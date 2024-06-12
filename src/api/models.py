@@ -137,4 +137,5 @@ class ActivityLogs(db.Model):
                 'date': self.date,
                 'duration': self.duration,
                 'calories': self.calories
+                
                 }
