@@ -34,6 +34,7 @@ class Users(db.Model):
                 'profile_picture': self.profile_picture
                 }
 
+
 class Exercises(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      name = db.Column(db.String(), unique=True, nullable=False)
@@ -99,7 +100,7 @@ class WorkoutDetails(db.Model):
         return {
                 'id': self.id,
                 'workout_id': self.workout_id,
-                'exercise_id': exercise_id
+                'exercise_id': self.exercise_id
                 }
 
 class Favorites(db.Model):
@@ -116,7 +117,7 @@ class Favorites(db.Model):
         return {
                 'id': self.id,
                 'user_id': self.user_id,
-                'exercise_id': exercise_id
+                'exercise_id': self.exercise_id
                 }
 
 class ActivityLogs(db.Model):
