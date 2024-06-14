@@ -83,7 +83,7 @@ def signup():
     
 
 @api.route('/users', methods=['GET','POST'])
-def usersall():
+def users():
     response_body = {}
     if request.method == 'GET':
         users = db.session.execute(db.select(Users)).scalars()
@@ -96,7 +96,7 @@ def usersall():
         return response_body, 200
 
 @api.route('/users/<int:id>', methods=['GET','PUT','DELETE'])
-def userone(id):
+def user(id):
     response_body = {}
     if request.method == 'GET':
         user = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
@@ -131,6 +131,75 @@ def userone(id):
         response_body['results'] = {}
         return response_body, 200
         response_body['message'] = 'Usuario no existe'
+        response_body['results'] = {}
+        return response_body, 404
+
+
+@api.route('/exercises', methods=['GET','POST'])
+def exercises():
+    response_body = {}
+    if request.method == 'GET':
+        exercises = db.session.execute(db.select(Exercises)).scalars()
+        results = [row.serialize() for row in exercises]
+        response_body['results'] = results
+        response_body['message'] = 'Listado de ejercicios'
+        return response_body, 200
+    if request.method == 'POST':
+        data = request.json
+        new_exercise = Exercises(
+            name = data.get('name'),
+            description = data.get('description'),
+            category = data.get('category'),
+            group = data.get('group'),
+            calories = data.get('calories'),
+            difficulty_level = data.get('difficulty_level'),
+            duration = data.get('duration')
+        )
+        db.session.add(new_exercise)
+        db.session.commit()
+        response_body['message'] = 'Ejercicio creado'
+        response_body['results'] = new_exercise.serialize()
+        return response_body, 201
+
+@api.route('/exercises/<int:id>', methods=['GET','PUT','DELETE'])
+def exercise(id):
+    response_body = {}
+    if request.method == 'GET':
+        exercise = db.session.execute(db.select(Exercises).where(Exercises.id == id)).scalar()
+        if exercise:
+            response_body['results'] = exercise.serialize()
+            response_body['message'] = 'Ejercicio encontrado'
+            return response_body, 200
+        response_body['message'] = 'Ejercicio no existe'
+        response_body['results'] = {}
+        return response_body, 404
+    if request.method == 'PUT':
+        data = request.json
+        exercise = db.session.execute(db.select(Exercises).where(Exercises.id == id)).scalar()
+        if exercise:
+            exercise.name = data.get('name', exercise.name)
+            exercise.description = data.get('description', exercise.description)
+            exercise.category = data.get('category', exercise.category)
+            exercise.group = data.get('group', exercise.group)
+            exercise.calories = data.get('calories', exercise.calories)
+            exercise.difficulty_level = data.get('difficulty_level', exercise.difficulty_level)
+            exercise.duration = data.get('duration', exercise.duration)
+            db.session.commit()
+            response_body['message'] = 'Ejercicio actualizado'
+            response_body['results'] = exercise.serialize()
+            return response_body, 200
+        response_body['message'] = 'Ejercicio no existe'
+        response_body['results'] = {}
+        return response_body, 404
+    if request.method == 'DELETE':
+        exercise = db.session.execute(db.select(Exercises).where(Exercises.id == id)).scalar()
+    if exercise:
+        db.session.delete(exercise)
+        db.session.commit()
+        response_body['message'] = 'Ejercicio eliminado'
+        response_body['results'] = {}
+        return response_body, 200
+        response_body['message'] = 'Ejercicio no existe'
         response_body['results'] = {}
         return response_body, 404
 
