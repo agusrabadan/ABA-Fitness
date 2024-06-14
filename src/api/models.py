@@ -30,6 +30,7 @@ class Users(db.Model):
             "registration_date": self.registration_date,
         }
 
+
 class Exercises(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
@@ -96,6 +97,7 @@ class WorkoutDetails(db.Model):
             'exercise_id': self.exercise_id
         }
 
+
 class Favorites(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -108,6 +110,7 @@ class Favorites(db.Model):
 
     def serialize(self):
         return {
+
             'id': self.id,
             'user_id': self.user_id,
             'exercise_id': self.exercise_id

@@ -14,4 +14,3 @@ def setup_admin(app):
     admin.add_view(ModelView(WorkoutDetails, db.session))
     admin.add_view(ModelView(Favorites, db.session))
     admin.add_view(ModelView(ActivityLogs, db.session))
-    
