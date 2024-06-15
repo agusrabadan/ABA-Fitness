@@ -298,3 +298,186 @@ def workout(id):
         response_body["message"] = "Rutina no existe"
         response_body["results"] = {}
         return response_body, 404
+
+
+@api.route("/workout_details", methods=["GET", "POST"])
+def workout_details():
+    response_body = {}
+    if request.method == "GET":
+        workout_details = db.session.execute(db.select(WorkoutDetails)).scalars()
+        results = [row.serialize() for row in workout_details]
+        response_body["results"] = results
+        response_body["message"] = "Listado de rutinas detalladas"
+        return response_body, 200
+    if request.method == "POST":
+        data = request.json
+        new_workout_detail = WorkoutDetails(
+            workout_id = data.get("workout_id"),
+            exercise_id = data.get("exercise_id"),
+            workout_order = data.get("workout_order")
+    )
+    db.session.add(new_workout_detail)
+    db.session.commit()
+    response_body["message"] = "Rutina detallada creada"
+    response_body["results"] = new_workout_detail.serialize()
+    return response_body, 201
+
+
+@api.route("workout_details/<int:id>", methods=["GET", "PUT", "DELETE"])
+def workout_detail(id):
+    response_body = {}
+    if request.method == "GET":
+        workout_detail = db.session.execute(db.select(WorkoutDetails).where(WorkoutDetails.id == id)).scalar()
+        if workout_detail:
+            response_body["results"] = workout_detail.serialize()
+            response_body["message"] = "Rutina detallada encontrada"
+            return response_body, 200
+        response_body["message"] = "Detalle de rutina no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    if request.method == "PUT":
+        data = request.json
+        workout_detail = db.session.execute(db.select(WorkoutDetails).where(WorkoutDetails.id == id)).scalar()
+        if workout_detail:
+            workout_detail.workout_id = data.get("workout_id", workout_detail.workout_id)
+            workout_detail.exercise_id = data.get("exercise_id", workout_detail.exercise_id)
+            workout_detail.workout_order = data.get("workout_order", workout_detail.workout_order)
+            db.session.commit()
+            response_body["message"] = "Rutina detallada actualizada"
+            response_body["results"] = {}
+            return response_body, 404
+    if request.method == "DELETE":
+        workout_detail = db.session.execute(db.select(WorkoutDetails).where(WorkoutDetails.id == id)).scalar()
+        if workout_detail:
+            db.session.delete(workout_detail)
+            db.session.commit()
+            response_body["message"] = "Rutina detallada eliminada"
+            response_body["results"] = {}
+            return response_body, 200
+        response_body["message"] = "Rutina detallada no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    
+
+@api.route("/favorites", methods=["GET", "POST"])
+def favorites():
+    response_body = {}
+    if request.method == "GET":
+        favorites = db.session.execute(db.select(Favorites)).scalars()
+        results = [row.serialize() for row in favorites]
+        response_body["results"] = results
+        response_body["message"] = "Listado de favoritos"
+        return (response_body), 200
+    if request.method == "POST":
+        data = request.json
+        new_favorite = Favorites(
+        user_id = data.get("user_id"),
+        exercise_id = data.get("exercise_id")
+        )
+        db.session.add(new_favorite)
+        db.session.commit()
+        response_body["message"] = "Favorito agregado"
+        response_body["results"] = new_favorite.serialize()
+        return response_body, 201
+    
+
+@api.route("/favorites/<int:id>", methods=["GET","PUT","DELETE"])
+def favorite(id):
+    response_body = {}
+    if request.method == "GET":
+        favorite = db.session.execute(db.select(Favorites).where(Favorites.id == id)).scalar()
+        if favorite:
+            response_body["results"] = favorite.serialize()
+            response_body["message"] = "Favorito encontrado"
+            return response_body, 200
+        response_body["message"] = "Favorito no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    if request.method == "PUT":
+        data = request.json
+        favorite = db.session.execute(db.select(Favorites).where(Favorites.id == id)).scalar()
+        if favorite:
+            favorite.user_id = data.get("user_id", favorite.user_id)
+            favorite.exercise_id = data.get("exercise_id", favorite.exercise_id)
+            db.session.commit()
+            response_body["message"] = "Favorito actualizado"
+            response_body["results"] = favorite.serialize()
+            return response_body, 200
+        response_body["message"] = "Favorito no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    if request.method == "DELETE":
+        favorite = db.session.execute(db.select(Favorites).where(Favorites.id == id)).scalar()
+        if favorite:
+            db.session.delete(favorite)
+            db.session.commit()
+            response_body["message"] = "Favorito eliminado"
+            response_body["results"] = {}
+            return response_body, 200
+        response_body["message"] = "Favorito no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    
+
+@api.route("/activity_logs", methods=["GET", "POST"])
+def activity_logs():
+    response_body = {}  # Se inicializa response_body como un diccionario vacío
+    if request.method == "GET":
+        activity_logs = db.session.execute(db.select(ActivityLogs)).scalars()
+        results = [row.serialize() for row in activity_logs]  # Corregido: serialize() en lugar de serialize
+        response_body["results"] = results
+        response_body["message"] = "Listado de registros de actividad"
+        return response_body, 200
+    if request.method == "POST":
+        data = request.json
+        new_activity_log = ActivityLogs(
+            workout_id=data.get("workout_id"),
+            date=data.get("date"),
+            duration=data.get("duration"),
+            calories=data.get("calories")
+        )
+        db.session.add(new_activity_log)
+        db.session.commit()
+        response_body["message"] = "Registro de actividad creado"
+        response_body["results"] = new_activity_log.serialize()  # Corregido: new_activity_log en lugar de mew_activity_log
+        return response_body, 201
+    
+    
+@api.route("/activity_logs/<int:id>", methods=["GET", "PUT", "DELETE"])
+def activity_log(id):
+    response_body = {}
+    if request.method == "GET":
+        activity_log = db.session.execute(db.select(ActivityLogs).where(ActivityLogs.id == id)).scalar()
+        if activity_log:
+            response_body["message"] = "Registro de actividad encontrado"
+            response_body["results"] = activity_log.serialize()
+            return response_body, 200
+        response_body["message"] = "Registro de actividad no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    if request.method == "PUT":
+        data = request.json
+        activity_log = db.session.execute(db.select(ActivityLogs).where(ActivityLogs.id == id)).scalar()
+        if activity_log:
+            activity_log.workout_id = data.get("workout_id", activity_log.workout_id)
+            activity_log.date = data.get("date", activity_log.date)
+            activity_log.duration = data.get("duration", activity_log.duration)
+            activity_log.calories = data.get("calories", activity_log.calories)
+            db.session.commit()
+            response_body["message"] = "Registro de actividad actualizado"
+            response_body["results"] = activity_log.serialize()
+            return response_body, 200
+        response_body["message"] = "Registro de actividad no existe"
+        response_body["results"] = {}
+        return response_body, 404
+    if request.method == "DELETE":
+        activity_log = db.session.execute(db.select(ActivityLogs).where(ActivityLogs.id == id)).scalar()
+        if activity_log:
+            db.session.delete(activity_log)
+            db.session.commit()
+            response_body["message"] = "Registro de actividad eliminado"
+            response_body["results"] = {}
+            return response_body, 200
+        response_body["message"] = "Registro de actividad no existe"
+        response_body["results"] = {}
+        return response_body, 404
