@@ -6,50 +6,82 @@ from flask import Flask, request, jsonify, url_for, send_from_directory
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from api.utils import APIException, generate_sitemap
+from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
-from api.models import db
-from flask_jwt_extended import JWTManager
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
 # from models import Person
 
-
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
-static_file_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), '../public/')
+static_file_dir = os.path.join(os.path.dirname(
+    os.path.realpath(__file__)), '../public/')
 app = Flask(__name__)
 app.url_map.strict_slashes = False
-# Database condiguration
+
+
+app.config['CLOUD_NAME'] = os.getenv("CLOUD_NAME")
+app.config['API_KEY'] = os.getenv("API_KEY")
+app.config['API-SECRET'] = os.getenv("API-SECRET")
+
+
+cloudinary.config( 
+  cloud_name = app.config['CLOUD_NAME'], 
+  api_key = app.config['API_KEY'], 
+  api_secret = app.config['API-SECRET'],
+  secure = True
+)
+
+
+# database condiguration
 db_url = os.getenv("DATABASE_URL")
 if db_url is not None:
-    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace("postgres://", "postgresql://")
+    app.config['SQLALCHEMY_DATABASE_URI'] = db_url.replace(
+        "postgres://", "postgresql://")
 else:
     app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:////tmp/test.db"
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 MIGRATE = Migrate(app, db, compare_type=True)
 db.init_app(app)
-# Other configurations
-setup_admin(app)  # Add the admin
-setup_commands(app)  # Add the admin
-app.register_blueprint(api, url_prefix='/api')  # Add all endpoints form the API with a "api" prefix
-# Setup the Flask-JWT-Extended extension
-app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this!
-jwt = JWTManager(app)
+
+# add the admin
+setup_admin(app)
+
+# add the admin
+setup_commands(app)
+
+# Add all endpoints form the API with a "api" prefix
+app.register_blueprint(api, url_prefix='/api')
 
 # Handle/serialize errors like a JSON object
+
+
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
+# generate sitemap with all your endpoints
 
-# Generate sitemap with all your endpoints
+
 @app.route('/')
 def sitemap():
     if ENV == "development":
         return generate_sitemap(app)
     return send_from_directory(static_file_dir, 'index.html')
 
+@app.route('/img' , methods=["POST"])
+def upload_image():
+    img = request.files["img"]
+    img_url = cloudinary.uploader.upload(img)
+    return jsonify({"img_url": img_url["url"]}) , 200
 
-# Any other endpoint will try to serve it like a static file
+# any other endpoint will try to serve it like a static file
+
+
 @app.route('/<path:path>', methods=['GET'])
 def serve_any_other_file(path):
     if not os.path.isfile(os.path.join(static_file_dir, path)):
@@ -59,7 +91,7 @@ def serve_any_other_file(path):
     return response
 
 
-# This only runs if `$ python src/main.py` is executed
+# this only runs if `$ python src/main.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3001))
     app.run(host='0.0.0.0', port=PORT, debug=True)
