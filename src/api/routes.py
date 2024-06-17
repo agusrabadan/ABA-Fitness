@@ -22,6 +22,7 @@ from datetime import datetime
 api = Blueprint("api", __name__)
 CORS(api)  # Allow CORS requests to this API
 
+
 @api.route("/login", methods=["POST"])
 def login():
     response_body = {}

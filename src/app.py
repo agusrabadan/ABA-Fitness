@@ -13,7 +13,10 @@ from api.commands import setup_commands
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
-
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import JWTManager
 # from models import Person
 
 ENV = "development" if os.getenv("FLASK_DEBUG") == "1" else "production"
@@ -22,6 +25,9 @@ static_file_dir = os.path.join(os.path.dirname(
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this!
+jwt = JWTManager(app)
 
 app.config['CLOUD_NAME'] = os.getenv("CLOUD_NAME")
 app.config['API_KEY'] = os.getenv("API_KEY")
