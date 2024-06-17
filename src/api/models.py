@@ -43,7 +43,8 @@ class Exercises(db.Model):
      group = db.Column(db.String(), unique=False, nullable=False)
      calories = db.Column(db.Integer(), unique=False, nullable=False)
      difficulty_level = db.Column(db.String(), unique=False, nullable=False)
-     duration = db.Column(db.Integer(), unique=False, nullable=False)
+     duration = db.Column(db.Integer(), unique=False, nullable=True)
+     exercise_image_url = db.Column(db.String(), unique=False, nullable=True)
 
      def __repr__(self):
         return f'<Exercise: {self.name}>'
@@ -57,7 +58,8 @@ class Exercises(db.Model):
                 'calories': self.calories,
                 'group': self.group,
                 'difficulty_level': self.difficulty_level,
-                'duration': self.duration
+                'duration': self.duration,
+                "exercise_image_url": self.exercise_image_url
                 }
 
 class Workouts(db.Model):
@@ -91,7 +93,10 @@ class WorkoutDetails(db.Model):
      workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
      workout_to = db.relationship('Workouts', foreign_keys = [workout_id])
      exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
-     exercise_to = db.relationship('Exercises', foreign_keys = [exercise_id]) 
+     exercise_to = db.relationship('Exercises', foreign_keys = [exercise_id])
+     reps_num = db.Column(db.Integer(), unique=False, nullable=False)
+     series_num = db.Column(db.Integer(), unique=False, nullable=False)
+     rest_seconds = db.Column(db.Integer(), unique=False, nullable=True)
      
      def __repr__(self):
         return f'<Workout_Details: {self.id}>'
@@ -100,7 +105,10 @@ class WorkoutDetails(db.Model):
         return {
                 'id': self.id,
                 'workout_id': self.workout_id,
-                'exercise_id': self.exercise_id
+                'exercise_id': self.exercise_id,
+                'reps_num' : self.reps_num,
+                'series_num' : self.series_num,
+                'rest_seconds' : self.rest_seconds
                 }
 
 class Favorites(db.Model):
