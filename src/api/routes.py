@@ -336,7 +336,6 @@ def workout_detail(id):
         response_body["results"] = {}
         return response_body, 404
 
-
 @api.route("/favorites", methods=["GET", "POST"])
 def favorites():
     response_body = {}
@@ -357,7 +356,7 @@ def favorites():
         response_body["message"] = "Favorito agregado"
         response_body["results"] = new_favorite.serialize()
         return response_body, 201
-
+      
 
 @api.route("/favorites/<int:id>", methods=["GET","PUT","DELETE"])
 def favorite(id):
@@ -420,7 +419,7 @@ def activity_logs():
         response_body["results"] = new_activity_log.serialize()  # Corregido: new_activity_log en lugar de mew_activity_log
         return response_body, 201
 
-
+      
 @api.route("/activity_logs/<int:id>", methods=["GET", "PUT", "DELETE"])
 def activity_log(id):
     response_body = {}
