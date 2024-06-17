@@ -148,20 +148,5 @@ class ActivityLogs(db.Model):
             'calories': self.calories
         }
 
-class WorkoutDetails(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
-    workout_to = db.relationship('Workouts', foreign_keys=[workout_id])
-    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
-    exercise_to = db.relationship('Exercises', foreign_keys=[exercise_id])
-    workout_order = db.Column(db.Integer(), unique=False, nullable=False)
-    def __repr__(self):
-        return f'<Workout_Details: {self.id}>'
-    def serialize(self):
-        return {
-            'id': self.id,
-            'workout_id': self.workout_id,
-            'exercise_id': self.exercise_id,
-            'workout_order': self.workout_order
-        }
+
 
