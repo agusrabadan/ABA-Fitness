@@ -17,12 +17,8 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
 from datetime import datetime
-
-
 api = Blueprint("api", __name__)
 CORS(api)  # Allow CORS requests to this API
-
-
 @api.route("/login", methods=["POST"])
 def login():
     response_body = {}
@@ -42,8 +38,6 @@ def login():
         return response_body, 200
     response_body["message"] = "Usuario y/o contraseña incorrecta"
     return response_body, 401
-
-
 @api.route("/profile", methods=["GET"])
 @jwt_required()
 def profile():
@@ -52,8 +46,6 @@ def profile():
     current_user = get_jwt_identity()
     response_body["message"] = f"User logueado: {current_user}"
     return response_body, 200
-
-
 @api.route("/signup", methods=["POST"])
 def signup():
     response_body = {}
@@ -67,12 +59,10 @@ def signup():
     birth_date = request.json.get("birth_date", None)
     gender = request.json.get("gender", None)
     registration_date = request.json.get("registration_date", None)
-
     existing_user = Users.query.filter_by(email=email).first()
     if existing_user:
         response_body["message"] = "El usuario ya existe"
         return response_body, 409
-
     # Lógica de verificación de email y password válidos
     user = Users()
     user.email = email
@@ -92,8 +82,6 @@ def signup():
     response_body["message"] = "Usuario registrado y logueado"
     response_body["access_token"] = access_token
     return response_body, 200
-
-
 @api.route("/users", methods=["GET", "POST"])
 def users():
     response_body = {}
@@ -106,8 +94,6 @@ def users():
     if request.method == "POST":
         response_body["message"] = "Este endpoint no es válido, primero haz un signup"
         return response_body, 200
-
-
 @api.route("/users/<int:id>", methods=["GET", "PUT", "DELETE"])
 def user(id):
     response_body = {}
@@ -146,8 +132,6 @@ def user(id):
         response_body["message"] = "Usuario no existe"
         response_body["results"] = {}
         return response_body, 404
-
-
 @api.route("/exercises", methods=["GET", "POST"])
 def exercises():
     response_body = {}
@@ -173,8 +157,6 @@ def exercises():
         response_body["message"] = "Ejercicio creado"
         response_body["results"] = new_exercise.serialize()
         return response_body, 201
-
-
 @api.route("/exercises/<int:id>", methods=["GET", "PUT", "DELETE"])
 def exercise(id):
     response_body = {}
@@ -224,8 +206,6 @@ def exercise(id):
         response_body["message"] = "Ejercicio no existe"
         response_body["results"] = {}
         return response_body, 404
-
-
 @api.route("/workouts", methods=["GET", "POST"])
 def workouts():
     response_body = {}
@@ -250,8 +230,6 @@ def workouts():
         response_body["message"] = "Rutina creada"
         response_body["results"] = new_workout.serialize()
         return response_body, 201
-
-
 @api.route("/workouts/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workout(id):
     response_body = {}
@@ -357,7 +335,6 @@ def workout_detail(id):
         response_body["message"] = "Rutina detallada no existe"
         response_body["results"] = {}
         return response_body, 404
-    
 
 @api.route("/favorites", methods=["GET", "POST"])
 def favorites():
@@ -379,7 +356,7 @@ def favorites():
         response_body["message"] = "Favorito agregado"
         response_body["results"] = new_favorite.serialize()
         return response_body, 201
-    
+      
 
 @api.route("/favorites/<int:id>", methods=["GET","PUT","DELETE"])
 def favorite(id):
@@ -417,7 +394,7 @@ def favorite(id):
         response_body["message"] = "Favorito no existe"
         response_body["results"] = {}
         return response_body, 404
-    
+
 
 @api.route("/activity_logs", methods=["GET", "POST"])
 def activity_logs():
@@ -441,8 +418,8 @@ def activity_logs():
         response_body["message"] = "Registro de actividad creado"
         response_body["results"] = new_activity_log.serialize()  # Corregido: new_activity_log en lugar de mew_activity_log
         return response_body, 201
-    
-    
+
+      
 @api.route("/activity_logs/<int:id>", methods=["GET", "PUT", "DELETE"])
 def activity_log(id):
     response_body = {}
