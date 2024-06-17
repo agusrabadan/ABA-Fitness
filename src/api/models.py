@@ -1,5 +1,23 @@
 from flask_sqlalchemy import SQLAlchemy
+from enum import Enum
 
+class DifficultyLevel(Enum):
+    Fácil = "Fácil"
+    Intermedio = "Intermedio"
+    Avanzado = "Avanzado"
+
+class Category(Enum):
+    Sin_equipo = "Sin equipo"
+    Con_equipo = "Con equipo"
+
+class Group(Enum):
+    Pectorales = "Pectorales"
+    Espalda = "Espalda"
+    Bíceps = "Bíceps"
+    Triceps = "Triceps"
+    Piernas = "Piernas"
+    Hombros = "Hombros"
+    Abdomen = "Abdomen"
 
 db = SQLAlchemy()
 
@@ -28,8 +46,8 @@ class Users(db.Model):
                 'is_active': self.is_active,
                 'first_name': self.first_name,
                 'last_name': self.last_name,
-                'weight': self.weight,
-                'height': self.height,
+                'weight (kg)': self.weight,
+                'height (cm)': self.height,
                 'birth_date': self.birth_date,
                 'profile_picture': self.profile_picture
                 }
@@ -39,10 +57,10 @@ class Exercises(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      name = db.Column(db.String(), unique=True, nullable=False)
      description = db.Column(db.String(), unique=True, nullable=False)
-     category = db.Column(db.String(), unique=False, nullable=True)
-     group = db.Column(db.String(), unique=False, nullable=False)
+     category = db.Column(db.Enum(Category), unique=False, nullable=True)
+     group = db.Column(db.Enum(Group), unique=False, nullable=True)
      calories = db.Column(db.Integer(), unique=False, nullable=False)
-     difficulty_level = db.Column(db.String(), unique=False, nullable=False)
+     difficulty_level = db.Column(db.Enum(DifficultyLevel), unique=False, nullable=False)
      duration = db.Column(db.Integer(), unique=False, nullable=True)
      exercise_image_url = db.Column(db.String(), unique=False, nullable=True)
 
@@ -66,7 +84,7 @@ class Workouts(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      name = db.Column(db.String(), unique=True, nullable=False)
      is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-     difficulty_level = db.Column(db.String(), unique=False, nullable=False)
+     difficulty_level = db.Column(db.Enum(DifficultyLevel), unique=False, nullable=False)
      user_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
      user_to = db.relationship('Users', foreign_keys = [user_id])    
      start_date = db.Column(db.Date(), unique=False, nullable=True)
