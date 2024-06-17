@@ -10,6 +10,8 @@ from api.models import db
 from api.routes import api
 from api.admin import setup_admin
 from api.commands import setup_commands
+from dotenv import load_dotenv
+import os
 import cloudinary
 import cloudinary.uploader
 import cloudinary.api
@@ -29,17 +31,21 @@ app.url_map.strict_slashes = False
 app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this!
 jwt = JWTManager(app)
 
-app.config['CLOUD_NAME'] = os.getenv("CLOUD_NAME")
-app.config['API_KEY'] = os.getenv("API_KEY")
-app.config['API-SECRET'] = os.getenv("API-SECRET")
+app.config['CLOUDINARY_CLOUD_NAME'] = os.getenv("CLOUDINARY_CLOUD_NAME")
+app.config['CLOUDINARY_API_KEY'] = os.getenv("CLOUDINARY_API_KEY")
+app.config['CLOUDINARY_API-SECRET'] = os.getenv("CLOUDINARY_API-SECRET")
 
 
 cloudinary.config( 
-  cloud_name = app.config['CLOUD_NAME'], 
-  api_key = app.config['API_KEY'], 
-  api_secret = app.config['API-SECRET'],
+  cloud_name = app.config['CLOUDINARY_CLOUD_NAME'], 
+  api_key = app.config['CLOUDINARY_API_KEY'], 
+  api_secret = app.config['CLOUDINARY_API-SECRET'],
   secure = True
 )
+
+# Setup the Flask-JWT-Extended extension
+app.config["JWT_SECRET_KEY"] = os.getenv("JWT_SECRET_KEY")  # Change this!
+jwt = JWTManager(app)
 
 
 # database condiguration
