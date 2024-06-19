@@ -73,23 +73,25 @@ def signup():
         return response_body, 409
 
     # Lógica de verificación de email y password válidos
-    user = Users()
-    user.email = email
-    user.password = password
-    user.is_active = True
-    user.first_name = first_name
-    user.last_name = last_name
-    user.weight = weight
-    user.height = height
-    user.profile_picture = profile_picture
-    user.birth_date = birth_date
-    user.gender = gender
-    user.registration_date = registration_date
+    user = Users(
+        email=email,
+        password=password,
+        is_active=True,
+        first_name=first_name,
+        last_name=last_name,
+        weight=weight,
+        height=height,
+        profile_picture=profile_picture,
+        birth_date=birth_date,
+        gender=gender,
+        registration_date=registration_date
+    )
     db.session.add(user)
     db.session.commit()
     access_token = create_access_token(identity={"user_id": user.id})
     response_body["message"] = "Usuario registrado y logueado"
     response_body["access_token"] = access_token
+    response_body["results"] = user.serialize()
     return response_body, 200
 
 @api.route("/users", methods=["GET", "POST"])

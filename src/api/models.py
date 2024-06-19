@@ -42,8 +42,9 @@ class Users(db.Model):
                 'is_active': self.is_active,
                 'first_name': self.first_name,
                 'last_name': self.last_name,
-                'weight (kg)': self.weight,
-                'height (cm)': self.height,
+                'weight': self.weight,
+                'height': self.height,
+                'gender': self.gender,
                 'birth_date': self.birth_date,
                 'profile_picture': self.profile_picture
                 }
@@ -136,6 +137,29 @@ class ActivityLogs(db.Model):
             'duration': self.duration,
             'calories': self.calories
         }
+
+class WorkoutDetails(db.Model):
+     id = db.Column(db.Integer, primary_key=True)
+     workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
+     workout_to = db.relationship('Workouts', foreign_keys = [workout_id])
+     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+     exercise_to = db.relationship('Exercises', foreign_keys = [exercise_id])
+     reps_num = db.Column(db.Integer(), unique=False, nullable=False)
+     series_num = db.Column(db.Integer(), unique=False, nullable=False)
+     rest_seconds = db.Column(db.Integer(), unique=False, nullable=True)
+     
+     def __repr__(self):
+        return f'<Workout_Details: {self.id}>'
+
+     def serialize(self):
+        return {
+                'id': self.id,
+                'workout_id': self.workout_id,
+                'exercise_id': self.exercise_id,
+                'reps_num' : self.reps_num,
+                'series_num' : self.series_num,
+                'rest_seconds' : self.rest_seconds
+                }
 
 
 
