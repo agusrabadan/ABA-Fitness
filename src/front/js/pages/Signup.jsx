@@ -10,9 +10,8 @@ export const Signup = () => {
     const [lastName, setLastName] = useState("");
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
-    const [gender, setGender] = useState("");
+    const [gender, setGender] = useState("Hombre"); // Valor predeterminado
     const [birthDate, setBirthDate] = useState("");
-
     const [errorMessage, setErrorMessage] = useState(""); // Para almacenar el mensaje de error
     const navigate = useNavigate();
 
@@ -27,9 +26,18 @@ export const Signup = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        const dataToSend = { email, password, first_name: firstName, last_name: lastName };
+        const dataToSend = {
+            email,
+            password,
+            first_name: firstName,
+            last_name: lastName,
+            weight: weight,
+            height: height,
+            gender: gender,
+            birth_date: birthDate
+        };
         const url = `${process.env.BACKEND_URL}/api/signup`;
-
+    
         const options = {
             method: 'POST',
             headers: {
@@ -37,25 +45,20 @@ export const Signup = () => {
             },
             body: JSON.stringify(dataToSend)
         };
-
+    
         try {
             const response = await fetch(url, options);
             if (response.status === 409) {
-                // Usuario ya existe
-                setErrorMessage("User already exists");
+                setErrorMessage("El usuario ya existe");
             } else if (!response.ok) {
                 console.log('Error:', response.status, response.statusText);
-                setErrorMessage("An error occurred. Please try again.");
+                setErrorMessage("Ha ocurrido un error, intentalo de nuevo.");
             } else {
                 const data = await response.json();
+                // Asegúrate de que todos los datos necesarios están en la respuesta
                 localStorage.setItem('token', data.access_token);
                 actions.setIsLogin(true);
-                actions.setCurrentUser({
-                    email: data.email,
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    id: data.id
-                });
+                actions.setCurrentUser(data.results);
                 navigate('/dashboard');
             }
         } catch (error) {
@@ -63,6 +66,7 @@ export const Signup = () => {
             setErrorMessage("An error occurred. Please try again.");
         }
     };
+    
 
     return (
         <div className="container mt-5">
@@ -105,15 +109,15 @@ export const Signup = () => {
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="gender" className="mb-1">Género:</label>
-                                    <select type="select" options="Hombre" className="form-control" id="gender"
-                                        onChange={handleGender} required>
-                                        <option value={gender}>Hombre</option>
-                                        <option value={gender} selected>Mujer</option>
-                                        <option value={gender}>Sin definir</option>
+                                    <select className="form-control" id="gender"
+                                        value={gender} onChange={handleGender} required>
+                                        <option value="Hombre">Hombre</option>
+                                        <option value="Mujer">Mujer</option>
+                                        <option value="Sin definir">Sin definir</option>
                                     </select>
                                 </div>
                                 <div className="form-group mt-3 h6">
-                                    <label htmlFor="birtDate" className="mb-1">Fecha de nacimiento:</label>
+                                    <label htmlFor="birthDate" className="mb-1">Fecha de nacimiento:</label>
                                     <input type="date" className="form-control" id="birthDate"
                                         value={birthDate} onChange={handleBirthDate} required />
                                 </div>
@@ -128,3 +132,4 @@ export const Signup = () => {
         </div>
     );
 };
+

@@ -3,15 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
 
-
 export const Login = () => {
   const { actions } = useContext(Context);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState(""); // Para almacenar el mensaje de error
+  const navigate = useNavigate();
 
-  const handleEmailChange = (event) => { setEmail(event.target.value); };
-  const handlePasswordChange = (event) => { setPassword(event.target.value); };
+  const handleEmailChange = (event) => {
+    setEmail(event.target.value);
+  };
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -23,19 +27,30 @@ export const Login = () => {
       headers: {
         'Content-Type': 'application/json'
       }
+    };
+
+    try {
+      const response = await fetch(url, options);
+      if (!response.ok) {
+        if (response.status === 401 || response.status === 404) {
+          // Si las credenciales son incorrectas o el usuario no existe
+          setErrorMessage("Usuario o contraseña incorrectos. Por favor, inténtelo de nuevo.");
+        } else {
+          // Para otros errores
+          setErrorMessage("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
+        }
+        return;
+      }
+
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      actions.setIsLogin(true);
+      actions.setCurrentUser(data.results);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Error de fetch:', error);
+      setErrorMessage("Ocurrió un error. Por favor, inténtelo de nuevo más tarde.");
     }
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      console.log('Error: ', response.status, response.statusText)
-      return
-    }
-    const data = await response.json();
-    console.log(data);
-    localStorage.setItem('token', data.access_token)
-    actions.setIsLogin(true)
-    actions.setCurrentUser(data.results)
-    //console.log(data.access_token);
-    navigate('/dashboard')
   };
 
   return (
@@ -47,6 +62,11 @@ export const Login = () => {
               <h2 className="card-title text-center mb-3 display-5">
                 Login
               </h2>
+              {errorMessage && (
+                <div className="alert alert-danger text-center" role="alert">
+                  {errorMessage}
+                </div>
+              )}
               <form onSubmit={handleSubmit}>
                 <div className="form-group mt-3 h6">
                   <label htmlFor="email" className="mb-1">
@@ -78,7 +98,9 @@ export const Login = () => {
                   <button type="submit" className="btn btn-success mt-5">
                     Acceder
                   </button>
-                  <Link to="/signup"> <p className="text-center mt-2"> Todavía no te has registrado? Hazlo aqui!</p></Link>
+                  <Link to="/signup">
+                    <p className="text-center mt-2">Todavía no te has registrado? Hazlo aquí!</p>
+                  </Link>
                 </div>
               </form>
             </div>
