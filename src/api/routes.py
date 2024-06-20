@@ -163,12 +163,12 @@ def exercises():
         data = request.json
         new_exercise = Exercises(
             name=data.get("name"),
-            description=data.get("description"),
-            category=data.get("category"),
-            group=data.get("group"),
-            calories=data.get("calories"),
-            difficulty_level=data.get("difficulty_level"),
-            duration=data.get("duration"),
+            target=data.get("target"),  
+            body_part=data.get("body_part"),  
+            equipment=data.get("equipment"),
+            secondary_muscles=data.get("secondary_muscles"),
+            instructions=data.get("instructions"),
+            gif_url=data.get("gif_url"),
         )
         db.session.add(new_exercise)
         db.session.commit()
@@ -198,14 +198,12 @@ def exercise(id):
         ).scalar()
         if exercise:
             exercise.name = data.get("name", exercise.name)
-            exercise.description = data.get("description", exercise.description)
-            exercise.category = data.get("category", exercise.category)
-            exercise.group = data.get("group", exercise.group)
-            exercise.calories = data.get("calories", exercise.calories)
-            exercise.difficulty_level = data.get(
-                "difficulty_level", exercise.difficulty_level
-            )
-            exercise.duration = data.get("duration", exercise.duration)
+            exercise.target = data.get("target", exercise.target)  
+            exercise.body_part = data.get("body_part", exercise.body_part)  
+            exercise.equipment = data.get("equipment", exercise.equipment)
+            exercise.secondary_muscles = data.get("secondary_muscles", exercise.secondary_muscles)
+            exercise.instructions = data.get("instructions", exercise.instructions)
+            exercise.gif_url = data.get("gif_url", exercise.gif_url)
             db.session.commit()
             response_body["message"] = "Ejercicio actualizado"
             response_body["results"] = exercise.serialize()
@@ -243,7 +241,6 @@ def workouts():
         new_workout = Workouts(
             name=data.get("name"),
             is_active=data.get("is_active"),
-            difficulty_level=data.get("difficulty_level"),
             user_id=data.get("user_id"),
             start_date=data.get("start_date"),
             ending_date=data.get("ending_date"),
@@ -277,9 +274,6 @@ def workout(id):
         if workout:
             workout.name = data.get("name", workout.name)
             workout.is_active = data.get("is_active", workout.is_active)
-            workout.difficulty_level = data.get(
-                "difficulty_level", workout.difficulty_level
-            )
             workout.user_id = data.get("user_id", workout.user_id)
             workout.start_date = data.get("start_date", workout.start_date)
             workout.ending_date = data.get("ending_date", workout.ending_date)
@@ -304,6 +298,7 @@ def workout(id):
         response_body["message"] = "Rutina no existe"
         response_body["results"] = {}
         return response_body, 404
+
 
 @api.route("/workoutdetails", methods=["GET", "POST"])
 def workoutdetails():
