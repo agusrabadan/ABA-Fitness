@@ -19,7 +19,7 @@ export const Dashboard = () => {
         <div className="container">
             {store.isLogin ?
                 <div className="text-center">
-                    <h1>ESTAS LOGUEADO, PAGINA RESTRINGIDA SOLO PARA USUARIOS</h1>
+                    <h1 className="text-white">ESTAS LOGUEADO</h1>
                     <div className="spinner-grow text-primary" role="status">
                         <span className="visually-hidden">Loading...</span>
                     </div>
