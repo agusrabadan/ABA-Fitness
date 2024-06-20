@@ -2,6 +2,7 @@ import React from "react";
 import "../../styles/home.css";
 import SubirImagen from "../component/SubirImagen.jsx";
 import tumbada from "../../img/tumbada.jpg";
+import hombre from "../../img/hombre-bn.webp";
 import { Link } from "react-router-dom";
 
 const textStyle = {
@@ -19,7 +20,7 @@ export const Home = () => {
 			{/* Contenedor de la imagen */}
 			<div className="position-relative">
 				{/* Usar la clase img-fluid para ajustar la imagen */}
-				<img src={tumbada} alt="Descripción de la imagen" className="img-fluid" />
+				<img src={tumbada} alt="Descripción de la imagen" className="img-fluid reduced-height" />
 				{/* Texto superpuesto */}
 				<div style={textStyle} >
 					<h2>Tu cambio empieza hoy </h2>
@@ -41,7 +42,7 @@ export const Home = () => {
 						<div><i className="fa-solid fa-heartbeat fs-5"></i></div>
 						<div className="text-center">
 							<p className="smaller-text mt-3">
-								Mejora la salud de tu corazón con nuestros ejercicios, 
+								Mejora la salud de tu corazón con nuestros ejercicios,
 								siente como tu calidad de vida aumenta significativamente
 							</p>
 						</div>
@@ -50,7 +51,7 @@ export const Home = () => {
 						<div><i className="fa-solid fa-dumbbell fs-5"></i></div>
 						<div className="text-center">
 							<p className="smaller-text mt-3">
-								No te preocupes si no tienes el gimnasio cerca, nuestra gran variedad de 
+								No te preocupes si no tienes el gimnasio cerca, nuestra gran variedad de
 								ejercicios incluye bastantes que podrás realizar en casa con tu propio peso
 							</p>
 						</div>
@@ -64,7 +65,32 @@ export const Home = () => {
 							</p>
 						</div>
 					</div>
+					{/* Siguiente bloque */}
 				</div>
+				<div className="container mt-5">
+					<div className="row">
+						<div className="col text-center">
+							<h2 className="text-white mt-3">Transforma tu cuerpo con nuestros ejercicios personalizados</h2>
+							<p className="lead text-white mt-5">Te ayudaremos a organizar tus ejercicios, sé tu propio coach diseñando rutinas de trabajo para cada dia de la semana, registrate ya gratis y disfruta de todos nuestros servicios</p>
+							<Link to="/signup" className="nav-link">
+								<button className="btn btn-outline-light mt-4 ms-2 fs-5 rounded-pill">Regístrate ya!</button>
+							</Link>
+						</div>
+						<div className="col-auto">
+							{/* Imagen del hombre pequeña y alineada a la derecha */}
+							<img src={hombre} alt="Hombre en ABA Fitness" className="img-fluid hombre-pequeno-derecha" />
+						</div>
+					</div>
+					{/* Línea de separación */}
+					<div className="row my-4 text-white">
+						<div className="col">
+							<hr className="separator" />
+						</div>
+					</div>
+					{/* Carrusel */}
+					
+				</div>
+
 			</div>
 		</div>
 	);
