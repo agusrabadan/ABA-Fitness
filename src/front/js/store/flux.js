@@ -2,9 +2,37 @@ const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
 			isLogin: false,
-			user: ''
-		},
+			user: '',
+			exercises: [],
+      exercisesLoading: false 
+    },
 		actions: {
+			fetchExercises: async () => {
+				try {
+				  setStore({ exercisesLoading: true });
+		
+				  const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0', {
+					method: 'GET',
+					headers: {
+					  'x-rapidapi-key': '4153567bccmsh1a02517c622e4f0p15a422jsna4f43fd7b304',
+					  'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
+					} 
+				  });
+		
+				  if (!response.ok) {
+					console.error('Error fetching exercises:', response.status, response.statusText);
+					setStore({ exercisesLoading: false });
+					return;
+				  }
+		
+				  const data = await response.json();
+				  setStore({ exercises: data, exercisesLoading: false });
+				} catch (error) {
+				  console.error('Error fetching exercises:', error);
+				  setStore({ exercisesLoading: false });
+				}
+			  },
+			  
 			exampleFunction: () => { getActions().changeColor(0, "green"); },  // Use getActions to call a function within a fuction
 			changeColor: (index, color) => {
 				const store = getStore();  // Get the store
