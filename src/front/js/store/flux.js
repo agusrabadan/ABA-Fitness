@@ -16,7 +16,7 @@ const getState = ({ getStore, getActions, setStore }) => {
 					headers: {
 					  'x-rapidapi-key': '4153567bccmsh1a02517c622e4f0p15a422jsna4f43fd7b304',
 					  'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
-					}
+					} 
 				  });
 		
 				  if (!response.ok) {
