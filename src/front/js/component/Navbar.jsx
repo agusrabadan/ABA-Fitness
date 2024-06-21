@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import "../../styles/navbar.css";
-import logo from "../../img/Logo1.webp"; // Asegúrate de tener un logo en tu carpeta de imágenes
+import logo from "../../img/Logo1.webp"; 
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -21,7 +21,7 @@ export const Navbar = () => {
         <nav className="navbar navbar-expand-lg text-white shadow-sm bg-dark">
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand d-flex align-items-center">
-                    <img src={logo} alt="Logo" width="60" height="60" className="d-inline-block align-text-top rounded mx-2" />
+                    <img src={logo} alt="Logo" width="60" height="60" className="d-inline-block align-text-top rounded-circle mx-2" />
                     <h2 className="ms-2 text-white ml-2">ABA Fitness</h2>
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

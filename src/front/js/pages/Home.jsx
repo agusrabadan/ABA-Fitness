@@ -1,13 +1,15 @@
 import React from "react";
 import "../../styles/home.css";
 import SubirImagen from "../component/SubirImagen.jsx";
+import logo from "../../img/Logo1.webp"; 
 import tumbada from "../../img/tumbada.jpg";
 import hombre from "../../img/hombre-bn.webp";
+import chica from "../../img/ChicaNegro.webp";
 import { Link } from "react-router-dom";
 
 const textStyle = {
 	position: "absolute",
-	top: "30%",
+	top: "20%",
 	left: "20%",
 	transform: "translate(-50%, -50%)",
 	color: "white",
@@ -65,8 +67,14 @@ export const Home = () => {
 							</p>
 						</div>
 					</div>
-					{/* Siguiente bloque */}
 				</div>
+				{/* Linea separación */}
+				<div className="row my-4 text-white">
+					<div className="col">
+						<hr className="separator" />
+					</div>
+				</div>
+				{/* Siguiente bloque */}
 				<div className="container mt-5">
 					<div className="row">
 						<div className="col text-center">
@@ -88,9 +96,57 @@ export const Home = () => {
 						</div>
 					</div>
 					{/* Carrusel */}
+					<div id="carouselExampleControls" className="carousel slide mb-5" data-bs-ride="carousel">
+						<div className="carousel-inner">
+							<div className="carousel-item active ">
+								<h6 className="text-white text-center"> "Desde que uso ABA fitness mi motivación se ha multiplicado por 1000, <br/>
+								 ir al gimnasio ya no es un sacrificio para mi" </h6>
+								<div className="d-flex justify-content-center">
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+								</div>
+							</div>
+							<div className="carousel-item">
+								<h6 className="text-white text-center"> "Estaba cansado de hacer siempre los mismos ejercicios y de no saber ejecutarlos, <br/>ABA Fitness terminó con esos dos problemas" </h6>
+								<div className="d-flex justify-content-center">
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+								</div>
+							</div>
+							<div className="carousel-item">
+								<h6 className="text-white text-center"> "Excelente aplicación, muy recomendable, da igual tu nivel o tu edad, <br/> 
+								apto para toda la familia, ellos te dan las herramientas, tu marcas tu ritmo." </h6>
+								<div className="d-flex justify-content-center">
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+									<i className="far fa-star text-white text-center"></i>
+								</div>
+							</div>
+						</div>
+						<button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+							<span className="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span className="visually-hidden">Anterior</span>
+						</button>
+						<button className="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+							<span className="carousel-control-next-icon" aria-hidden="true"></span>
+							<span className="visually-hidden">Siguiente</span>
+						</button>
+					</div>
 					
-				</div>
+					<div className="d-flex justify-content-center">
+						<img src={logo} alt="Logo" width="200" height="200" className="d-inline-block align-text-top rounded-circle mx-2" />
+					</div>
+					<p className="text-white text-center mt-1 mb-5"> ABA Fitness Company</p>
 
+				</div>
 			</div>
 		</div>
 	);
