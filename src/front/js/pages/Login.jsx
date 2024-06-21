@@ -67,7 +67,7 @@ export const Login = () => {
                 Login
               </h2>
               {errorMessage && (
-                <div className="alert alert-danger text-center" role="alert">
+                <div className="alert alert-secondary text-center" role="alert">
                   {errorMessage}
                 </div>
               )}

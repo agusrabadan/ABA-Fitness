@@ -79,7 +79,7 @@ export const Signup = () => {
                     <div className="card bg-dark text-white">
                         <div className="card-body">
                             <h2 className="card-title text-center mb-3 display-5">Crear cuenta</h2>
-                            {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+                            {errorMessage && <div className="alert alert-secondary" role="alert">{errorMessage}</div>}
                             <form onSubmit={handleSubmit}>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="email" className="mb-1">Email:</label>
