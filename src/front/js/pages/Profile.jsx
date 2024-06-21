@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
+import "../../styles/profile.css";
 
 export const Profile = () => {
   const { store } = useContext(Context);
@@ -15,30 +16,32 @@ export const Profile = () => {
     <div className="container mt-5">
       {store.isLogin ? (
         <div>
-          <h2 className="mb-4">Perfil de Usuario</h2>
-          <div className="card">
+          <h2 className="mb-4 text-white">Perfil de Usuario</h2>
+          <div className="card bg-dark text-white">
             <div className="card-body">
-              <img src={store.user.profile_picture} className="rounded mx-auto d-block h-25 w-25" alt="..." />
-              <p className="text-success"><strong>Nombre:</strong> {store.user.first_name}</p>
-              <p className="text-success"><strong>Apellido:</strong> {store.user.last_name}</p>
-              <p className="text-success"><strong>Email:</strong> {store.user.email}</p>
-              <p className="text-success"><strong>Género:</strong> {store.user.gender}</p>
-              <p className="text-success"><strong>Peso:</strong> {store.user.weight} kg</p>
-              <p className="text-success"><strong>Altura:</strong> {store.user.height} cm</p>
-              <p className="text-success"><strong>Fecha de nacimiento:</strong> {formatDate(store.user.birth_date)}</p>
+              <img src={store.user.profile_picture} className="rounded mx-auto d-block h-25 w-25 mb-3" alt="Foto de perfil" />
+              <p><strong>Nombre:</strong> {store.user.first_name}</p>
+              <p><strong>Apellido:</strong> {store.user.last_name}</p>
+              <p><strong>Email:</strong> {store.user.email}</p>
+              <p><strong>Género:</strong> {store.user.gender}</p>
+              <p><strong>Peso:</strong> {store.user.weight} kg</p>
+              <p><strong>Altura:</strong> {store.user.height} cm</p>
+              <p><strong>Fecha de nacimiento:</strong> {formatDate(store.user.birth_date)}</p>
             </div>
           </div>
         </div>
       ) : (
-        <div className="text-center">
-          <div className="alert alert-danger" role="alert">
+        <div className="container text-center">
+          <div className="alert alert-secondary col-6 d-flex justify-content-center mx-auto" role="alert">
             La sesión ha expirado
           </div>
           <Link to="/login">
-            <button className="btn btn-success">Login</button>
+            <button className="btn btn-outline-light">Login</button>
           </Link>
         </div>
       )}
     </div>
   );
 };
+
+
