@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8e3464ef8c40
+Revision ID: ed0a08eaef5d
 Revises: 
-Create Date: 2024-06-17 10:44:00.247177
+Create Date: 2024-06-20 10:12:05.188568
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8e3464ef8c40'
+revision = 'ed0a08eaef5d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,16 +21,14 @@ def upgrade():
     op.create_table('exercises',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
-    sa.Column('description', sa.String(), nullable=False),
-    sa.Column('category', sa.String(), nullable=True),
-    sa.Column('group', sa.String(), nullable=False),
-    sa.Column('calories', sa.Integer(), nullable=False),
-    sa.Column('difficulty_level', sa.String(), nullable=False),
-    sa.Column('duration', sa.Integer(), nullable=True),
-    sa.Column('exercise_image_url', sa.String(), nullable=True),
+    sa.Column('target', sa.Enum('Abductors', 'Abs', 'Adductors', 'Biceps', 'Calves', 'Cardiovascular_system', 'Delts', 'Forearms', 'Glutes', 'Hamstrings', 'Lats', 'Levator_scapulae', 'Pectorals', 'Quads', 'Serratus_anterior', 'Spine', 'Traps', 'Triceps', 'Upper_back', name='target'), nullable=False),
+    sa.Column('body_part', sa.Enum('Back', 'Cardio', 'Chest', 'Lower_arms', 'Lower_legs', 'Neck', 'Shoulders', 'Upper_arms', 'Upper_legs', 'Waist', name='bodypart'), nullable=False),
+    sa.Column('equipment', sa.String(), nullable=False),
+    sa.Column('secondary_muscles', sa.String(), nullable=False),
+    sa.Column('instructions', sa.String(), nullable=False),
+    sa.Column('gif_url', sa.String(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('description'),
-    sa.UniqueConstraint('name')
+    sa.UniqueConstraint('gif_url')
     )
     op.create_table('users',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -61,7 +59,6 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(), nullable=False),
     sa.Column('is_active', sa.Boolean(), nullable=False),
-    sa.Column('difficulty_level', sa.String(), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=True),
     sa.Column('start_date', sa.Date(), nullable=True),
     sa.Column('ending_date', sa.Date(), nullable=True),

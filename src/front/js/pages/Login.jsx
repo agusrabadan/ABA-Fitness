@@ -8,6 +8,7 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState(""); // Para almacenar el mensaje de error
+  const [showPassword, setShowPassword] = useState(false); // Estado para controlar la visibilidad de la contraseña
   const navigate = useNavigate();
 
   const handleEmailChange = (event) => {
@@ -15,6 +16,9 @@ export const Login = () => {
   };
   const handlePasswordChange = (event) => {
     setPassword(event.target.value);
+  };
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   const handleSubmit = async (event) => {
@@ -56,14 +60,14 @@ export const Login = () => {
   return (
     <div className="container mt-5">
       <div className="row justify-content-center">
-        <div className="col-md-6">
-          <div className="card">
+        <div className="col-md-5">
+          <div className="card bg-dark text-white">
             <div className="card-body">
               <h2 className="card-title text-center mb-3 display-5">
                 Login
               </h2>
               {errorMessage && (
-                <div className="alert alert-danger text-center" role="alert">
+                <div className="alert alert-secondary text-center" role="alert">
                   {errorMessage}
                 </div>
               )}
@@ -81,25 +85,43 @@ export const Login = () => {
                     required
                   />
                 </div>
-                <div className="form-group mt-3 h6">
+                <div className="form-group mt-3 h6 position-relative">
                   <label htmlFor="password" className="mb-1">
                     Contraseña:
                   </label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"} // Cambiar tipo basado en showPassword
                     className="form-control"
                     id="password"
                     value={password}
                     onChange={handlePasswordChange}
                     required
                   />
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className="password-toggle-icon text-dark"
+                    style={{
+                      position: "absolute",
+                      right: "20px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      
+                    }}
+                  >
+                    {showPassword ? (
+                      <i className="fas fa-eye mt-4"></i>
+                    ) : (
+                      <i className="fas fa-eye-slash mt-4"></i>
+                    )}
+                  </span>
                 </div>
                 <div className="text-center">
-                  <button type="submit" className="btn btn-success mt-5">
+                  <button type="submit" className="btn btn-outline-light ms-2 mt-4">
                     Acceder
                   </button>
                   <Link to="/signup">
-                    <p className="text-center mt-2">Todavía no te has registrado? Hazlo aquí!</p>
+                    <p className="text-center mt-2">¿Todavía no te has registrado? ¡Hazlo aquí!</p>
                   </Link>
                 </div>
               </form>

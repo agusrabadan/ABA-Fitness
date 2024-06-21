@@ -1,19 +1,72 @@
 from flask_sqlalchemy import SQLAlchemy
 from enum import Enum
 
-class DifficultyLevel(Enum):
-    Fácil = "Fácil"
-    Intermedio = "Intermedio"
-    Avanzado = "Avanzado"
 
-class Group(Enum):
-    Pectorales = "Pectorales"
-    Espalda = "Espalda"
-    Bíceps = "Bíceps"
+class BodyPart(Enum):
+    Back = "Back"
+    Cardio = "Cardio"
+    Chest = "Chest"
+    Lower_arms = "Lower_arms"
+    Lower_legs = "Lower_legs"
+    Neck = "Neck"
+    Shoulders = "Shoulders" 
+    Upper_arms = "Upper_arms"
+    Upper_legs = "Upper_legs"
+    Waist = "Waist"
+
+
+class Target(Enum):
+    Abductors = "Abductors"
+    Abs = "Abs"
+    Adductors = "Adductors"
+    Biceps = "Biceps"
+    Calves = "Calves"
+    Cardiovascular_system = "Cardiovascular_system"
+    Delts = "Delts"
+    Forearms = "Forearms"
+    Glutes = "Glutes"
+    Hamstrings = "Hamstrings"
+    Lats = "Lats"
+    Levator_scapulae = "Levator_scapulae"
+    Pectorals = "Pectorals"
+    Quads = "Quads"
+    Serratus_anterior = "Serratus_anterior"
+    Spine = "Spine"
+    Traps = "Traps"
     Triceps = "Triceps"
-    Piernas = "Piernas"
-    Hombros = "Hombros"
-    Abdomen = "Abdomen" 
+    Upper_back = "Upper_back"
+
+
+class Equipment(Enum): 
+    Assisted = "Assisted"
+    Band = "Band"
+    Barbell = "Barbell"
+    BodyWeight = "Body Weight"
+    BosuBall = "Bosu Ball"
+    Cable = "Cable"
+    Dumbbell = "Dumbbell"
+    EllipticalMachine = "Elliptical Machine"
+    EzBarbell = "Ez Barbell"
+    Hammer = "Hammer"
+    Kettlebell = "Kettlebell"
+    LeverageMachine = "Leverage Machine"
+    MedicineBall = "Medicine Ball"
+    OlympicBarbell = "Olympic Barbell"
+    ResistanceBand = "Resistance Band"
+    Roller = "Roller"
+    Rope = "Rope"
+    SkiergMachine = "Skierg Machine"
+    SledMachine = "Sled Machine"
+    SmithMachine = "Smith Machine"
+    StabilityBall = "Stability Ball"
+    StationaryBike = "Stationary Bike"
+    StepmillMachine = "Stepmill Machine"
+    Tire = "Tire"
+    TrapBar = "Trap Bar"
+    UpperBodyErgometer = "Upper Body Ergometer"
+    Weighted = "Weighted"
+    WheelRoller = "Wheel Roller"
+
 
 db = SQLAlchemy()
 
@@ -37,49 +90,49 @@ class Users(db.Model):
 
     def serialize(self):
         return {
-                'id': self.id,
-                'email': self.email,
-                'is_active': self.is_active,
-                'first_name': self.first_name,
-                'last_name': self.last_name,
-                'weight': self.weight,
-                'height': self.height,
-                'gender': self.gender,
-                'birth_date': self.birth_date,
-                'profile_picture': self.profile_picture
-                }
+            'id': self.id,
+            'email': self.email,
+            'is_active': self.is_active,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'weight': self.weight,
+            'height': self.height,
+            'gender': self.gender,
+            'birth_date': self.birth_date,
+            'profile_picture': self.profile_picture
+        }
 
 
 class Exercises(db.Model):
-     id = db.Column(db.Integer, primary_key=True)
-     name = db.Column(db.String(), unique=True, nullable=False)
-     description = db.Column(db.String(), unique=True, nullable=False)
-     group = db.Column(db.Enum(Group), unique=False, nullable=True)
-     calories = db.Column(db.Integer(), unique=False, nullable=False)
-     difficulty_level = db.Column(db.Enum(DifficultyLevel), unique=False, nullable=False)
-     duration = db.Column(db.Integer(), unique=False, nullable=True)
-     exercise_image_url = db.Column(db.String(), unique=False, nullable=True)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(), unique=False, nullable=False)
+    target = db.Column(db.Enum(Target), unique=False, nullable=False)  
+    body_part = db.Column(db.Enum(BodyPart), unique=False, nullable=False)  
+    equipment = db.Column(db.Enum(Equipment), unique=False, nullable=False)
+    secondary_muscles = db.Column(db.String(), unique=False, nullable=False)
+    instructions = db.Column(db.String(), unique=False, nullable=False)
+    gif_url = db.Column(db.String(), unique=True, nullable=False)
 
-     def __repr__(self):
+    def __repr__(self):
         return f'<Exercise: {self.name}>'
 
-     def serialize(self):
+    def serialize(self):
         return {
-                'id': self.id,
-                'name': self.name,
-                'description': self.description,
-                'calories': self.calories,
-                'group': self.group,
-                'difficulty_level': self.difficulty_level,
-                'duration': self.duration,
-                "exercise_image_url": self.exercise_image_url
-                }
+            'id': self.id,
+            'name': self.name,
+            'target': self.target.value,  
+            'body_part': self.body_part.value,  
+            'equipment': self.equipment.value,
+            'secondary_muscles': self.secondary_muscles,
+            'instructions': self.instructions,
+            "gif_url": self.gif_url
+        }
+
 
 class Workouts(db.Model):
      id = db.Column(db.Integer, primary_key=True)
      name = db.Column(db.String(), unique=True, nullable=False)
      is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-     difficulty_level = db.Column(db.Enum(DifficultyLevel), unique=False, nullable=False)
      user_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
      user_to = db.relationship('Users', foreign_keys = [user_id])    
      start_date = db.Column(db.Date(), unique=False, nullable=True)
@@ -96,7 +149,6 @@ class Workouts(db.Model):
                 'description': self.description,
                 'calories': self.calories,
                 'group': self.group,
-                'difficulty_level': self.difficulty_level,
                 'duration': self.duration
                 }
 
@@ -160,6 +212,3 @@ class WorkoutDetails(db.Model):
                 'series_num' : self.series_num,
                 'rest_seconds' : self.rest_seconds
                 }
-
-
-

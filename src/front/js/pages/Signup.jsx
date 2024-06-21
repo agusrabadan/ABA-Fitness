@@ -6,6 +6,7 @@ export const Signup = () => {
     const { actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Estado para controlar la visibilidad de la contraseña
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [weight, setWeight] = useState("");
@@ -23,6 +24,9 @@ export const Signup = () => {
     const handleHeight = (event) => setHeight(event.target.value);
     const handleGender = (event) => setGender(event.target.value);
     const handleBirthDate = (event) => setBirthDate(event.target.value);
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+      };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -71,22 +75,48 @@ export const Signup = () => {
     return (
         <div className="container mt-5">
             <div className="row justify-content-center">
-                <div className="col-md-6">
-                    <div className="card">
+                <div className="col-md-5">
+                    <div className="card bg-dark text-white">
                         <div className="card-body">
                             <h2 className="card-title text-center mb-3 display-5">Crear cuenta</h2>
-                            {errorMessage && <div className="alert alert-danger" role="alert">{errorMessage}</div>}
+                            {errorMessage && <div className="alert alert-secondary" role="alert">{errorMessage}</div>}
                             <form onSubmit={handleSubmit}>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="email" className="mb-1">Email:</label>
                                     <input type="email" className="form-control" id="email"
                                         value={email} onChange={handleEmailChange} required />
                                 </div>
-                                <div className="form-group mt-3 h6">
-                                    <label htmlFor="password" className="mb-1">Contraseña:</label>
-                                    <input type="password" className="form-control" id="password"
-                                        value={password} onChange={handlePasswordChange} required />
-                                </div>
+                                <div className="form-group mt-3 h6 position-relative">
+                  <label htmlFor="password" className="mb-1">
+                    Contraseña:
+                  </label>
+                  <input
+                    type={showPassword ? "text" : "password"} // Cambiar tipo basado en showPassword
+                    className="form-control"
+                    id="password"
+                    value={password}
+                    onChange={handlePasswordChange}
+                    required
+                  />
+                  <span
+                    onClick={togglePasswordVisibility}
+                    className="password-toggle-icon text-dark"
+                    style={{
+                      position: "absolute",
+                      right: "20px",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      cursor: "pointer",
+                      
+                    }}
+                  >
+                    {showPassword ? (
+                      <i className="fas fa-eye mt-4"></i>
+                    ) : (
+                      <i className="fas fa-eye-slash mt-4"></i>
+                    )}
+                  </span>
+                </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="firstName" className="mb-1">Nombre:</label>
                                     <input type="text" className="form-control" id="firstName"
@@ -122,7 +152,7 @@ export const Signup = () => {
                                         value={birthDate} onChange={handleBirthDate} required />
                                 </div>
                                 <div className="text-center">
-                                    <button type="submit" className="btn btn-primary mt-5">Crear cuenta</button>
+                                    <button type="submit" className="btn btn-outline-light ms-2 mt-4">Crear cuenta</button>
                                 </div>
                             </form>
                         </div>
