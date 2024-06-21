@@ -13,6 +13,10 @@ import { Signup } from "./pages/Signup.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Single } from "./pages/Single.jsx";
+import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
+import { ConditionsTerms } from "./pages/ConditionsTerms.jsx";
+import Contact from "./pages/Contact.jsx";
+
 
 
 // Create your first component
@@ -32,6 +36,9 @@ const Layout = () => {
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
                         <Route element={<Profile />} path="/profile" />
+                        <Route element={<PrivacyPolicy />} path="/privacy-policy" />
+                        <Route element={<ConditionsTerms />} path="/conditions-terms" />
+                        <Route element={<Contact/>} path="/contact" />
                         <Route element={<Dashboard />} path="/dashboard" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
