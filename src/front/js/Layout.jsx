@@ -13,6 +13,7 @@ import { Signup } from "./pages/Signup.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { Workouts } from "./pages/Workouts.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
+import Exercises from './pages/Exercises.jsx';
 import { Favorites } from "./pages/Favorites.jsx";
 import { Single } from "./pages/Single.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
@@ -44,6 +45,7 @@ const Layout = () => {
                         <Route element={<ConditionsTerms />} path="/conditions-terms" />
                         <Route element={<Contact/>} path="/contact" />
                         <Route element={<Dashboard />} path="/dashboard" />
+                        <Route element={<Exercises />} path="/exercises" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
