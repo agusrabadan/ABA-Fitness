@@ -35,7 +35,7 @@
   backface-visibility: hidden;
 }
 
-.exercise-card .front,
+.exercise-card .front, 
 .exercise-card .back {
   width: 250%;
   height: 100%;

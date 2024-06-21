@@ -61,7 +61,7 @@ const Exercises = () => {
           type="text"
           placeholder="Search exercises..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          onChange={(e) => setSearchTerm(e.target.value)} 
         />
       </Form>
       {loading ? (
