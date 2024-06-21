@@ -37,6 +37,37 @@ class Target(Enum):
     Upper_back = "Upper_back"
 
 
+class Equipment(Enum): 
+    Assisted = "Assisted"
+    Band = "Band"
+    Barbell = "Barbell"
+    BodyWeight = "Body Weight"
+    BosuBall = "Bosu Ball"
+    Cable = "Cable"
+    Dumbbell = "Dumbbell"
+    EllipticalMachine = "Elliptical Machine"
+    EzBarbell = "Ez Barbell"
+    Hammer = "Hammer"
+    Kettlebell = "Kettlebell"
+    LeverageMachine = "Leverage Machine"
+    MedicineBall = "Medicine Ball"
+    OlympicBarbell = "Olympic Barbell"
+    ResistanceBand = "Resistance Band"
+    Roller = "Roller"
+    Rope = "Rope"
+    SkiergMachine = "Skierg Machine"
+    SledMachine = "Sled Machine"
+    SmithMachine = "Smith Machine"
+    StabilityBall = "Stability Ball"
+    StationaryBike = "Stationary Bike"
+    StepmillMachine = "Stepmill Machine"
+    Tire = "Tire"
+    TrapBar = "Trap Bar"
+    UpperBodyErgometer = "Upper Body Ergometer"
+    Weighted = "Weighted"
+    WheelRoller = "Wheel Roller"
+
+
 db = SQLAlchemy()
 
 
@@ -77,7 +108,7 @@ class Exercises(db.Model):
     name = db.Column(db.String(), unique=False, nullable=False)
     target = db.Column(db.Enum(Target), unique=False, nullable=False)  
     body_part = db.Column(db.Enum(BodyPart), unique=False, nullable=False)  
-    equipment = db.Column(db.String(), unique=False, nullable=False)
+    equipment = db.Column(db.Enum(Equipment), unique=False, nullable=False)
     secondary_muscles = db.Column(db.String(), unique=False, nullable=False)
     instructions = db.Column(db.String(), unique=False, nullable=False)
     gif_url = db.Column(db.String(), unique=True, nullable=False)
@@ -91,7 +122,7 @@ class Exercises(db.Model):
             'name': self.name,
             'target': self.target.value,  
             'body_part': self.body_part.value,  
-            'equipment': self.equipment,
+            'equipment': self.equipment.value,
             'secondary_muscles': self.secondary_muscles,
             'instructions': self.instructions,
             "gif_url": self.gif_url
