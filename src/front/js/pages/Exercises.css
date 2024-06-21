@@ -1,0 +1,77 @@
+.container-fluid {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+.row {
+  margin-right: -15px;
+  margin-left: -15px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.exercise-card {
+  perspective: 1000px;
+  width: calc(33.33% - 30px); /* Ajuste para mostrar tres tarjetas por fila con margen */
+  margin: 15px; /* Espacio entre tarjetas */
+  height: 500px; /* Altura fija para las tarjetas */
+  display: flex;
+  flex-direction: column;
+}
+
+.exercise-card .card {
+  width: 1000%; /* Aumento del ancho de la tarjeta */
+  height: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+.exercise-card .front,
+.exercise-card .back {
+  width: 250%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.exercise-card .front {
+  z-index: 2;
+  transform: rotateY(0deg);
+  overflow-y: auto;
+}
+
+.exercise-card .back {
+  z-index: 1;
+  transform: rotateY(180deg);
+  overflow-y: auto;
+}
+
+.exercise-card.flipped .front {
+  transform: rotateY(-180deg);
+}
+
+.exercise-card.flipped .back {
+  transform: rotateY(0deg);
+}
+
+@media (max-width: 992px) {
+  .exercise-card {
+    width: calc(50% - 30px); /* Ajuste para mostrar dos tarjetas por fila con margen en pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) {
+  .exercise-card {
+    width: calc(100% - 30px); /* Tarjeta ocupa todo el ancho con margen en pantallas pequeñas */
+  }
+}
