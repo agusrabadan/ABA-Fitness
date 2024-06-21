@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Context } from "../store/appContext.js";
 import { useNavigate } from "react-router-dom";
-
+import { Link } from "react-router-dom";
 
 export const Dashboard = () => {
     const { store } = useContext(Context)
@@ -18,32 +18,9 @@ export const Dashboard = () => {
     return (
         <div className="container">
             {store.isLogin ?
-                <div className="text-center">
-                    <h1 className="text-white">ESTAS LOGUEADO</h1>
-                    <div className="spinner-grow text-primary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-secondary" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-success" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-danger" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-warning" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-info" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-light" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
-                    <div className="spinner-grow text-dark" role="status">
-                        <span className="visually-hidden">Loading...</span>
-                    </div>
+                <div className="container">
+                    <h2 className="text-white text-start mt-5">Hola {store.user.first_name}!</h2>
+                    <Link to="/workouts"><button type="button" className="btn btn-secondary text-white btn-lg mt-3 rounded-pill border border-dark border-1">Crea tu rutina aquí</button></Link>
                 </div>
                 :
                 <div>

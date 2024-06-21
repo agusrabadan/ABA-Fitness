@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext.js";
 import "../../styles/navbar.css";
-import logo from "../../img/Logo1.webp"; 
+import logo from "../../img/Logo1.webp";
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -30,17 +30,17 @@ export const Navbar = () => {
                 <div className="collapse navbar-collapse" id="navbarNavDropdown">
                     {store.isLogin && (
                         <ul className="navbar-nav mx-auto d-flex justify-content-center align-items-center">
-                            <li className="nav-item mx-5">
-                                Comp1
+                            <li className="nav-item mx-3">
+                                Ejercicios
                             </li>
-                            <li className="nav-item mx-5">
-                                Comp2
+                            <li className="nav-item mx-3 text-white">
+                                <Link to="/workouts" className="text-white">Workouts</Link>
                             </li>
-                            <li className="nav-item mx-5">
-                                Comp3
+                            <li className="nav-item mx-3">
+                                <Link to="/favorites" className="text-white">Favorites</Link>
                             </li>
-                            <li className="nav-item mx-5">
-                                Comp4
+                            <li className="nav-item mx-3">
+                                Activity Log
                             </li>
                         </ul>
                     )}
