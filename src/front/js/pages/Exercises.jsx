@@ -14,7 +14,7 @@ export const Exercises = () => {
         const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0', {
           method: 'GET',
           headers: {
-            'x-rapidapi-key': '4153567bccmsh1a02517c622e4f0p15a422jsna4f43fd7b304',
+            'x-rapidapi-key': 'b81b9ed226mshd87412341f3634ap143e3bjsnad7f3f6ce509',
             'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
           }
         });

@@ -5,78 +5,78 @@ export const PrivacyPolicy = () => {
         <div className="container mt-5 text-white">
             <div className="row justify-content-center">
                 <div className="col-10">
-                    <h2 className="mb-4 text-center">Política de Privacidad</h2>
+                    <h2 className="mb-4 text-center">Privacy Policy</h2>
                     <p className="text-center">
-                        En <strong>[Nombre de la Empresa/Aplicación/Sitio Web]</strong> ("nosotros", "nuestro" o "nos"), valoramos tu privacidad y estamos comprometidos a proteger tus datos personales. Esta Política de Privacidad explica cómo recopilamos, usamos, divulgamos y protegemos tu información cuando visitas nuestro sitio web <a href="https://www.ABAFitness.com">www.ejemplo.com</a> y/o utilizas nuestros servicios.
+                        At <strong>[Company/Application/Website Name]</strong> ("we", "our", or "us"), we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and protect your information when you visit our website <a href="https://www.example.com">www.example.com</a> and/or use our services.
                     </p>
 
-                    <h3 className="mt-4">1. Información que Recopilamos</h3>
-                    <p>Recopilamos varios tipos de información en relación con la prestación de nuestros servicios, incluyendo:</p>
+                    <h3 className="mt-4">1. Information We Collect</h3>
+                    <p>We collect various types of information in connection with the provision of our services, including:</p>
 
-                    <h4 className="mt-3">1.1 Información que Nos Proporcionas Directamente</h4>
+                    <h4 className="mt-3">1.1 Information You Provide Directly</h4>
                     <ul>
-                        <li><strong>Datos de registro:</strong> Cuando te registras en nuestro sitio, recopilamos información personal como tu nombre, dirección de correo electrónico, dirección postal, número de teléfono y detalles de pago.</li>
-                        <li><strong>Datos de contacto:</strong> Cuando te comunicas con nosotros a través de formularios de contacto, correos electrónicos o teléfono, podemos guardar la información que proporcionas en estas comunicaciones.</li>
+                        <li><strong>Registration data:</strong> When you register on our site, we collect personal information such as your name, email address, postal address, phone number, and payment details.</li>
+                        <li><strong>Contact data:</strong> When you communicate with us through contact forms, emails, or phone calls, we may retain the information you provide in these communications.</li>
                     </ul>
 
-                    <h4 className="mt-3">1.2 Información que Recopilamos Automáticamente</h4>
+                    <h4 className="mt-3">1.2 Information We Collect Automatically</h4>
                     <ul>
-                        <li><strong>Datos de uso:</strong> Recopilamos información sobre cómo interactúas con nuestro sitio y servicios, como las páginas que visitas, el tiempo que pasas en el sitio, y las acciones que realizas.</li>
-                        <li><strong>Datos del dispositivo:</strong> Recopilamos información sobre los dispositivos que utilizas para acceder a nuestros servicios, incluidos el tipo de dispositivo, sistema operativo, configuración del dispositivo, identificadores únicos y datos de red.</li>
+                        <li><strong>Usage data:</strong> We collect information about how you interact with our site and services, such as pages visited, time spent on the site, and actions taken.</li>
+                        <li><strong>Device data:</strong> We collect information about the devices you use to access our services, including device type, operating system, device settings, unique device identifiers, and network data.</li>
                     </ul>
 
-                    <h4 className="mt-3">1.3 Información Recopilada de Terceros</h4>
+                    <h4 className="mt-3">1.3 Information Collected from Third Parties</h4>
                     <ul>
-                        <li><strong>Datos de socios:</strong> Podemos recibir información sobre ti de nuestros socios comerciales y de marketing.</li>
-                        <li><strong>Datos de redes sociales:</strong> Si accedes a nuestros servicios a través de una red social o vinculas tu cuenta con nosotros a una red social, podemos recibir información de tu perfil en esa red social.</li>
+                        <li><strong>Partner data:</strong> We may receive information about you from our business and marketing partners.</li>
+                        <li><strong>Social media data:</strong> If you access our services through a social network or link your account with us to a social network, we may receive information from your social network profile.</li>
                     </ul>
 
-                    <h3 className="mt-4">2. Cómo Usamos Tu Información</h3>
-                    <p>Utilizamos la información recopilada para los siguientes propósitos:</p>
+                    <h3 className="mt-4">2. How We Use Your Information</h3>
+                    <p>We use the collected information for the following purposes:</p>
                     <ul>
-                        <li><strong>Proporcionar y administrar nuestros servicios:</strong> Para gestionar tu cuenta, procesar tus transacciones y facilitar el uso de nuestros servicios.</li>
-                        <li><strong>Mejorar nuestros servicios:</strong> Para entender cómo usas nuestros servicios y mejorar la experiencia del usuario.</li>
-                        <li><strong>Comunicaciones:</strong> Para enviarte actualizaciones, responder a tus consultas y ofrecerte asistencia al cliente.</li>
-                        <li><strong>Marketing y publicidad:</strong> Para enviarte comunicaciones promocionales y mostrarte anuncios relevantes.</li>
-                        <li><strong>Cumplimiento legal:</strong> Para cumplir con nuestras obligaciones legales y proteger nuestros derechos y la seguridad de nuestros usuarios y servicios.</li>
+                        <li><strong>Providing and managing our services:</strong> To manage your account, process your transactions, and facilitate the use of our services.</li>
+                        <li><strong>Improving our services:</strong> To understand how you use our services and enhance user experience.</li>
+                        <li><strong>Communications:</strong> To send you updates, respond to your inquiries, and provide customer support.</li>
+                        <li><strong>Marketing and advertising:</strong> To send you promotional communications and display relevant advertisements.</li>
+                        <li><strong>Legal compliance:</strong> To comply with legal obligations and protect our rights and the safety of our users and services.</li>
                     </ul>
 
-                    <h3 className="mt-4">3. Cómo Compartimos Tu Información</h3>
-                    <p>No vendemos ni alquilamos tu información personal a terceros. Podemos compartir tu información con:</p>
+                    <h3 className="mt-4">3. How We Share Your Information</h3>
+                    <p>We do not sell or rent your personal information to third parties. We may share your information with:</p>
                     <ul>
-                        <li><strong>Proveedores de servicios:</strong> Terceros que realizan servicios en nuestro nombre, como procesamiento de pagos, análisis de datos y alojamiento de sitios web.</li>
-                        <li><strong>Socios comerciales:</strong> Terceros con quienes colaboramos para ofrecer servicios conjuntos o promociones.</li>
-                        <li><strong>Cumplimiento legal:</strong> Cuando sea necesario para cumplir con la ley, regulaciones o procesos legales, o para proteger los derechos y la seguridad de nosotros, nuestros usuarios y otros.</li>
+                        <li><strong>Service providers:</strong> Third parties who perform services on our behalf, such as payment processing, data analysis, and website hosting.</li>
+                        <li><strong>Business partners:</strong> Third parties with whom we collaborate to offer joint services or promotions.</li>
+                        <li><strong>Legal compliance:</strong> When necessary to comply with law, regulations, or legal processes, or to protect the rights and safety of us, our users, and others.</li>
                     </ul>
 
-                    <h3 className="mt-4">4. Seguridad de Tu Información</h3>
-                    <p>Implementamos medidas de seguridad adecuadas para proteger tus datos personales contra acceso no autorizado, pérdida, alteración y divulgación. Sin embargo, ningún sistema de transmisión o almacenamiento es completamente seguro, por lo que no podemos garantizar la seguridad absoluta de tu información.</p>
+                    <h3 className="mt-4">4. Security of Your Information</h3>
+                    <p>We implement appropriate security measures to protect your personal data against unauthorized access, loss, alteration, and disclosure. However, no transmission or storage system is completely secure, so we cannot guarantee the absolute security of your information.</p>
 
-                    <h3 className="mt-4">5. Retención de Datos</h3>
-                    <p>Retenemos tu información personal durante el tiempo que sea necesario para cumplir con los fines descritos en esta Política de Privacidad, a menos que la ley exija o permita un período de retención más prolongado.</p>
+                    <h3 className="mt-4">5. Data Retention</h3>
+                    <p>We retain your personal information for as long as necessary to fulfill the purposes described in this Privacy Policy, unless a longer retention period is required or permitted by law.</p>
 
-                    <h3 className="mt-4">6. Tus Derechos y Opciones</h3>
-                    <p>Tienes ciertos derechos en relación con tu información personal, incluyendo:</p>
+                    <h3 className="mt-4">6. Your Rights and Choices</h3>
+                    <p>You have certain rights regarding your personal information, including:</p>
                     <ul>
-                        <li><strong>Acceso y corrección:</strong> Puedes solicitar acceso a la información personal que tenemos sobre ti y corregir cualquier inexactitud.</li>
-                        <li><strong>Eliminación:</strong> Puedes solicitar que eliminemos tu información personal, sujeto a ciertas limitaciones.</li>
-                        <li><strong>Opt-out:</strong> Puedes optar por no recibir comunicaciones promocionales de nuestra parte.</li>
+                        <li><strong>Access and correction:</strong> You can request access to the personal information we hold about you and correct any inaccuracies.</li>
+                        <li><strong>Deletion:</strong> You can request that we delete your personal information, subject to certain limitations.</li>
+                        <li><strong>Opt-out:</strong> You can opt out of receiving promotional communications from us.</li>
                     </ul>
-                    <p>Para ejercer tus derechos, contáctanos en <a href="mailto:contacto@ejemplo.com">contacto@ejemplo.com</a>.</p>
+                    <p>To exercise your rights, please contact us at <a href="mailto:contact@example.com">contact@example.com</a>.</p>
 
-                    <h3 className="mt-4">7. Cookies y Tecnologías de Seguimiento</h3>
-                    <p>Utilizamos cookies y tecnologías similares para mejorar tu experiencia en nuestro sitio web, analizar el uso y ofrecerte anuncios personalizados. Puedes gestionar tus preferencias de cookies a través de la configuración de tu navegador.</p>
+                    <h3 className="mt-4">7. Cookies and Tracking Technologies</h3>
+                    <p>We use cookies and similar technologies to enhance your experience on our website, analyze usage, and deliver personalized advertisements. You can manage your cookie preferences through your browser settings.</p>
 
-                    <h3 className="mt-4">8. Cambios a Esta Política de Privacidad</h3>
-                    <p>Podemos actualizar esta Política de Privacidad ocasionalmente. Te notificaremos sobre cualquier cambio significativo publicando la nueva política en nuestro sitio y, cuando sea requerido por la ley, solicitaremos tu consentimiento.</p>
+                    <h3 className="mt-4">8. Changes to This Privacy Policy</h3>
+                    <p>We may update this Privacy Policy occasionally. We will notify you of any significant changes by posting the new policy on our site and, where required by law, obtaining your consent.</p>
 
-                    <h3 className="mt-4">9. Contacto</h3>
-                    <p>Si tienes preguntas o inquietudes sobre esta Política de Privacidad o nuestras prácticas de privacidad, contáctanos en:</p>
+                    <h3 className="mt-4">9. Contact Us</h3>
+                    <p>If you have questions or concerns about this Privacy Policy or our privacy practices, please contact us at:</p>
                     <p>
-                        <strong>[Nombre de la Empresa/Aplicación/Sitio Web]</strong><br />
-                        [Dirección]<br />
-                        <a href="mailto:contacto@ejemplo.com">contacto@ejemplo.com</a><br />
-                        [Teléfono]
+                        <strong>ABA Fitness</strong><br />
+                        <br />
+                        <a href="mailto:contact@example.com">contact@abafitness.com</a><br />
+                        +34 679 65 79 12
                     </p>
                 </div>
             </div>
