@@ -31,7 +31,7 @@ export const Navbar = () => {
                     {store.isLogin && (
                         <ul className="navbar-nav mx-auto d-flex justify-content-center align-items-center">
                             <li className="nav-item mx-3">
-                                Ejercicios
+                                <Link to="/exercises" className="text-white">Exercises</Link>
                             </li>
                             <li className="nav-item mx-3 text-white">
                                 <Link to="/workouts" className="text-white">Workouts</Link>

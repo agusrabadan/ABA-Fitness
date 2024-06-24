@@ -12,6 +12,7 @@ export const Workouts = () => {
     const [selectedSets, setSelectedSets] = useState(""); // Estado para el número de series
     const [exercises, setExercises] = useState([]); // Estado para almacenar la lista de ejercicios desde la API
     const [filteredExercises, setFilteredExercises] = useState([]); // Estado para los ejercicios filtrados
+    const [selectedExercise, setSelectedExercise] = useState(null); // Estado para el ejercicio seleccionado
 
     // URL de la API y opciones de cabecera
     const url = 'https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0';
@@ -50,10 +51,12 @@ export const Workouts = () => {
 
     const handleBodyPartChange = (event) => {
         setSelectedBodyPart(event.target.value);
+        setSelectedExercise(null); // Limpiar el ejercicio seleccionado al cambiar la parte del cuerpo
     };
 
     const handleEquipmentChange = (event) => {
         setSelectedEquipment(event.target.value);
+        setSelectedExercise(null); // Limpiar el ejercicio seleccionado al cambiar el equipo
     };
 
     const handleRepsChange = (event) => {
@@ -88,6 +91,15 @@ export const Workouts = () => {
             setFilteredExercises([]);
         }
     }, [selectedBodyPart, selectedEquipment, exercises]); // Dependencias actualizadas para incluir 'exercises'
+
+    // Obtener las opciones únicas de body part y equipment disponibles en los ejercicios
+    const bodyPartOptions = Array.from(new Set(exercises.map(exercise => exercise.bodyPart)));
+    const equipmentOptions = Array.from(new Set(exercises.map(exercise => exercise.equipment)));
+
+    // Función para seleccionar un ejercicio y mostrar su gif
+    const selectExercise = (exercise) => {
+        setSelectedExercise(exercise);
+    };
 
     return (
         <div className="container">
@@ -126,12 +138,9 @@ export const Workouts = () => {
                                                 onChange={handleBodyPartChange}
                                             >
                                                 <option value="">Select body part</option>
-                                                <option value="arms">Arms</option>
-                                                <option value="legs">Legs</option>
-                                                <option value="back">Back</option>
-                                                <option value="chest">Chest</option>
-                                                <option value="shoulders">Shoulders</option>
-                                                <option value="abs">Abs</option>
+                                                {bodyPartOptions.map((bodyPart, index) => (
+                                                    <option key={index} value={bodyPart}>{bodyPart}</option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="form-group mb-3">
@@ -143,12 +152,9 @@ export const Workouts = () => {
                                                 onChange={handleEquipmentChange}
                                             >
                                                 <option value="">Select equipment</option>
-                                                <option value="none">None</option>
-                                                <option value="dumbbell">Dumbbell</option>
-                                                <option value="barbell">Barbell</option>
-                                                <option value="machine">Machine</option>
-                                                <option value="bands">Bands</option>
-                                                <option value="kettlebell">Kettlebell</option>
+                                                {equipmentOptions.map((equipment, index) => (
+                                                    <option key={index} value={equipment}>{equipment}</option>
+                                                ))}
                                             </select>
                                         </div>
                                         <div className="form-group mb-3">
@@ -191,15 +197,25 @@ export const Workouts = () => {
                                         </button>
                                     </div>
                                     <div className="ml-4" style={{ width: '50%' }}>  {/* Ajustar el ancho de la lista de ejercicios */}
-                                        <h6 className="text-white">Ejercicios disponibles:</h6>
-                                        <ul className="list-group">
+                                        <h6 className="text-white mx-5">Ejercicios disponibles: presiona para ver la animación </h6>
+                                        <ul className="list-group mx-5">
                                             {filteredExercises.map((exercise, index) => (
-                                                <li key={index} className="list-group-item bg-dark text-white">
+                                                <li key={index} className="list-group-item bg-dark text-white cursor-pointer"
+                                                    onClick={() => selectExercise(exercise)}>
                                                     {exercise.name}
                                                 </li>
                                             ))}
                                         </ul>
                                     </div>
+                                    {selectedExercise && (
+                                        <div className="mx-5 d-flex align-items-center">
+                                            <img
+                                                src={selectedExercise.gifUrl}
+                                                alt={selectedExercise.name}
+                                                style={{ width: '300px', height: '300px', objectFit: 'cover' }}
+                                            />
+                                        </div>
+                                    )}
                                 </div>
                             )}
                         </div>
