@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react'; // Añadido useContext
+import { Container, Row, Col, Card, Button, Pagination, Spinner, Form } from 'react-bootstrap'; // Reemplazado el form por el de react-bootstrap
+import { Context } from "../store/appContext"; // Añadido Context
 import "../../styles/exercises.css";
 
 export const Exercises = () => {
+  const { store, actions } = useContext(Context); // Añadido para usar store y actions
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -14,7 +17,7 @@ export const Exercises = () => {
         const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0', {
           method: 'GET',
           headers: {
-            'x-rapidapi-key': '4153567bccmsh1a02517c622e4f0p15a422jsna4f43fd7b304',
+            'x-rapidapi-key': 'b81b9ed226mshd87412341f3634ap143e3bjsnad7f3f6ce509',
             'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
           }
         });
@@ -47,59 +50,83 @@ export const Exercises = () => {
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
   // Calcular el número total de páginas
-  const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredExercises.length / exercisesPerPage); i++) {
-    pageNumbers.push(i);
+  const totalPages = Math.ceil(filteredExercises.length / exercisesPerPage);
+
+  // Limitar el número de páginas mostradas en la paginación
+  const maxPageNumbersToShow = 20; // Cambiado límite para el número de páginas a mostrar a 20
+  const startPage = Math.max(1, Math.min(currentPage - Math.floor(maxPageNumbersToShow / 2), totalPages - maxPageNumbersToShow + 1));
+  const endPage = Math.min(totalPages, startPage + maxPageNumbersToShow - 1);
+  const displayedPageNumbers = [];
+  for (let i = startPage; i <= endPage; i++) {
+    displayedPageNumbers.push(i);
   }
 
   return (
-    <div className="container mt-4">
+    <Container className="mt-4">
       <h2>Exercises</h2>
-      <form className="mb-3">
-        <input
+      <Form className="mb-3">
+        <Form.Control
           type="text"
-          className="form-control"
           placeholder="Search exercises..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} 
         />
-      </form>
+      </Form>
       {loading ? (
         <div className="text-center">
-          <div className="spinner-border" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
         </div>
       ) : (
         <>
-          <div className="row">
+          <Row>
             {currentExercises.map((exercise) => (
-              <div key={exercise.id} className="col-12 col-md-6 col-lg-4 mb-4">
-                <ExerciseCard exercise={exercise} />
-              </div>
+              <Col key={exercise.id} xs={12} md={6} lg={4} className="mb-4">
+                <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} /> {/* Pasamos actions y isFavorite a ExerciseCard */}
+              </Col>
             ))}
-          </div>
-          <nav className="mt-4">
-            <ul className="pagination justify-content-center">
-              {pageNumbers.map((number) => (
-                <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
-                  <button
-                    className="page-link"
+          </Row>
+          <div className="d-flex justify-content-center mt-4">
+            <div style={{ overflowX: 'auto' }}> {/* Añadido contenedor con scroll horizontal */}
+              <Pagination>
+                {currentPage > 1 && (
+                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} /> // Botón para página anterior
+                )}
+                {startPage > 1 && (
+                  <>
+                    <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
+                    <Pagination.Ellipsis disabled /> {/* Ellipsis para indicar que hay más páginas */}
+                  </>
+                )}
+                {displayedPageNumbers.map(number => (
+                  <Pagination.Item
+                    key={number}
+                    active={number === currentPage}
                     onClick={() => handlePageChange(number)}
                   >
                     {number}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
+                  </Pagination.Item>
+                ))}
+                {endPage < totalPages && (
+                  <>
+                    <Pagination.Ellipsis disabled /> {/* Ellipsis para indicar que hay más páginas */}
+                    <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
+                  </>
+                )}
+                {currentPage < totalPages && (
+                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} /> // Botón para página siguiente
+                )}
+              </Pagination>
+            </div>
+          </div>
         </>
       )}
-    </div>
+    </Container>
   );
 };
 
-const ExerciseCard = ({ exercise }) => {
+const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFavorite y actions como props
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
@@ -108,30 +135,38 @@ const ExerciseCard = ({ exercise }) => {
 
   return (
     <div className={`exercise-card ${isFlipped ? 'flipped' : ''}`}>
-      <div className="card front">
-        <img className="card-img-top" src={exercise.gifUrl} alt={exercise.name} />
-        <div className="card-body">
-          <h5 className="card-title">{exercise.name}</h5>
-          <p className="card-text"><strong>Body Part:</strong> {exercise.bodyPart}</p>
-          <p className="card-text"><strong>Target:</strong> {exercise.target}</p>
-          <p className="card-text"><strong>Equipment:</strong> {exercise.equipment}</p>
-          <button className="btn btn-primary" onClick={handleFlip}>Details</button>
-        </div>
-      </div>
+      <Card className="front">
+      <Card.Title className="text-center mt-3 fw-bold">{exercise.name}</Card.Title>
+        <Card.Body>
+        <Card.Img variant="top" src={exercise.gifUrl} alt={exercise.name} />
+          <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
+          <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
+          <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
+          <Button variant="primary" onClick={handleFlip}>Details</Button>
+          {isFavorite ? (
+            <Button variant="danger" className="ml-2 float-end" onClick={() => actions.removeFavorite(exercise.id)}> {/* Botón para eliminar de favoritos */}
+              Delete
+            </Button>
+          ) : (
+            <Button variant="success" className="ml-2 float-end" onClick={() => actions.addFavorite(exercise)}> {/* Botón para añadir a favoritos */}
+              Add
+            </Button>
+          )}
+        </Card.Body>
+      </Card>
 
-      <div className="card back">
-        <div className="card-body">
-          <h5 className="card-title">Instructions</h5>
+      <Card className="back">
+        <Card.Body>
+          <Card.Title>Instructions</Card.Title>
           <ul>
             {exercise.instructions && exercise.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
             ))}
           </ul>
-          <button className="btn btn-secondary" onClick={handleFlip}>Back</button>
-        </div>
-      </div>
+          <Button variant="secondary" onClick={handleFlip}>Back</Button>
+        </Card.Body>
+      </Card>
     </div>
   );
 };
-
 
