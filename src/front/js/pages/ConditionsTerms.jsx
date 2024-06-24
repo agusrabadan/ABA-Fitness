@@ -5,76 +5,76 @@ export const ConditionsTerms = () => {
         <div className="container mt-5 text-white">
             <div className="row justify-content-center">
                 <div className="col-10">
-                    <h2 className="mb-4 text-center">Términos y Condiciones</h2>
+                    <h2 className="mb-4 text-center">Terms and Conditions</h2>
                     <p className="text-center">
-                        Bienvenido a <strong>ABA Fitness</strong> ("nosotros", "nuestro" o "nos"). Al acceder o usar nuestros servicios, aceptas cumplir y estar sujeto a los siguientes Términos y Condiciones. Por favor, léelos atentamente antes de utilizar nuestros servicios.
+                        Welcome to <strong>ABA Fitness</strong> ("we", "our", or "us"). By accessing or using our services, you agree to comply with and be bound by the following Terms and Conditions. Please read them carefully before using our services.
                     </p>
 
-                    <h3 className="mt-4">1. Aceptación de los Términos</h3>
+                    <h3 className="mt-4">1. Acceptance of Terms</h3>
                     <p>
-                        Al acceder o utilizar cualquier parte de nuestro sitio web o servicios, aceptas estar sujeto a estos Términos y Condiciones, incluyendo cualquier política adicional disponible en el sitio web. Si no estás de acuerdo con todos los términos y condiciones, no podrás acceder al sitio web ni utilizar los servicios.
+                        By accessing or using any part of our website or services, you agree to be bound by these Terms and Conditions, including any additional policies available on the website. If you do not agree to all the terms and conditions, you may not access the website or use the services.
                     </p>
 
-                    <h3 className="mt-4">2. Modificaciones a los Términos</h3>
+                    <h3 className="mt-4">2. Modifications to Terms</h3>
                     <p>
-                        Nos reservamos el derecho de modificar o actualizar estos Términos y Condiciones en cualquier momento. Las modificaciones serán efectivas una vez publicadas en esta página. Es tu responsabilidad revisar periódicamente los términos actualizados. El uso continuado de nuestros servicios después de cualquier cambio constituye tu aceptación de los nuevos términos.
+                        We reserve the right to modify or update these Terms and Conditions at any time. The modifications will be effective once published on this page. It is your responsibility to periodically review the updated terms. Your continued use of our services after any changes constitutes your acceptance of the new terms.
                     </p>
 
-                    <h3 className="mt-4">3. Uso de Nuestros Servicios</h3>
-                    <h4 className="mt-3">3.1 Requisitos de Edad</h4>
+                    <h3 className="mt-4">3. Use of Our Services</h3>
+                    <h4 className="mt-3">3.1 Age Requirements</h4>
                     <p>
-                        Debes tener al menos 18 años para usar nuestros servicios o tener el permiso de tus padres o tutores legales si eres menor de 18 años pero mayor de 13 años. Al usar nuestros servicios, garantizas que cumples con este requisito de edad.
+                        You must be at least 18 years old to use our services or have permission from your parents or legal guardians if you are under 18 but over 13 years old. By using our services, you warrant that you meet this age requirement.
                     </p>
 
-                    <h4 className="mt-3">3.2 Cuenta de Usuario</h4>
+                    <h4 className="mt-3">3.2 User Account</h4>
                     <p>
-                        Para acceder a ciertas funcionalidades de nuestros servicios, es posible que necesites crear una cuenta. Eres responsable de mantener la confidencialidad de tu cuenta y contraseña, y aceptas notificar de inmediato cualquier uso no autorizado de tu cuenta. Nos reservamos el derecho de suspender o cancelar tu cuenta en cualquier momento por cualquier razón.
+                        To access certain features of our services, you may need to create an account. You are responsible for maintaining the confidentiality of your account and password, and you agree to immediately notify us of any unauthorized use of your account. We reserve the right to suspend or terminate your account at any time for any reason.
                     </p>
 
-                    <h4 className="mt-3">3.3 Actividades Prohibidas</h4>
-                    <p>No debes:</p>
+                    <h4 className="mt-3">3.3 Prohibited Activities</h4>
+                    <p>You must not:</p>
                     <ul>
-                        <li>Usar nuestros servicios para cualquier propósito ilegal o no autorizado.</li>
-                        <li>Violar cualquier ley en tu jurisdicción (incluyendo pero no limitado a las leyes de derechos de autor).</li>
-                        <li>Subir o transmitir cualquier código malicioso, virus o cualquier tipo de software dañino.</li>
-                        <li>Intentar recopilar información personal de otros usuarios sin su consentimiento.</li>
-                        <li>Suplantar la identidad de cualquier persona o entidad.</li>
+                        <li>Use our services for any illegal or unauthorized purpose.</li>
+                        <li>Violate any law in your jurisdiction (including but not limited to copyright laws).</li>
+                        <li>Upload or transmit any malicious code, viruses, or any type of harmful software.</li>
+                        <li>Attempt to collect personal information from other users without their consent.</li>
+                        <li>Impersonate any person or entity.</li>
                     </ul>
 
-                    <h3 className="mt-4">4. Propiedad Intelectual</h3>
+                    <h3 className="mt-4">4. Intellectual Property</h3>
                     <p>
-                        Todo el contenido, incluyendo textos, gráficos, logotipos, imágenes y software, es propiedad de <strong>[Nombre de la Empresa/Aplicación/Sitio Web]</strong> o de sus proveedores de contenido y está protegido por leyes de derechos de autor. No puedes reproducir, distribuir, modificar o crear trabajos derivados de cualquier contenido sin nuestro permiso previo por escrito.
+                        All content, including text, graphics, logos, images, and software, is the property of <strong>[Company/Application/Website Name]</strong> or its content suppliers and is protected by copyright laws. You may not reproduce, distribute, modify, or create derivative works from any content without our prior written permission.
                     </p>
 
-                    <h3 className="mt-4">5. Limitación de Responsabilidad</h3>
+                    <h3 className="mt-4">5. Limitation of Liability</h3>
                     <p>
-                        En la medida máxima permitida por la ley aplicable, <strong>[Nombre de la Empresa/Aplicación/Sitio Web]</strong> no será responsable por ningún daño indirecto, incidental, especial, consecuente o punitivo, incluyendo pero no limitado a, pérdida de beneficios, datos, uso o cualquier otra pérdida intangible resultante de:
+                        To the maximum extent permitted by applicable law, <strong>[Company/Application/Website Name]</strong> shall not be liable for any indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, use, or any other intangible losses resulting from:
                     </p>
                     <ul>
-                        <li>Tu uso o incapacidad para usar nuestros servicios.</li>
-                        <li>Cualquier contenido obtenido de los servicios.</li>
-                        <li>Acceso no autorizado, uso o alteración de tus transmisiones o contenido.</li>
+                        <li>Your use or inability to use our services.</li>
+                        <li>Any content obtained from the services.</li>
+                        <li>Unauthorized access, use, or alteration of your transmissions or content.</li>
                     </ul>
 
-                    <h3 className="mt-4">6. Terminación</h3>
+                    <h3 className="mt-4">6. Termination</h3>
                     <p>
-                        Podemos suspender o terminar tu acceso a nuestros servicios en cualquier momento, sin previo aviso o responsabilidad, por cualquier motivo, incluyendo si violas estos Términos y Condiciones. Todas las disposiciones de estos términos que por su naturaleza deben sobrevivir a la terminación sobrevivirán, incluyendo, sin limitación, disposiciones de propiedad, renuncias de garantía y limitaciones de responsabilidad.
+                        We may suspend or terminate your access to our services at any time, without prior notice or liability, for any reason, including if you violate these Terms and Conditions. All provisions of these terms which by their nature should survive termination shall survive, including, without limitation, ownership provisions, warranty disclaimers, and limitations of liability.
                     </p>
 
-                    <h3 className="mt-4">7. Ley Aplicable</h3>
+                    <h3 className="mt-4">7. Applicable Law</h3>
                     <p>
-                        Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes de [País/Estado], sin tener en cuenta sus disposiciones sobre conflictos de leyes. Cualquier disputa derivada de o en conexión con estos términos será resuelta en los tribunales de [País/Estado].
+                        These Terms and Conditions shall be governed and construed in accordance with the laws of [Country/State], without regard to its conflict of law provisions. Any dispute arising out of or in connection with these terms shall be resolved in the courts of [Country/State].
                     </p>
 
-                    <h3 className="mt-4">8. Contacto</h3>
+                    <h3 className="mt-4">8. Contact</h3>
                     <p>
-                        Si tienes alguna pregunta o inquietud sobre estos Términos y Condiciones, contáctanos en:
+                        If you have any questions or concerns about these Terms and Conditions, please contact us at:
                     </p>
                     <p>
-                        <strong>ABA Fitness </strong><br />
-                        [Dirección]<br />
-                        <a href="mailto:contacto@ejemplo.com">contacto@abafitness.com</a><br />
-                        + 34 679 657 912
+                        <strong>ABA Fitness</strong><br />
+                        [Address]<br />
+                        <a href="mailto:contact@example.com">contact@abafitness.com</a><br />
+                        +34 679 657 912
                     </p>
                 </div>
             </div>
