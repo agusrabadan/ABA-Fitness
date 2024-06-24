@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Row, Col, Card, Button, Pagination, Spinner, Form } from 'react-bootstrap';
-import './Exercises.css';
+import "../../styles/exercises.css";
 
-const Exercises = () => {
+export const Exercises = () => {
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,45 +53,49 @@ const Exercises = () => {
   }
 
   return (
-    <Container className="mt-4">
+    <div className="container mt-4">
       <h2>Exercises</h2>
-      <Form className="mb-3">
-        <Form.Control
+      <form className="mb-3">
+        <input
           type="text"
+          className="form-control"
           placeholder="Search exercises..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)} 
         />
-      </Form>
+      </form>
       {loading ? (
         <div className="text-center">
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
         </div>
       ) : (
         <>
-          <Row>
+          <div className="row">
             {currentExercises.map((exercise) => (
-              <Col key={exercise.id} xs={12} md={6} lg={4} className="mb-4">
+              <div key={exercise.id} className="col-12 col-md-6 col-lg-4 mb-4">
                 <ExerciseCard exercise={exercise} />
-              </Col>
+              </div>
             ))}
-          </Row>
-          <Pagination className="justify-content-center mt-4">
-            {pageNumbers.map((number) => (
-              <Pagination.Item
-                key={number}
-                active={number === currentPage}
-                onClick={() => handlePageChange(number)}
-              >
-                {number}
-              </Pagination.Item>
-            ))}
-          </Pagination>
+          </div>
+          <nav className="mt-4">
+            <ul className="pagination justify-content-center">
+              {pageNumbers.map((number) => (
+                <li key={number} className={`page-item ${number === currentPage ? 'active' : ''}`}>
+                  <button
+                    className="page-link"
+                    onClick={() => handlePageChange(number)}
+                  >
+                    {number}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </>
       )}
-    </Container>
+    </div>
   );
 };
 
@@ -105,30 +108,30 @@ const ExerciseCard = ({ exercise }) => {
 
   return (
     <div className={`exercise-card ${isFlipped ? 'flipped' : ''}`}>
-      <Card className="front">
-        <Card.Img variant="top" src={exercise.gifUrl} alt={exercise.name} />
-        <Card.Body>
-          <Card.Title>{exercise.name}</Card.Title>
-          <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
-          <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
-          <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
-          <Button variant="primary" onClick={handleFlip}>Details</Button>
-        </Card.Body>
-      </Card>
+      <div className="card front">
+        <img className="card-img-top" src={exercise.gifUrl} alt={exercise.name} />
+        <div className="card-body">
+          <h5 className="card-title">{exercise.name}</h5>
+          <p className="card-text"><strong>Body Part:</strong> {exercise.bodyPart}</p>
+          <p className="card-text"><strong>Target:</strong> {exercise.target}</p>
+          <p className="card-text"><strong>Equipment:</strong> {exercise.equipment}</p>
+          <button className="btn btn-primary" onClick={handleFlip}>Details</button>
+        </div>
+      </div>
 
-      <Card className="back">
-        <Card.Body>
-          <Card.Title>Instrucciones</Card.Title>
+      <div className="card back">
+        <div className="card-body">
+          <h5 className="card-title">Instructions</h5>
           <ul>
             {exercise.instructions && exercise.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
             ))}
           </ul>
-          <Button variant="secondary" onClick={handleFlip}>Volver</Button>
-        </Card.Body>
-      </Card>
+          <button className="btn btn-secondary" onClick={handleFlip}>Back</button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Exercises;
+
