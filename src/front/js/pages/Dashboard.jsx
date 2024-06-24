@@ -9,7 +9,7 @@ export const Dashboard = () => {
 
     useEffect(() => {
         if (!store.isLogin) {
-            navigate('/home')
+            navigate('/')
         }
     }, [])
 
