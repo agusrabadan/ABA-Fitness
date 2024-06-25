@@ -1,8 +1,8 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { Context } from "../store/appContext.js";
-import "../../styles/navbar.css";
 import logo from "../../img/Logo1.webp";
+
 
 export const Navbar = () => {
     const { store, actions } = useContext(Context);
@@ -60,12 +60,16 @@ export const Navbar = () => {
                             <>
                                 <li className="nav-item">
                                     <Link to="/login" className="nav-link">
-                                        <button className="btn btn-outline-light ms-2">Login</button>
+                                        <button className="btn btn-lg ms-2 rounded-pill text-orange border-orange font-weight-bold">
+                                            Login
+                                        </button>
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/signup" className="nav-link">
-                                        <button className="btn btn-outline-light ms-2">Register</button>
+                                        <button className="btn btn-lg ms-2 rounded-pill text-orange border-orange font-weight-bold">
+                                            Register
+                                        </button>
                                     </Link>
                                 </li>
                             </>
