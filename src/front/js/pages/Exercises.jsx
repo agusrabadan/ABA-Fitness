@@ -36,9 +36,9 @@ export const Exercises = () => {
   // Filtrar ejercicios por término de búsqueda
   const filteredExercises = exercises.filter(exercise => {
     return exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           exercise.bodyPart.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           exercise.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           exercise.equipment.toLowerCase().includes(searchTerm.toLowerCase());
+      exercise.bodyPart.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exercise.target.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exercise.equipment.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
   // Obtener los ejercicios de la página actual
@@ -69,7 +69,7 @@ export const Exercises = () => {
           type="text"
           placeholder="Search exercises..."
           value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)} 
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
       </Form>
       {loading ? (
@@ -133,28 +133,30 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFav
     setIsFlipped(!isFlipped);
   };
 
+  // Función para capitalizar la primera letra del nombre del ejercicio
+  const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  };
+
   return (
     <div className={`exercise-card ${isFlipped ? 'flipped' : ''}`}>
       <Card className="front">
-      <Card.Title className="text-center mt-3 fw-bold">{exercise.name}</Card.Title>
-        <Card.Body>
-        <Card.Img variant="top" src={exercise.gifUrl} alt={exercise.name} />
-          <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
-          <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
-          <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
-          <Button variant="primary" onClick={handleFlip}>Details</Button>
-          {isFavorite ? (
-            <Button variant="danger" className="ml-2 float-end" onClick={() => actions.removeFavorite(exercise.id)}> {/* Botón para eliminar de favoritos */}
-              Delete
-            </Button>
-          ) : (
-            <Button variant="success" className="ml-2 float-end" onClick={() => actions.addFavorite(exercise)}> {/* Botón para añadir a favoritos */}
-              Add
-            </Button>
-          )}
+        <Card.Title className="text-center mx-3 mt-3 fw-bold">{capitalizeFirstLetter(exercise.name)}</Card.Title>
+        <Card.Body className="d-flex flex-column">
+          <Card.Img variant="top" src={exercise.gifUrl} alt={exercise.name} />
+          <div className="mt-auto mb-2">
+            <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
+            <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
+            <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
+            <Button variant="secondary" onClick={handleFlip}>Details</Button>
+            {isFavorite ? (
+              <i className="fa-solid fa-heart-circle-minus float-end fa-lg pt-3 text-danger" onClick={() => actions.removeFavorite(exercise.id)}></i> /* Icono para eliminar de favoritos */
+            ) : (
+              <i className="fa-solid fa-heart-circle-plus float-end fa-lg pt-3 text-success" onClick={() => actions.addFavorite(exercise)}></i> /* Icono para añadir a favoritos */
+            )}
+          </div>
         </Card.Body>
       </Card>
-
       <Card className="back">
         <Card.Body>
           <Card.Title>Instructions</Card.Title>
@@ -169,4 +171,3 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFav
     </div>
   );
 };
-

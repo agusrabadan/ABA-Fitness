@@ -16,9 +16,9 @@
 
 .exercise-card {
   perspective: 1000px;
-  width: calc(33.33% - 30px); /* Ajuste para mostrar tres tarjetas por fila con margen */
-  margin: 15px; /* Espacio entre tarjetas */
-  height: 500px; /* Altura fija para las tarjetas */
+  width: calc(33.33% - 40px); /* Ajuste para mostrar tres tarjetas por fila con margen */
+  margin: 7px; /* Espacio entre tarjetas */
+  height: 520px; /* Altura fija para las tarjetas */
   display: flex;
   flex-direction: column;
 }
@@ -47,7 +47,6 @@
 .exercise-card .front {
   z-index: 2;
   transform: rotateY(0deg);
-  overflow-y: auto;
 }
 
 .exercise-card .back {

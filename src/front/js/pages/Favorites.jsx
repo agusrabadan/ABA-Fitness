@@ -1,7 +1,8 @@
 import React, { useContext, useState } from "react";
 import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
-import { Pagination } from "react-bootstrap"; // Añadido para paginación
+import { Pagination, Card } from "react-bootstrap"; // Añadido para paginación
+import "../../styles/favorites.css"
 
 export const Favorites = () => {
     const { store, actions } = useContext(Context);
@@ -10,6 +11,11 @@ export const Favorites = () => {
 
     const handleRemoveFavorite = (id) => {
         actions.removeFavorite(id);
+    };
+
+    // Función para capitalizar la primera letra del nombre del favorito
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     };
 
     // Calcular los favoritos de la página actual
@@ -38,27 +44,25 @@ export const Favorites = () => {
     return (
         <>
             <div className="container mt-5">
-                <h2 className="text-white bg-dark text-center">Mis Favoritos</h2>
+                <h2 className="text-white bg-dark text-center">My Favorites</h2>
                 <div className="row">
                     {store.favorites.length === 0 ? (
-                        <p className="text-white bg-dark text-center">No hay favoritos seleccionados.</p>
+                        <p className="text-white bg-dark text-center">There are no favorites selected</p>
                     ) : (
                         currentFavorites.map((fav, index) => (
                             <div key={index} className="col-md-4">
-                                <div className="card mb-4">
-                                    <img src={fav.gifUrl} className="card-img-top" alt={fav.name} /> {/* Añadido el GIF en la parte superior */}
-                                    <div className="card-body">
-                                        <h5 className="card-title">{fav.name}</h5>
-                                        <p className="card-text">
-                                            {fav.body_part && `Body part: ${fav.body_part}`}<br />
-                                            {fav.target && `Objective: ${fav.target}`}<br />
-                                            {fav.equipment && `Equipment: ${fav.equipment}`}<br />
-                                        </p>
-                                        <button className="btn btn-danger" onClick={() => handleRemoveFavorite(fav.id)}>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
+                                <Card className="mb-4">
+                                    <Card.Title className="text-center mx-3 mt-3 fw-bold">{capitalizeFirstLetter(fav.name)}</Card.Title> {/* Modificado para capitalizar la primera letra */}
+                                    <Card.Body className="d-flex flex-column"> 
+                                        <Card.Img variant="top" src={fav.gifUrl} alt={fav.name} />
+                                        <div className="mt-auto mb-2"> 
+                                            <Card.Text><strong>Body part:</strong> {fav.bodyPart}</Card.Text>
+                                            <Card.Text><strong>Objective:</strong> {fav.target}</Card.Text>
+                                            <Card.Text><strong>Equipment:</strong> {fav.equipment}</Card.Text>
+                                            <i className="fa-solid fa-heart-circle-minus float-end fa-lg pt-3 text-danger" onClick={() => handleRemoveFavorite(fav.id)}></i> {/* Icono para eliminar de favoritos */}
+                                        </div>
+                                    </Card.Body>
+                                </Card>
                             </div>
                         ))
                     )}
