@@ -1,0 +1,42 @@
+.favorite-card {
+    perspective: 1000px;
+    width: calc(33.33% - 40px); /* Ajuste para mostrar tres tarjetas por fila con margen uniforme */
+    margin: 20px; /* Espacio entre tarjetas, arriba, abajo, izquierda y derecha */
+    height: 550px; /* Altura ajustada para permitir más espacio para el título */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .favorite-card .card {
+    width: 100%; /* Ancho de la tarjeta */
+    height: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+  }
+  
+  .card-title {
+    height: 3.5rem; /* Altura fija para el título, permitiendo hasta dos líneas */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0 15px; /* Margen para ajustar a los lados */
+  }
+  
+  @media (max-width: 992px) {
+    .favorite-card {
+      width: calc(50% - 40px); /* Ajuste para mostrar dos tarjetas por fila con margen uniforme en pantallas medianas */
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .favorite-card {
+      width: calc(100% - 40px); /* Tarjeta ocupa todo el ancho con margen uniforme en pantallas pequeñas */
+    }
+  }
+  
