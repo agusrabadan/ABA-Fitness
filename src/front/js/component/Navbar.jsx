@@ -60,7 +60,7 @@ export const Navbar = () => {
                             <>
                                 <li className="nav-item">
                                     <Link to="/login" className="nav-link">
-                                        <button className="btn btn-outline-secondary ms-2">Login</button>
+                                        <button className="btn btn-outline-light ms-2">Login</button>
                                     </Link>
                                 </li>
                                 <li className="nav-item">
