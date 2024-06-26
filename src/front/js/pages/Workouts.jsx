@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext.js";
 import { useNavigate } from "react-router-dom";
+import logo from "../../img/Logo1.webp";
 
 export const Workouts = () => {
     const { store } = useContext(Context);
@@ -15,7 +16,7 @@ export const Workouts = () => {
     const [exercises, setExercises] = useState([]);
     const [filteredExercises, setFilteredExercises] = useState([]);
     const [selectedExercise, setSelectedExercise] = useState(null);
-    const [routineName, setRoutineName] = useState("Rutina 1");
+    const [routineName, setRoutineName] = useState("Workout 1");
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
 
@@ -152,33 +153,23 @@ export const Workouts = () => {
         .filter(equipment => !unwantedEquipments.includes(equipment))
     )).map(equipment => equipment.charAt(0).toUpperCase() + equipment.slice(1));
 
-    const selectExercise = (exercise) => {
-        setSelectedExercise(exercise);
-    };
-
     const handleNameChange = (event) => {
         setRoutineName(event.target.value);
     };
-
     const toggleEditName = () => {
         setIsEditingName(!isEditingName);
     };
-
     const toggleShowExercises = () => {
         setShowExercises(!showExercises);
     };
-
     const toggleShowRoutineExercises = () => {
         setShowRoutineExercises(!showRoutineExercises);
     };
-
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
-
     function calculateTotalRoutineDuration() {
         let totalSeconds = 0;
-
         if (routineExercises.length > 0) {
             routineExercises.forEach(exercise => {
                 totalSeconds += calculateTotalDuration(exercise);
@@ -186,28 +177,23 @@ export const Workouts = () => {
             // Agregar el tiempo de descanso entre series
             totalSeconds += (routineExercises.length - 1) * 30;
         }
-
         return Math.max(totalSeconds, 0); // Asegurar que la duración no sea negativa
     }
-
     function calculateTotalDuration(exercise) {
         const totalSets = parseInt(exercise.sets, 10);
         const totalReps = parseInt(exercise.reps, 10);
         return totalSets * totalReps * 2; // Cada repetición dura 2 segundos
     }
-
     function formatDuration(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
         return `${minutes} min ${seconds} seg`;
     }
-
     function removeExerciseFromRoutine(index) {
         const updatedRoutineExercises = [...routineExercises];
         updatedRoutineExercises.splice(index, 1);
         setRoutineExercises(updatedRoutineExercises);
     }
-
     function paginationItems() {
         const pageNumbers = Math.ceil(filteredExercises.length / exercisesPerPage);
         const maxPageNumbers = 5; // Máximo de páginas visibles
@@ -217,7 +203,6 @@ export const Workouts = () => {
         const endPage = Math.min(startPage + maxPageNumbers - 1, pageNumbers);
 
         const items = [];
-
         // Mostrar flechas solo si hay más de 5 páginas
         if (pageNumbers > maxPageNumbers) {
             // Botón de retroceso
@@ -226,7 +211,6 @@ export const Workouts = () => {
                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>&laquo;</button>
                 </li>
             );
-
             // Páginas visibles
             for (let i = startPage; i <= endPage; i++) {
                 items.push(
@@ -237,7 +221,6 @@ export const Workouts = () => {
                     </li>
                 );
             }
-
             // Botón de avance
             items.push(
                 <li key="next" className={`page-item ${currentPage === pageNumbers ? 'disabled' : ''}`}>
@@ -245,10 +228,8 @@ export const Workouts = () => {
                 </li>
             );
         }
-
         return items;
     }
-
     // Paginación
     const indexOfLastExercise = currentPage * exercisesPerPage;
     const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
@@ -278,23 +259,23 @@ export const Workouts = () => {
                                         style={{ cursor: 'pointer' }}
                                     />
                                     <button className="btn btn-outline-light ml-3" onClick={toggleShowExercises}>
-                                        Buscar ejercicios
+                                        Search exercises
                                     </button>
                                     <button className="btn btn-outline-light ml-3" onClick={toggleShowRoutineExercises}>
-                                        Ver rutina ({routineExercises.length})
+                                        See workout ({routineExercises.length})
                                     </button>
                                 </>
                             )}
-                            <h6 className="mt-2">Total ejercicios: {routineExercises.length}</h6>
-                            <h6 className="mt-2">Duración total: {formatDuration(calculateTotalRoutineDuration())}</h6>
+                            <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
+                            <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
                             <button className="btn btn-success ml-3" onClick={saveRoutineToDatabase}>
-                                Guardar Rutina
+                                Add workout
                             </button>
                         </div>
                         <div className="card-body">
                             {showRoutineExercises && (
                                 <div className="mb-4">
-                                    <h4 className="text-white">Ejercicios en la rutina:</h4>
+                                    <h4 className="text-white">Workout exercises:</h4>
                                     <ul className="list-group">
                                         {routineExercises.map((exercise, index) => (
                                             <li key={index} className="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
@@ -380,7 +361,7 @@ export const Workouts = () => {
                                         </div>
                                     </div>
                                     <div className="ml-4" style={{ width: '50%' }}>
-                                        <h6 className="text-white mx-5">Ejercicios disponibles:</h6>
+                                        <h6 className="text-white mx-5">Available exercises:</h6>
                                         <ul className="list-group mx-5">
                                             {currentExercises.map((exercise, index) => (
                                                 <li key={index} className="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
@@ -407,41 +388,14 @@ export const Workouts = () => {
                                             </ul>
                                         </nav>
                                     </div>
-                                    {selectedExercise && (
-                                        <div className="mx-5 d-flex align-items-center">
-                                            <img
-                                                src={selectedExercise.gifUrl}
-                                                alt={selectedExercise.name}
-                                                style={{ width: '200px', height: '200px', objectFit: 'cover' }}
-                                            />
-                                        </div>
-                                    )}
                                 </div>
-                            )}
-                            {selectedExercise && (
-                                <div className="mt-4">
-                                    <h4 className="text-white">Ejercicio seleccionado:</h4>
-                                    <p className="text-white">{selectedExercise.name}</p>
-                                    <div>
-                                        <img
-                                            src={selectedExercise.gifUrl}
-                                            alt={selectedExercise.name}
-                                            style={{ width: '150px', height: '150px', objectFit: 'cover', marginRight: '10px' }}
-                                        />
-                                        <span className="text-white">Ver animación</span>
-                                    </div>
-                                </div>
-                            )}
+                            )}                          
                         </div>
                     </div>
                 </div>
             ) : (
-                <div>Debes iniciar sesión para ver esta página</div>
+                <div>Login required</div>
             )}
         </div>
     );
-
-
-
-
 };

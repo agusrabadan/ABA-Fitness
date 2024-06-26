@@ -62,15 +62,18 @@ export const Exercises = () => {
   }
 
   return (
-    <Container className="mt-4">
-      <h2>Exercises</h2>
-      <Form className="mb-3">
+    <Container className="mt-4 container">
+      <h1 className='text-white text-center'>Exercises</h1>
+      <Form className="mb-3 mt-3 col-4">
+        <div className='d-flex justify-content-between'>
+      <i className="fas fa-search text-white fs-3 mx-2 mt-1"></i>
         <Form.Control
           type="text"
           placeholder="Search exercises..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        </div>
       </Form>
       {loading ? (
         <div className="text-center">
@@ -141,23 +144,24 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFav
   return (
     <div className={`exercise-card ${isFlipped ? 'flipped' : ''}`}>
       <Card className="front">
-        <Card.Title className="text-center mx-3 mt-3 fw-bold">{capitalizeFirstLetter(exercise.name)}</Card.Title>
+        <Card.Title className="text-center mx-3 mt-2 fw-bold">{capitalizeFirstLetter(exercise.name)}</Card.Title>
+        
         <Card.Body className="d-flex flex-column">
-          <Card.Img variant="top" src={exercise.gifUrl} alt={exercise.name} />
-          <div className="mt-auto mb-2">
+          <Card.Img  src={exercise.gifUrl} alt={exercise.name} />
+          <div className="">
             <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
             <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
             <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
-            <Button variant="secondary" onClick={handleFlip}>Details</Button>
+            <i className="far fa-question-circle fs-2" onClick={handleFlip} type="button" title="+ Info" ></i>
             {isFavorite ? (
-              <i className="fa-solid fa-heart-circle-minus float-end fa-lg pt-3 text-danger" onClick={() => actions.removeFavorite(exercise.id)}></i> /* Icono para eliminar de favoritos */
+              <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} type="button" title="Add Favorite" ></i> /* Icono para eliminar de favoritos */
             ) : (
-              <i className="fa-solid fa-heart-circle-plus float-end fa-lg pt-3 text-success" onClick={() => actions.addFavorite(exercise)}></i> /* Icono para añadir a favoritos */
+              <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} type="button" title="Add Favorite"></i> /* Icono para añadir a favoritos */
             )}
           </div>
         </Card.Body>
       </Card>
-      <Card className="back">
+      <Card className="back" onClick={handleFlip} type="button">
         <Card.Body>
           <Card.Title>Instructions</Card.Title>
           <ul>
@@ -165,7 +169,6 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFav
               <li key={index}>{instruction}</li>
             ))}
           </ul>
-          <Button variant="secondary" onClick={handleFlip}>Back</Button>
         </Card.Body>
       </Card>
     </div>
