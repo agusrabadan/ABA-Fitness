@@ -1,7 +1,3 @@
-"""
-This module takes care of starting the API Server, Loading the DB and Adding the endpoints
-"""
-
 from flask import Flask, request, jsonify, url_for, Blueprint
 from api.utils import generate_sitemap, APIException
 from flask_cors import CORS
@@ -18,6 +14,7 @@ from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
 from datetime import datetime
+import requests
 
 api = Blueprint("api", __name__)
 CORS(api)  # Allow CORS requests to this API
@@ -148,33 +145,51 @@ def user(id):
         response_body["message"] = "Usuario no existe"
         response_body["results"] = {}
         return response_body, 404
+    
 
+RAPIDAPI_KEY = "b81b9ed226mshd87412341f3634ap143e3bjsnad7f3f6ce509"
+RAPIDAPI_HOST = "exercisedb.p.rapidapi.com"
 @api.route("/exercises", methods=["GET", "POST"])
 def exercises():
     response_body = {}
     if request.method == "GET":
-        exercises = db.session.execute(db.select(Exercises)).scalars()
-        results = [row.serialize() for row in exercises]
-        response_body["results"] = results
-        response_body["message"] = "Listado de ejercicios"
-        return response_body, 200
-    
+        try:
+            exercises = db.session.execute(db.select(Exercises)).scalars()
+            results = [row.serialize() for row in exercises]
+            response_body["results"] = results
+            response_body["message"] = "Listado de ejercicios"
+            return jsonify(response_body), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
     if request.method == "POST":
-        data = request.json
-        new_exercise = Exercises(
-            name=data.get("name"),
-            target=data.get("target"),  
-            body_part=data.get("body_part"),  
-            equipment=data.get("equipment"),
-            secondary_muscles=data.get("secondary_muscles"),
-            instructions=data.get("instructions"),
-            gif_url=data.get("gif_url"),
-        )
-        db.session.add(new_exercise)
-        db.session.commit()
-        response_body["message"] = "Ejercicio creado"
-        response_body["results"] = new_exercise.serialize()
-        return response_body, 201
+        try:
+            headers = {
+                "X-RapidAPI-Key": RAPIDAPI_KEY,
+                "X-RapidAPI-Host": RAPIDAPI_HOST
+            }
+            api_url = "https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0"
+            external_response = requests.get(api_url, headers=headers)
+            if external_response.status_code != 200:
+                return jsonify({"error": "Error al obtener datos de la API externa"}), 500
+            external_data = external_response.json()
+            for data in external_data:
+                new_exercise = Exercises(
+                    name=data.get("name"),
+                    target=data.get("target"),
+                    body_part=data.get("bodyPart"),
+                    equipment=data.get("equipment"),
+                    secondary_muscles=data.get("secondaryMuscles", ""),
+                    instructions=data.get("instructions", ""),
+                    gif_url=data.get("gifUrl"),
+                )
+                db.session.add(new_exercise)
+            db.session.commit()
+            response_body["message"] = "Ejercicios creados"
+            return jsonify(response_body), 201
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({"error": str(e)}), 400
+
 
 @api.route("/exercises/<int:id>", methods=["GET", "PUT", "DELETE"])
 def exercise(id):

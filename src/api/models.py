@@ -102,32 +102,28 @@ class Users(db.Model):
             'profile_picture': self.profile_picture
         }
 
-
 class Exercises(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(), unique=False, nullable=False)
-    target = db.Column(db.Enum(Target), unique=False, nullable=False)  
-    body_part = db.Column(db.Enum(BodyPart), unique=False, nullable=False)  
-    equipment = db.Column(db.Enum(Equipment), unique=False, nullable=False)
-    secondary_muscles = db.Column(db.String(), unique=False, nullable=False)
-    instructions = db.Column(db.String(), unique=False, nullable=False)
-    gif_url = db.Column(db.String(), unique=True, nullable=False)
-
-    def __repr__(self):
+    name = db.Column(db.String, nullable=False)
+    target = db.Column(db.String, nullable=False)
+    body_part = db.Column(db.String, nullable=False)
+    equipment = db.Column(db.String, nullable=False)
+    secondary_muscles = db.Column(db.String, nullable=True)
+    instructions = db.Column(db.String, nullable=True)
+    gif_url = db.Column(db.String, unique=True, nullable=False)
+    def _repr_(self):
         return f'<Exercise: {self.name}>'
-
     def serialize(self):
         return {
             'id': self.id,
             'name': self.name,
-            'target': self.target.value,  
-            'body_part': self.body_part.value,  
-            'equipment': self.equipment.value,
+            'target': self.target,
+            'body_part': self.body_part,
+            'equipment': self.equipment,
             'secondary_muscles': self.secondary_muscles,
             'instructions': self.instructions,
             "gif_url": self.gif_url
         }
-
 
 class Workouts(db.Model):
      id = db.Column(db.Integer, primary_key=True)
