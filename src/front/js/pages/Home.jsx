@@ -153,10 +153,7 @@ export const Home = () => {
 						</button>
 					</div>
 
-					<div className="d-flex justify-content-center">
-						<img src={logo} alt="Logo" width="200" height="200" className="d-inline-block align-text-top rounded-circle mx-2" />
-					</div>
-					<p className="text-white text-center mt-1 mb-5"> ABA Fitness Company</p>
+					
 
 				</div>
 			</div>
