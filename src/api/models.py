@@ -126,28 +126,24 @@ class Exercises(db.Model):
         }
 
 class Workouts(db.Model):
-     id = db.Column(db.Integer, primary_key=True)
-     name = db.Column(db.String(), unique=True, nullable=False)
-     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
-     user_id = db.Column(db.Integer, db.ForeignKey('users.id')) 
-     user_to = db.relationship('Users', foreign_keys = [user_id])    
-     start_date = db.Column(db.Date(), unique=False, nullable=True)
-     ending_date = db.Column(db.Date(), unique=False, nullable=True)
-     
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_to = db.relationship('Users')
+    name = db.Column(db.String(120), unique=False, nullable=False)
+    duration = db.Column(db.Integer(), unique=False, nullable=False)
 
-     def __repr__(self):
-        return f'<Workout: {self.name}>'
+    def __repr__(self):
+        return f'<Workouts: {self.id}>'
 
-     def serialize(self):
+    def serialize(self):
         return {
-                'id': self.id,
-                'name': self.name,
-                'description': self.description,
-                'calories': self.calories,
-                'group': self.group,
-                'duration': self.duration
-                }
-
+            'id': self.id,
+            'user_id': self.user_id,
+            'name': self.name,
+            'duration': self.duration,
+            'exercises': [detail.serialize() for detail in self.workout_details]
+        }
+    
 
 class Favorites(db.Model):
      id = db.Column(db.Integer, primary_key=True)
@@ -187,24 +183,24 @@ class ActivityLogs(db.Model):
         }
 
 class WorkoutDetails(db.Model):
-     id = db.Column(db.Integer, primary_key=True)
-     workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
-     workout_to = db.relationship('Workouts', foreign_keys = [workout_id])
-     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
-     exercise_to = db.relationship('Exercises', foreign_keys = [exercise_id])
-     reps_num = db.Column(db.Integer(), unique=False, nullable=False)
-     series_num = db.Column(db.Integer(), unique=False, nullable=False)
-     rest_seconds = db.Column(db.Integer(), unique=False, nullable=True)
-     
-     def __repr__(self):
+    id = db.Column(db.Integer, primary_key=True)
+    workout_id = db.Column(db.Integer, db.ForeignKey('workouts.id'))
+    workout_to = db.relationship('Workouts', backref=db.backref('workout_details', lazy=True))
+    exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+    exercise_to = db.relationship('Exercises', foreign_keys=[exercise_id])
+    reps_num = db.Column(db.Integer(), unique=False, nullable=False)
+    series_num = db.Column(db.Integer(), unique=False, nullable=False)
+    rest_seconds = db.Column(db.Integer(), unique=False, nullable=True)
+
+    def __repr__(self):
         return f'<Workout_Details: {self.id}>'
 
-     def serialize(self):
+    def serialize(self):
         return {
-                'id': self.id,
-                'workout_id': self.workout_id,
-                'exercise_id': self.exercise_id,
-                'reps_num' : self.reps_num,
-                'series_num' : self.series_num,
-                'rest_seconds' : self.rest_seconds
-                }
+            'id': self.id,
+            'workout_id': self.workout_id,
+            'exercise_id': self.exercise_id,
+            'reps_num': self.reps_num,
+            'series_num': self.series_num,
+            'rest_seconds': self.rest_seconds
+        }

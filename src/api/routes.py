@@ -241,7 +241,7 @@ def exercise(id):
         response_body["results"] = {}
         return response_body, 404
 
-@api.route("/workouts", methods=["GET", "POST"])
+@api.route("/workouts", methods=["GET"])
 def workouts():
     response_body = {}
     if request.method == "GET":
@@ -250,21 +250,37 @@ def workouts():
         response_body["results"] = results
         response_body["message"] = "Listado de rutinas"
         return response_body, 200
+
+
+@api.route('/workouts', methods=['POST'])
+def add_workout():
+    data = request.json
+    new_workout = Workouts(
+        user_id = data['userId'],
+        name = data['routineName'],
+        duration = data['totalDuration']
+    )
+    db.session.add(new_workout)
+    db.session.commit()
     
-    if request.method == "POST":
-        data = request.json
-        new_workout = Workouts(
-            name=data.get("name"),
-            is_active=data.get("is_active"),
-            user_id=data.get("user_id"),
-            start_date=data.get("start_date"),
-            ending_date=data.get("ending_date"),
+    # Añadir detalles del workout
+    exercises = data.get('exercises', [])
+    for exercise in exercises:
+        workout_detail = WorkoutDetails(
+            workout_id=new_workout.id,
+            exercise_id=exercise['exercise_id'],
+            reps_num=exercise['reps_num'],
+            series_num=exercise['series_num'],
+            rest_seconds=exercise.get('rest_seconds', 0)
         )
-        db.session.add(new_workout)
-        db.session.commit()
-        response_body["message"] = "Rutina creada"
-        response_body["results"] = new_workout.serialize()
-        return response_body, 201
+        db.session.add(workout_detail)
+    
+    db.session.commit()
+    response_body = {
+        "results": new_workout.serialize(),
+        "message": "Workout created successfully"
+    }
+    return response_body, 201
 
 @api.route("/workouts/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workout(id):
@@ -315,31 +331,42 @@ def workout(id):
         return response_body, 404
 
 
-@api.route("/workoutdetails", methods=["GET", "POST"])
-def workoutdetails():
-    response_body = {}
-    if request.method == "GET":
-        workoutdetails = db.session.execute(db.select(WorkoutDetails)).scalars()
-        results = [row.serialize() for row in workoutdetails]
-        response_body["results"] = results
-        response_body["message"] = "Listado de detalles de rutina"
-        return response_body, 200
-    
-    if request.method == "POST":
-        data = request.json
-        new_workoutdetail = WorkoutDetails(
-            workout_id=data.get("workout_id"),
-            exercise_id=data.get("exercise_id"),
-            repetitions=data.get("repetitions"),
-            series=data.get("series"),
-            duration=data.get("duration"),
-            status=data.get("status"),
+app = Flask(__name__)
+CORS(app)
+
+@app.route('/api/workouts', methods=['POST'])
+def add_workout():
+    data = request.json
+
+    # Crear el nuevo workout
+    new_workout = Workouts(
+        user_id=data['userId'],
+        name=data['routineName'],
+        duration=data['totalDuration']
+    )
+    db.session.add(new_workout)
+    db.session.commit()
+
+    # Obtener el ID del workout recién creado
+    workout_id = new_workout.id
+
+    # Agregar detalles de la rutina
+    workout_details = data['exercises']
+    for detail in workout_details:
+        new_detail = WorkoutDetails(
+            workout_id=workout_id,
+            exercise_id=detail['exercise_id'],
+            reps_num=detail['reps_num'],
+            series_num=detail['series_num'],
+            rest_seconds=detail['rest_seconds']
         )
-        db.session.add(new_workoutdetail)
-        db.session.commit()
-        response_body["message"] = "Detalle de rutina creado"
-        response_body["results"] = new_workoutdetail.serialize()
-        return response_body, 201
+        db.session.add(new_detail)
+    db.session.commit()
+
+    return jsonify({"message": "Workout and details added successfully", "id": workout_id}), 201
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @api.route("/workoutdetails/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workoutdetail(id):
