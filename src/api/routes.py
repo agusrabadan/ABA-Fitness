@@ -331,24 +331,42 @@ def workout(id):
         return response_body, 404
 
 
-@api.route("/workoutdetails", methods=["POST"])
-def add_workout_detail():
-    data = request.json
-    new_workout_detail = WorkoutDetails(
-        workout_id=data.get("workout_id"),
-        exercise_id=data.get("exercise_id"),
-        reps_num=data.get("reps_num"),
-        series_num=data.get("series_num"),
-        rest_seconds=data.get("rest_seconds")
-    )
-    db.session.add(new_workout_detail)
-    db.session.commit()
-    response_body = {
-        "message": "Workout detail created",
-        "results": new_workout_detail.serialize()
-    }
-    return response_body, 201
+app = Flask(__name__)
+CORS(app)
 
+@app.route('/api/workouts', methods=['POST'])
+def add_workout():
+    data = request.json
+
+    # Crear el nuevo workout
+    new_workout = Workouts(
+        user_id=data['userId'],
+        name=data['routineName'],
+        duration=data['totalDuration']
+    )
+    db.session.add(new_workout)
+    db.session.commit()
+
+    # Obtener el ID del workout recién creado
+    workout_id = new_workout.id
+
+    # Agregar detalles de la rutina
+    workout_details = data['exercises']
+    for detail in workout_details:
+        new_detail = WorkoutDetails(
+            workout_id=workout_id,
+            exercise_id=detail['exercise_id'],
+            reps_num=detail['reps_num'],
+            series_num=detail['series_num'],
+            rest_seconds=detail['rest_seconds']
+        )
+        db.session.add(new_detail)
+    db.session.commit()
+
+    return jsonify({"message": "Workout and details added successfully", "id": workout_id}), 201
+
+if __name__ == '__main__':
+    app.run(debug=True)
 
 @api.route("/workoutdetails/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workoutdetail(id):

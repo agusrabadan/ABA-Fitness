@@ -46,48 +46,30 @@ export const Workouts = () => {
 
     const saveRoutineToDatabase = async () => {
         try {
-            const workoutResponse = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workouts/', {
+            const response = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workouts', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // Agrega cualquier otro encabezado necesario, como tokens de autenticación
                 },
                 body: JSON.stringify({
                     routineName: routineName,
+                    exercises: routineExercises.map(exercise => ({
+                        exercise_id: exercise.id,
+                        reps_num: exercise.reps,
+                        series_num: exercise.sets,
+                        rest_seconds: exercise.rest || 0
+                    })),
                     totalDuration: calculateTotalRoutineDuration(),
-                    userId: store.user.id // Suponiendo que el user_id está en el store
+                    userId: store.user.id
                 }),
             });
 
-            if (!workoutResponse.ok) {
-                const errorData = await workoutResponse.json();
+            if (response.ok) {
+                alert('Rutina guardada exitosamente en la base de datos');
+            } else {
+                const errorData = await response.json();
                 throw new Error(`Error al guardar la rutina en la base de datos: ${errorData.message}`);
             }
-
-            const workoutData = await workoutResponse.json();
-            const workoutId = workoutData.id; // Suponiendo que la respuesta contiene el id del workout guardado
-
-            const detailsResponse = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workoutdetails/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(routineExercises.map(exercise => ({
-                    workout_id: workoutId,
-                    exercise_id: exercise.id,
-                    reps_num: exercise.reps,
-                    series_num: exercise.sets,
-                    rest_seconds: exercise.rest || 0
-                }))),
-            });
-
-            if (!detailsResponse.ok) {
-                const errorData = await detailsResponse.json();
-                throw new Error(`Error al guardar los detalles de la rutina en la base de datos: ${errorData.message}`);
-            }
-
-            alert('Rutina y detalles guardados exitosamente en la base de datos');
-            // Puedes también redirigir al usuario o realizar otras acciones después de guardar
         } catch (error) {
             console.error('Error al intentar guardar la rutina:', error);
             alert(`Error al guardar la rutina. Por favor, intenta de nuevo más tarde. Detalle del error: ${error.message}`);
