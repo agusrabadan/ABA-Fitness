@@ -23,9 +23,7 @@
     margin-left: 20px; /* Añade un margen a la izquierda para separar del texto */
 }
 
-.btn-blue {
-    background-color: lightblue !important; /* Fondo azul para el botón */
-  }
+
   
   .text-orange {
     color: darkorange !important; /* Color del texto naranja */
