@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext.js";
 import { useNavigate } from "react-router-dom";
-import logo from "../../img/Logo1.webp";
 
 export const Workouts = () => {
     const { store } = useContext(Context);
@@ -13,13 +12,12 @@ export const Workouts = () => {
     const [selectedEquipment, setSelectedEquipment] = useState("");
     const [selectedReps, setSelectedReps] = useState("");
     const [selectedSets, setSelectedSets] = useState("");
+    const [selectedRest, setSelectedRest] = useState("");
     const [exercises, setExercises] = useState([]);
     const [filteredExercises, setFilteredExercises] = useState([]);
-    const [selectedExercise, setSelectedExercise] = useState(null);
     const [routineName, setRoutineName] = useState("Workout 1");
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
-
     const [currentPage, setCurrentPage] = useState(1);
     const exercisesPerPage = 5;
 
@@ -48,10 +46,7 @@ export const Workouts = () => {
 
     const saveRoutineToDatabase = async () => {
         try {
-            // Aquí debes realizar la lógica para enviar la rutina a tu base de datos
-            // Puedes utilizar fetch u otra librería como Axios para hacer la petición POST
-
-            const response = await fetch('https://miniature-happiness-7vvqqw6ppxj6hwwpg-3001.app.github.dev/workouts/', {
+            const workoutResponse = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workouts/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -59,26 +54,45 @@ export const Workouts = () => {
                 },
                 body: JSON.stringify({
                     routineName: routineName,
-                    exercises: routineExercises,
-                    totalDuration: calculateTotalRoutineDuration(), // Asegúrate de enviar la duración total
-                    userId: user_id
-                    // Otros datos que necesites enviar a la base de datos
+                    totalDuration: calculateTotalRoutineDuration(),
+                    userId: store.user.id // Suponiendo que el user_id está en el store
                 }),
             });
 
-            if (response.ok) {
-                // Aquí puedes manejar la respuesta si es exitosa
-                alert('Rutina guardada exitosamente en la base de datos');
-                // Puedes también redirigir al usuario o realizar otras acciones después de guardar
-            } else {
-                throw new Error('Error al guardar la rutina en la base de datos');
+            if (!workoutResponse.ok) {
+                const errorData = await workoutResponse.json();
+                throw new Error(`Error al guardar la rutina en la base de datos: ${errorData.message}`);
             }
+
+            const workoutData = await workoutResponse.json();
+            const workoutId = workoutData.id; // Suponiendo que la respuesta contiene el id del workout guardado
+
+            const detailsResponse = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workoutdetails/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(routineExercises.map(exercise => ({
+                    workout_id: workoutId,
+                    exercise_id: exercise.id,
+                    reps_num: exercise.reps,
+                    series_num: exercise.sets,
+                    rest_seconds: exercise.rest || 0
+                }))),
+            });
+
+            if (!detailsResponse.ok) {
+                const errorData = await detailsResponse.json();
+                throw new Error(`Error al guardar los detalles de la rutina en la base de datos: ${errorData.message}`);
+            }
+
+            alert('Rutina y detalles guardados exitosamente en la base de datos');
+            // Puedes también redirigir al usuario o realizar otras acciones después de guardar
         } catch (error) {
             console.error('Error al intentar guardar la rutina:', error);
-            alert('Error al guardar la rutina. Por favor, intenta de nuevo más tarde.');
+            alert(`Error al guardar la rutina. Por favor, intenta de nuevo más tarde. Detalle del error: ${error.message}`);
         }
     };
-
 
     useEffect(() => {
         if (!store.isLogin) {
@@ -92,12 +106,10 @@ export const Workouts = () => {
 
     const handleBodyPartChange = (event) => {
         setSelectedBodyPart(event.target.value);
-        setSelectedExercise(null);
     };
 
     const handleEquipmentChange = (event) => {
         setSelectedEquipment(event.target.value);
-        setSelectedExercise(null);
     };
 
     const handleRepsChange = (event) => {
@@ -108,34 +120,35 @@ export const Workouts = () => {
         setSelectedSets(event.target.value);
     };
 
+    const handleRestChange = (event) => {
+        setSelectedRest(event.target.value);
+    };
+
     const handleAddToRoutine = (exercise) => {
         if (!selectedReps || !selectedSets) {
             alert("Especificar número de repeticiones y series.");
             return;
         }
 
-        setRoutineExercises([...routineExercises, { ...exercise, reps: selectedReps, sets: selectedSets }]);
+        setRoutineExercises([...routineExercises, { ...exercise, reps: selectedReps, sets: selectedSets, rest: selectedRest }]);
         setSelectedBodyPart("");
         setSelectedEquipment("");
         setSelectedReps("");
         setSelectedSets("");
+        setSelectedRest("");
     };
 
-    // Filtrar ejercicios según la parte del cuerpo y el equipo seleccionados
     useEffect(() => {
         if (selectedBodyPart && selectedEquipment) {
             const filtered = exercises.filter(exercise =>
                 exercise.bodyPart === selectedBodyPart.toLowerCase() && exercise.equipment === selectedEquipment.toLowerCase()
             );
             setFilteredExercises(filtered);
-            console.log("Ejercicios filtrados:", filtered); // Mensaje de depuración
         } else {
             setFilteredExercises([]);
-            console.log("Sin filtro aplicado, ejercicios filtrados:", []); // Mensaje de depuración
         }
     }, [selectedBodyPart, selectedEquipment, exercises]);
 
-    // Filtrar las opciones de body part y capitalizar la primera letra
     const bodyPartOptions = Array.from(new Set(exercises
         .map(exercise => exercise.bodyPart.toLowerCase())
         .filter(bodyPart =>
@@ -156,62 +169,67 @@ export const Workouts = () => {
     const handleNameChange = (event) => {
         setRoutineName(event.target.value);
     };
+
     const toggleEditName = () => {
         setIsEditingName(!isEditingName);
     };
+
     const toggleShowExercises = () => {
         setShowExercises(!showExercises);
     };
+
     const toggleShowRoutineExercises = () => {
         setShowRoutineExercises(!showRoutineExercises);
     };
+
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
     };
+
     function calculateTotalRoutineDuration() {
         let totalSeconds = 0;
         if (routineExercises.length > 0) {
             routineExercises.forEach(exercise => {
                 totalSeconds += calculateTotalDuration(exercise);
             });
-            // Agregar el tiempo de descanso entre series
             totalSeconds += (routineExercises.length - 1) * 30;
         }
-        return Math.max(totalSeconds, 0); // Asegurar que la duración no sea negativa
+        return Math.max(totalSeconds, 0);
     }
+
     function calculateTotalDuration(exercise) {
         const totalSets = parseInt(exercise.sets, 10);
         const totalReps = parseInt(exercise.reps, 10);
-        return totalSets * totalReps * 2; // Cada repetición dura 2 segundos
+        return totalSets * totalReps * 2;
     }
+
     function formatDuration(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
         return `${minutes} min ${seconds} seg`;
     }
+
     function removeExerciseFromRoutine(index) {
         const updatedRoutineExercises = [...routineExercises];
         updatedRoutineExercises.splice(index, 1);
         setRoutineExercises(updatedRoutineExercises);
     }
+
     function paginationItems() {
         const pageNumbers = Math.ceil(filteredExercises.length / exercisesPerPage);
-        const maxPageNumbers = 5; // Máximo de páginas visibles
-        const middlePage = Math.ceil(maxPageNumbers / 2); // Página central para centrar las páginas visibles
+        const maxPageNumbers = 5;
+        const middlePage = Math.ceil(maxPageNumbers / 2);
         let startPage = currentPage <= middlePage ? 1 : currentPage - middlePage + 1;
         startPage = Math.max(startPage, 1);
         const endPage = Math.min(startPage + maxPageNumbers - 1, pageNumbers);
 
         const items = [];
-        // Mostrar flechas solo si hay más de 5 páginas
         if (pageNumbers > maxPageNumbers) {
-            // Botón de retroceso
             items.push(
                 <li key="prev" className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={() => handlePageChange(currentPage - 1)}>&laquo;</button>
                 </li>
             );
-            // Páginas visibles
             for (let i = startPage; i <= endPage; i++) {
                 items.push(
                     <li key={i} className={`page-item ${i === currentPage ? 'active' : ''}`}>
@@ -221,7 +239,6 @@ export const Workouts = () => {
                     </li>
                 );
             }
-            // Botón de avance
             items.push(
                 <li key="next" className={`page-item ${currentPage === pageNumbers ? 'disabled' : ''}`}>
                     <button className="page-link" onClick={() => handlePageChange(currentPage + 1)}>&raquo;</button>
@@ -230,7 +247,7 @@ export const Workouts = () => {
         }
         return items;
     }
-    // Paginación
+
     const indexOfLastExercise = currentPage * exercisesPerPage;
     const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
     const currentExercises = filteredExercises.slice(indexOfFirstExercise, indexOfLastExercise);
@@ -279,13 +296,11 @@ export const Workouts = () => {
                                     <ul className="list-group">
                                         {routineExercises.map((exercise, index) => (
                                             <li key={index} className="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
-
                                                 <img
                                                     src={exercise.gifUrl}
                                                     alt={exercise.name}
                                                     style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
                                                 />{exercise.name.toUpperCase(0)} - {exercise.reps} reps, {exercise.sets} sets
-
                                                 <i
                                                     className="fas fa-trash-alt ml-auto"
                                                     onClick={() => removeExerciseFromRoutine(index)}
@@ -359,6 +374,16 @@ export const Workouts = () => {
                                                 <option value="5">5</option>
                                             </select>
                                         </div>
+                                        <div className="form-group mb-3">
+                                            <label htmlFor="rest" className="text-white">Rest seconds</label>
+                                            <input
+                                                type="number"
+                                                id="rest"
+                                                className="form-control"
+                                                value={selectedRest}
+                                                onChange={handleRestChange}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="ml-4" style={{ width: '50%' }}>
                                         <h6 className="text-white mx-5">Available exercises:</h6>
@@ -381,7 +406,6 @@ export const Workouts = () => {
                                                 </li>
                                             ))}
                                         </ul>
-                                        {/* Paginación */}
                                         <nav className="mt-3">
                                             <ul className="pagination justify-content-center">
                                                 {paginationItems()}
