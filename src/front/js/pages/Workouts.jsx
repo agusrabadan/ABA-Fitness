@@ -15,7 +15,7 @@ export const Workouts = () => {
     const [selectedRest, setSelectedRest] = useState("");
     const [exercises, setExercises] = useState([]);
     const [filteredExercises, setFilteredExercises] = useState([]);
-    const [routineName, setRoutineName] = useState("Workout 1");
+    const [routineName, setRoutineName] = useState("Workout Name");
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -46,7 +46,13 @@ export const Workouts = () => {
 
     const saveRoutineToDatabase = async () => {
         try {
-            const response = await fetch('https://legendary-system-66wv49r7gvghqgq-3001.app.github.dev/api/workouts', {
+            // Verificar si no hay ejercicios en la rutina
+            if (routineExercises.length === 0) {
+                alert('No se puede guardar la rutina porque no has añadido ningún ejercicio.');
+                return;
+            }
+
+            const response = await fetch(`${process.env.BACKEND_URL}/api/workouts`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -75,6 +81,7 @@ export const Workouts = () => {
             alert(`Error al guardar la rutina. Por favor, intenta de nuevo más tarde. Detalle del error: ${error.message}`);
         }
     };
+
 
     useEffect(() => {
         if (!store.isLogin) {
@@ -238,8 +245,8 @@ export const Workouts = () => {
         <div className="container">
             {store.isLogin ? (
                 <div className="container">
-                    <h3 className="text-white text-start mt-2">Mis workouts!</h3>
-                    <div className="card text-center bg-dark text-white">
+                    <h1 className="text-white text-start mt-2">My workouts!</h1>
+                    <div className="card text-center text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
                         <div className="card-header justify-content-around d-flex align-items-center">
                             {isEditingName ? (
                                 <input
@@ -247,11 +254,11 @@ export const Workouts = () => {
                                     value={routineName}
                                     onChange={handleNameChange}
                                     onBlur={toggleEditName}
-                                    className="form-control"
+                                    className="form-control "
                                 />
                             ) : (
                                 <>
-                                    <h2 className="d-inline">{routineName}</h2>
+                                    <h3 className="d-inline">{routineName}</h3>
                                     <i
                                         className="fas fa-pencil-alt"
                                         onClick={toggleEditName}
@@ -267,7 +274,7 @@ export const Workouts = () => {
                             )}
                             <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
                             <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
-                            <button className="btn btn-success ml-3" onClick={saveRoutineToDatabase}>
+                            <button className="btn btn-outline-success ml-3" onClick={saveRoutineToDatabase}>
                                 Add workout
                             </button>
                         </div>
@@ -277,7 +284,7 @@ export const Workouts = () => {
                                     <h4 className="text-white">Workout exercises:</h4>
                                     <ul className="list-group">
                                         {routineExercises.map((exercise, index) => (
-                                            <li key={index} className="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                                            <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
                                                 <img
                                                     src={exercise.gifUrl}
                                                     alt={exercise.name}
@@ -295,7 +302,7 @@ export const Workouts = () => {
                             )}
                             {showExercises && (
                                 <div className="d-flex mt-3">
-                                    <div className="d-flex flex-column p-4 bg-dark border border-secondary">
+                                    <div className="d-flex flex-column p-4 border" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
                                         <div className="form-group mb-3">
                                             <label htmlFor="bodyPart" className="text-white">Target Body Part</label>
                                             <select
@@ -356,22 +363,12 @@ export const Workouts = () => {
                                                 <option value="5">5</option>
                                             </select>
                                         </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="rest" className="text-white">Rest seconds</label>
-                                            <input
-                                                type="number"
-                                                id="rest"
-                                                className="form-control"
-                                                value={selectedRest}
-                                                onChange={handleRestChange}
-                                            />
-                                        </div>
                                     </div>
                                     <div className="ml-4" style={{ width: '50%' }}>
                                         <h6 className="text-white mx-5">Available exercises:</h6>
                                         <ul className="list-group mx-5">
                                             {currentExercises.map((exercise, index) => (
-                                                <li key={index} className="list-group-item bg-dark text-white d-flex justify-content-between align-items-center">
+                                                <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
                                                     <div>{exercise.name}</div>
                                                     <div className="d-flex align-items-center">
                                                         <img
@@ -383,6 +380,7 @@ export const Workouts = () => {
                                                             className="fas fa-plus mx-2 add-icon"
                                                             onClick={() => handleAddToRoutine(exercise)}
                                                             style={{ cursor: 'pointer' }}
+                                                            title="Add Exercise"
                                                         />
                                                     </div>
                                                 </li>
@@ -395,7 +393,7 @@ export const Workouts = () => {
                                         </nav>
                                     </div>
                                 </div>
-                            )}                          
+                            )}
                         </div>
                     </div>
                 </div>

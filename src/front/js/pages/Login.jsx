@@ -58,10 +58,10 @@ export const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="container">
       <div className="row justify-content-center">
         <div className="col-md-5">
-          <div className="card bg-dark text-white">
+          <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
             <div className="card-body">
               <h2 className="card-title text-center mb-3 display-5">
                 Login
@@ -87,7 +87,7 @@ export const Login = () => {
                 </div>
                 <div className="form-group mt-3 h6 position-relative">
                   <label htmlFor="password" className="mb-1">
-                    Contraseña:
+                    Password:
                   </label>
                   <input
                     type={showPassword ? "text" : "password"} // Cambiar tipo basado en showPassword
@@ -106,7 +106,7 @@ export const Login = () => {
                       top: "50%",
                       transform: "translateY(-50%)",
                       cursor: "pointer",
-                      
+
                     }}
                   >
                     {showPassword ? (
@@ -118,10 +118,10 @@ export const Login = () => {
                 </div>
                 <div className="text-center">
                   <button type="submit" className="btn btn-outline-light ms-2 mt-4">
-                    Acceder
+                    Sign in
                   </button>
                   <Link to="/signup">
-                    <p className="text-center mt-2">¿Todavía no te has registrado? ¡Hazlo aquí!</p>
+                    <p className="text-center mt-3">You don´t have an account? Create one!</p>
                   </Link>
                 </div>
               </form>

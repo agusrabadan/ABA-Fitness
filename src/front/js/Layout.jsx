@@ -15,6 +15,8 @@ import { Workouts } from "./pages/Workouts.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Exercises } from "./pages/Exercises.jsx";
 import { Favorites } from "./pages/Favorites.jsx";
+import { ActivityLog } from "./pages/ActivityLog.jsx";
+
 import { Single } from "./pages/Single.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 import { ConditionsTerms } from "./pages/ConditionsTerms.jsx";
@@ -30,7 +32,7 @@ const Layout = () => {
     if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
 
     return (
-        <div className="bg-dark">
+        <div className="">
             <BrowserRouter basename={basename}>
                 <ScrollToTop>
                     <Navbar />
@@ -42,6 +44,7 @@ const Layout = () => {
                         <Route element={<Exercises />} path="/exercises" />
                         <Route element={<Workouts />} path="/workouts" />
                         <Route element={<Favorites />} path="/favorites" />
+                        <Route element={<ActivityLog />} path="/activity-log" />
                         <Route element={<PrivacyPolicy />} path="/privacy-policy" />
                         <Route element={<ConditionsTerms />} path="/conditions-terms" />
                         <Route element={<Contact/>} path="/contact" />
