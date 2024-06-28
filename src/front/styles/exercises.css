@@ -18,7 +18,8 @@
   perspective: 1000px;
   width: calc(44% - 40px); /* Ajuste para mostrar tres tarjetas por fila con margen */
   margin: 7px; /* Espacio entre tarjetas */
-  height: 500px; /* Altura fija para las tarjetas */
+  height: 525px; /* Altura fija para las tarjetas */
+  max-height: 600px;
   display: flex;
   flex-direction: column;
   object-position: top; /* Recorta la parte superior de la imagen */

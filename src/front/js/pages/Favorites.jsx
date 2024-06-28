@@ -59,7 +59,7 @@ export const Favorites = () => {
                                             <Card.Text><strong>Body part:</strong> {fav.bodyPart}</Card.Text>
                                             <Card.Text><strong>Objective:</strong> {fav.target}</Card.Text>
                                             <Card.Text><strong>Equipment:</strong> {fav.equipment}</Card.Text>
-                                            <i className="fa-solid fa-heart-circle-minus float-end fa-lg pt-3 text-danger" onClick={() => handleRemoveFavorite(fav.id)}></i> {/* Icono para eliminar de favoritos */}
+                                            <i className="fa-solid fa-heart-circle-minus float-end fa-lg pt-3 text-danger fs-4" type="button" title="Remove Favorite" onClick={() => handleRemoveFavorite(fav.id)}></i> {/* Icono para eliminar de favoritos */}
                                         </div>
                                     </Card.Body>
                                 </Card>
@@ -105,10 +105,7 @@ export const Favorites = () => {
             </div>
             <div className="d-flex justify-content-around">
                 <Link to="/exercises">
-                    <button className="btn btn-outline-light rounded-pill text-orange border-orange">Add exercises</button>
-                </Link>
-                <Link to="/workouts">
-                    <button className="btn btn-outline-light rounded-pill text-orange border-orange">Add workouts</button>
+                    <button className="btn btn-outline-light rounded-pill text-white border-white">Add exercises</button>
                 </Link>
             </div>
         </>

@@ -16,8 +16,6 @@ import { Dashboard } from "./pages/Dashboard.jsx";
 import { Exercises } from "./pages/Exercises.jsx";
 import { Favorites } from "./pages/Favorites.jsx";
 import { ActivityLog } from "./pages/ActivityLog.jsx";
-
-import { Single } from "./pages/Single.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 import { ConditionsTerms } from "./pages/ConditionsTerms.jsx";
 import Contact from "./pages/Contact.jsx";
@@ -49,7 +47,6 @@ const Layout = () => {
                         <Route element={<ConditionsTerms />} path="/conditions-terms" />
                         <Route element={<Contact/>} path="/contact" />
                         <Route element={<Dashboard />} path="/dashboard" />
-                        <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
                     </Routes>
                     <Footer />

@@ -134,7 +134,7 @@ export const Profile = () => {
                     >
                       <option value="Hombre">Male</option>
                       <option value="Mujer">Female</option>
-                      <option value="Sin definir">Not defined</option>
+                      <option value="Sin definir">Others</option>
                     </select>
                   </div>
                   <div className="mb-3">

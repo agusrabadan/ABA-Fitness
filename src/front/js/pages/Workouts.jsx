@@ -398,7 +398,7 @@ export const Workouts = () => {
                     </div>
                 </div>
             ) : (
-                <div>Login required</div>
+                <div>You must login to view the exercises</div>
             )}
         </div>
     );

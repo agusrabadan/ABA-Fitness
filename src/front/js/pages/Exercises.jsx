@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Pagination, Spinner, Form } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Pagination, Spinner, Form, Alert } from 'react-bootstrap';
 import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
@@ -78,9 +78,9 @@ export const Exercises = () => {
         </div>
       ) : (
         <>
-          <Row>
+          <Row className="d-flex">
             {currentExercises.map((exercise) => (
-              <Col key={exercise.id} xs={8} md={6} lg={4} className="mb-4">
+              <Col key={exercise.id} xs={8} md={6} lg={4} className="mb-4 d-flex">
                 <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} />
               </Col>
             ))}
