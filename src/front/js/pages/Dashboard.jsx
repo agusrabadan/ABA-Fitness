@@ -24,14 +24,14 @@ export const Dashboard = () => {
           <h2 className="text-white text-start mt-5">Hi {store.user.first_name}!</h2>
           <Link to="/workouts">
             <button type="button" className="btn btn-outline-light mt-3 rounded-pill">
-            Create your routine
+              Create your routine
             </button>
           </Link>
 
-          <div className="mt-5 mb-5 orange-border">
-            <ImageCarousel /> 
-            <MotivationCarousel /> 
-          </div>
+          {/* <div className="mt-5 mb-5 orange-border">
+            <ImageCarousel />
+            <MotivationCarousel />
+          </div> */}
         </div>
       ) : (
         <div>

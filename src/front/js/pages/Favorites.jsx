@@ -44,10 +44,10 @@ export const Favorites = () => {
     return (
         <>
             <div className="container mt-5">
-                <h2 className="text-white bg-dark text-center">My Favorites</h2>
+                <h2 className="text-white text-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>My Favorites</h2>
                 <div className="row">
                     {store.favorites.length === 0 ? (
-                        <p className="text-white bg-dark text-center">There are no favorites selected</p>
+                        <p className="text-white text-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>There are no favorites selected</p>
                     ) : (
                         currentFavorites.map((fav, index) => (
                             <div key={index} className="col-md-4">
@@ -105,10 +105,10 @@ export const Favorites = () => {
             </div>
             <div className="d-flex justify-content-around">
                 <Link to="/exercises">
-                    <button className="btn btn-secondary mb-3">Add exercises</button>
+                    <button className="btn btn-outline-light rounded-pill text-orange border-orange">Add exercises</button>
                 </Link>
                 <Link to="/workouts">
-                    <button className="btn btn-secondary mb-3">Add workouts</button>
+                    <button className="btn btn-outline-light rounded-pill text-orange border-orange">Add workouts</button>
                 </Link>
             </div>
         </>

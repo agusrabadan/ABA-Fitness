@@ -126,6 +126,10 @@ def user(id):
             user.is_active = data["is_active"]
             user.first_name = data["first_name"]
             user.last_name = data["last_name"]
+            user.weight = data["weight"]
+            user.height = data["height"]
+            user.birth_date = data["birth_date"]
+            user.gender = data["gender"]
             db.session.commit()
             response_body["message"] = "Datos del usuario actualizados"
             response_body["results"] = user.serialize()

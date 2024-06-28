@@ -1,10 +1,10 @@
-import React, { useState, useEffect, useContext } from 'react'; // Añadido useContext
-import { Container, Row, Col, Card, Button, Pagination, Spinner, Form } from 'react-bootstrap'; // Reemplazado el form por el de react-bootstrap
-import { Context } from "../store/appContext"; // Añadido Context
+import React, { useState, useEffect, useContext } from 'react';
+import { Container, Row, Col, Card, Button, Pagination, Spinner, Form } from 'react-bootstrap';
+import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
 export const Exercises = () => {
-  const { store, actions } = useContext(Context); // Añadido para usar store y actions
+  const { store, actions } = useContext(Context);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +33,6 @@ export const Exercises = () => {
     fetchExercises();
   }, []);
 
-  // Filtrar ejercicios por término de búsqueda
   const filteredExercises = exercises.filter(exercise => {
     return exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       exercise.bodyPart.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -41,19 +40,15 @@ export const Exercises = () => {
       exercise.equipment.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  // Obtener los ejercicios de la página actual
   const indexOfLastExercise = currentPage * exercisesPerPage;
   const indexOfFirstExercise = indexOfLastExercise - exercisesPerPage;
   const currentExercises = filteredExercises.slice(indexOfFirstExercise, indexOfLastExercise);
 
-  // Cambiar la página
   const handlePageChange = (pageNumber) => setCurrentPage(pageNumber);
 
-  // Calcular el número total de páginas
   const totalPages = Math.ceil(filteredExercises.length / exercisesPerPage);
 
-  // Limitar el número de páginas mostradas en la paginación
-  const maxPageNumbersToShow = 20; // Cambiado límite para el número de páginas a mostrar a 20
+  const maxPageNumbersToShow = 20;
   const startPage = Math.max(1, Math.min(currentPage - Math.floor(maxPageNumbersToShow / 2), totalPages - maxPageNumbersToShow + 1));
   const endPage = Math.min(totalPages, startPage + maxPageNumbersToShow - 1);
   const displayedPageNumbers = [];
@@ -66,13 +61,13 @@ export const Exercises = () => {
       <h1 className='text-white text-center'>Exercises</h1>
       <Form className="mb-3 mt-3 col-4">
         <div className='d-flex justify-content-between'>
-      <i className="fas fa-search text-white fs-3 mx-2 mt-1"></i>
-        <Form.Control
-          type="text"
-          placeholder="Search exercises..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
+          <i className="fas fa-search text-white fs-3 mx-2 mt-1"></i>
+          <Form.Control
+            type="text"
+            placeholder="Search exercises..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </Form>
       {loading ? (
@@ -85,21 +80,21 @@ export const Exercises = () => {
         <>
           <Row>
             {currentExercises.map((exercise) => (
-              <Col key={exercise.id} xs={12} md={6} lg={4} className="mb-4">
-                <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} /> {/* Pasamos actions y isFavorite a ExerciseCard */}
+              <Col key={exercise.id} xs={8} md={6} lg={4} className="mb-4">
+                <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} />
               </Col>
             ))}
           </Row>
           <div className="d-flex justify-content-center mt-4">
-            <div style={{ overflowX: 'auto' }}> {/* Añadido contenedor con scroll horizontal */}
+            <div style={{ overflowX: 'auto' }}>
               <Pagination>
                 {currentPage > 1 && (
-                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} /> // Botón para página anterior
+                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
                 )}
                 {startPage > 1 && (
                   <>
                     <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
-                    <Pagination.Ellipsis disabled /> {/* Ellipsis para indicar que hay más páginas */}
+                    <Pagination.Ellipsis disabled />
                   </>
                 )}
                 {displayedPageNumbers.map(number => (
@@ -113,12 +108,12 @@ export const Exercises = () => {
                 ))}
                 {endPage < totalPages && (
                   <>
-                    <Pagination.Ellipsis disabled /> {/* Ellipsis para indicar que hay más páginas */}
+                    <Pagination.Ellipsis disabled />
                     <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
                   </>
                 )}
                 {currentPage < totalPages && (
-                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} /> // Botón para página siguiente
+                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
                 )}
               </Pagination>
             </div>
@@ -129,14 +124,13 @@ export const Exercises = () => {
   );
 };
 
-const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFavorite y actions como props
+const ExerciseCard = ({ exercise, isFavorite, actions }) => {
   const [isFlipped, setIsFlipped] = useState(false);
 
   const handleFlip = () => {
     setIsFlipped(!isFlipped);
   };
 
-  // Función para capitalizar la primera letra del nombre del ejercicio
   const capitalizeFirstLetter = (string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
   };
@@ -147,16 +141,18 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => { // Añadimos isFav
         <Card.Title className="text-center mx-3 mt-2 fw-bold">{capitalizeFirstLetter(exercise.name)}</Card.Title>
         
         <Card.Body className="d-flex flex-column">
-          <Card.Img  src={exercise.gifUrl} alt={exercise.name} />
-          <div className="">
+          <div className="exercise-img-container">
+            <Card.Img src={exercise.gifUrl} alt={exercise.name} className="exercise-img" />
+          </div>
+          <div className="exercise-info">
             <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
             <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
             <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
             <i className="far fa-question-circle fs-2" onClick={handleFlip} type="button" title="+ Info" ></i>
             {isFavorite ? (
-              <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} type="button" title="Add Favorite" ></i> /* Icono para eliminar de favoritos */
+              <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} type="button" title="Remove Favorite" ></i>
             ) : (
-              <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} type="button" title="Add Favorite"></i> /* Icono para añadir a favoritos */
+              <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} type="button" title="Add Favorite"></i>
             )}
           </div>
         </Card.Body>

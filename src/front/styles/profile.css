@@ -10,4 +10,16 @@
   .text-white {
     color: white;
   }
-  
+
+  .profile-pic{
+    width: 100px;
+    height: 100px;
+    border-radius:50%
+    
+  }
+
+  #edit{
+    color: rgb(215, 120, 11);
+  }
+
+  /* Estilos para las barras de colores del BMI */

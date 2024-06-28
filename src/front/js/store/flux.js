@@ -91,7 +91,14 @@ const getState = ({ getStore, getActions, setStore }) => {
 				const store = getStore();
 				const favorites = store.favorites.filter(fav => fav.id !== id);
 				setStore({ favorites }); // Añadido para eliminar favoritos
-			}
+			},
+
+			setUser: (userData) => {
+				setStore({ user: userData });
+				// Si es necesario, también puedes actualizar el estado de `isLogin` aquí
+				// Por ejemplo, si el usuario se considera "loggeado" después de actualizar sus datos
+				setStore({ isLogin: true }); // Esto es opcional y depende de tu lógica
+			  },
 		}
 	};
 };

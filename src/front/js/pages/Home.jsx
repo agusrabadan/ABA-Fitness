@@ -38,7 +38,7 @@ export const Home = () => {
 					<h2 className="mt-5 text-orange">Your transformation begins today.</h2>
 					<Link to="/login">
 						<button type="button" className="btn btn-blue btn-lg mt-3 rounded-pill text-orange border-orange text-bold">
-							Join now!
+							Join us now!
 						</button>
 					</Link>
 
@@ -89,7 +89,7 @@ export const Home = () => {
 								designing workout routines for each day of the week. Sign up for free now and enjoy all our services.</p>
 							<Link to="/signup" className="nav-link">
 								<button className="btn btn-blue btn-lg mt-4 ms-2 rounded-pill text-orange border-orange text-bold">
-									Sign up now!
+									Register now!
 								</button>
 
 

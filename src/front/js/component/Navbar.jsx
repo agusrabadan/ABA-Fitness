@@ -18,11 +18,11 @@ export const Navbar = () => {
     };
 
     return (
-        <nav className="navbar navbar-expand-lg text-white shadow-sm bg-dark">
+        <nav className="navbar navbar-expand-lg text-white shadow-sm border-bottom">
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand d-flex align-items-center">
-                    <img src={logo} alt="Logo" width="60" height="60" className="d-inline-block align-text-top rounded-circle mx-2" />
-                    <h2 className="ms-2 text-white ml-2">ABA Fitness</h2>
+                    <img src={logo} alt="Logo" width="80" height="80" className="d-inline-block align-text-top rounded-circle mx-2" />
+                    <h1 className="ms-2 text-info ml-2">ABA Fitness</h1>
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon"></span>
@@ -31,23 +31,23 @@ export const Navbar = () => {
                     {store.isLogin && (
                         <ul className="navbar-nav mx-auto d-flex justify-content-center align-items-center">
                             <li className="nav-item mx-3">
-                                <Link to="/exercises" className="text-white">Exercises</Link>
+                                <Link to="/exercises" className="btn btn-outline-light rounded-pill text-orange border-orange">Exercises</Link>
                             </li>
                             <li className="nav-item mx-3 text-white">
-                                <Link to="/workouts" className="text-white">Workouts</Link>
+                                <Link to="/workouts" className="btn btn-outline-light rounded-pill text-orange border-orange">Workouts</Link>
                             </li>
                             <li className="nav-item mx-3">
-                                <Link to="/favorites" className="text-white">Favorites</Link>
+                                <Link to="/favorites" className="btn btn-outline-light rounded-pill text-orange border-orange">Favorites</Link>
                             </li>
                             <li className="nav-item mx-3">
-                                Activity Log
+                                <Link to="/activity-log" className="btn btn-outline-light rounded-pill text-orange border-orange">Activity Log</Link>
                             </li>
                         </ul>
                     )}
                     <ul className="navbar-nav ms-auto d-flex align-items-center">
                         {store.isLogin ? (
                             <li className="nav-item">
-                                <button className="btn btn-outline-light dropdown-toggle" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button className="btn btn-outline-light rounded-pill text-info border-info font-weight-bold fs-5 dropdown-toggle mx-3" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                     Welcome, {store.user.first_name}
                                 </button>
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -60,14 +60,14 @@ export const Navbar = () => {
                             <>
                                 <li className="nav-item">
                                     <Link to="/login" className="nav-link">
-                                        <button className="btn btn-lg ms-2 rounded-pill text-orange border-orange font-weight-bold">
+                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold fs-5">
                                             Login
                                         </button>
                                     </Link>
                                 </li>
                                 <li className="nav-item">
                                     <Link to="/signup" className="nav-link">
-                                        <button className="btn btn-lg ms-2 rounded-pill text-orange border-orange font-weight-bold">
+                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold fs-5">
                                             Register
                                         </button>
                                     </Link>
