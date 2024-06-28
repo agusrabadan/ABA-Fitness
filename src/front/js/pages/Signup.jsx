@@ -152,7 +152,7 @@ export const Signup = () => {
                                         value={birthDate} onChange={handleBirthDate} required />
                                 </div>
                                 <div className="text-center">
-                                    <button type="submit" className="btn btn-outline-light ms-2 mt-4">Crete Account</button>
+                                    <button type="submit" className="btn btn-outline-light ms-2 mt-4">Create Account</button>
                                 </div>
                             </form>
                         </div>
