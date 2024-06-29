@@ -34,8 +34,22 @@ export const Workouts = () => {
         const fetchExercises = async () => {
             try {
                 const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
+                }
+
                 const data = await response.json();
-                setExercises(data);
+
+                // Filtrar ejercicios con id <= 1324 y que tienen las propiedades necesarias
+                const validExercises = data.filter(exercise =>
+                    exercise.id <= 1324 && // Filtro por ID
+                    exercise.name && 
+                    exercise.bodyPart && 
+                    exercise.equipment && 
+                    exercise.gifUrl
+                );
+
+                setExercises(validExercises);
             } catch (error) {
                 console.error("Error al obtener los ejercicios de la API:", error);
             }
@@ -141,7 +155,7 @@ export const Workouts = () => {
     const bodyPartOptions = Array.from(new Set(exercises
         .map(exercise => exercise.bodyPart.toLowerCase())
         .filter(bodyPart =>
-            ["back", "upper legs", "lower legs", "upper arms", "chest", "shoulders", "cardio"].includes(bodyPart)
+            ["back", "upper legs", "waist", "lower legs", "upper arms", "chest", "shoulders", "cardio"].includes(bodyPart)
         )
     )).map(bodyPart => bodyPart.charAt(0).toUpperCase() + bodyPart.slice(1));
 
@@ -243,7 +257,6 @@ export const Workouts = () => {
 
     return (
         <div className="container">
-            {store.isLogin ? (
                 <div className="container">
                     <h1 className="text-white text-start mt-2">My workouts!</h1>
                     <div className="card text-center text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
@@ -363,6 +376,16 @@ export const Workouts = () => {
                                                 <option value="5">5</option>
                                             </select>
                                         </div>
+                                        <div className="form-group mb-3">
+                                            <label htmlFor="rest" className="text-white">Rest seconds</label>
+                                            <input
+                                                type="number"
+                                                id="rest"
+                                                className="form-control"
+                                                value={selectedRest}
+                                                onChange={handleRestChange}
+                                            />
+                                        </div>
                                     </div>
                                     <div className="ml-4" style={{ width: '50%' }}>
                                         <h6 className="text-white mx-5">Available exercises:</h6>
@@ -397,9 +420,7 @@ export const Workouts = () => {
                         </div>
                     </div>
                 </div>
-            ) : (
-                <div>You must login to view the exercises</div>
-            )}
+            
         </div>
     );
 };

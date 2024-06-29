@@ -151,7 +151,7 @@ def user(id):
         return response_body, 404
     
 
-RAPIDAPI_KEY = "b81b9ed226mshd87412341f3634ap143e3bjsnad7f3f6ce509"
+RAPIDAPI_KEY = "f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5"
 RAPIDAPI_HOST = "exercisedb.p.rapidapi.com"
 @api.route("/exercises", methods=["GET", "POST"])
 def exercises():
@@ -338,21 +338,10 @@ def workout(id):
 app = Flask(__name__)
 CORS(app)
 
-@app.route('/api/workouts', methods=['POST'])
-def add_workout():
+@api.route("/workoutdetails", methods=["POST"])
+def add_workout_detail():
     data = request.json
-
-    # Crear el nuevo workout
-    new_workout = Workouts(
-        user_id=data['userId'],
-        name=data['routineName'],
-        duration=data['totalDuration']
-    )
-    db.session.add(new_workout)
-    db.session.commit()
-
-    # Obtener el ID del workout recién creado
-    workout_id = new_workout.id
+    
 
     # Agregar detalles de la rutina
     workout_details = data['exercises']

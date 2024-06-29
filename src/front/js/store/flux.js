@@ -12,10 +12,10 @@ const getState = ({ getStore, getActions, setStore }) => {
 				try {
 					setStore({ exercisesLoading: true });
 
-					const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0', {
+					const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0', {
 						method: 'GET',
 						headers: {
-							'x-rapidapi-key': '4153567bccmsh1a02517c622e4f0p15a422jsna4f43fd7b304',
+							'x-rapidapi-key': 'f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5',
 							'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
 						}
 					});
