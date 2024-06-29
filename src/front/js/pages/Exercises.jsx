@@ -17,12 +17,14 @@ export const Exercises = () => {
         const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0', {
           method: 'GET',
           headers: {
-            'x-rapidapi-key': 'b81b9ed226mshd87412341f3634ap143e3bjsnad7f3f6ce509',
+            'x-rapidapi-key': 'f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5',
             'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
           }
         });
         const data = await response.json();
-        setExercises(data);
+        const filteredExercises = data.filter(exercise => exercise.id <= 1324);
+
+        setExercises(filteredExercises);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching the exercises:', error);
