@@ -141,7 +141,7 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
     <div className={`exercise-card ${isFlipped ? 'flipped' : ''}`}>
       <Card className="front">
         <Card.Title className="text-center mx-3 mt-2 fw-bold">{capitalizeFirstLetter(exercise.name)}</Card.Title>
-        
+
         <Card.Body className="d-flex flex-column">
           <div className="exercise-img-container">
             <Card.Img src={exercise.gifUrl} alt={exercise.name} className="exercise-img" />
@@ -150,12 +150,14 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
             <Card.Text><strong>Body Part:</strong> {exercise.bodyPart}</Card.Text>
             <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
             <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
-            <i className="far fa-question-circle fs-2" onClick={handleFlip} type="button" title="+ Info" ></i>
-            {isFavorite ? (
-              <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} type="button" title="Remove Favorite" ></i>
-            ) : (
-              <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} type="button" title="Add Favorite"></i>
-            )}
+            <div className="justify-content-around d-flex fixed-bottom mb-3">
+              <i className="far fa-question-circle fs-2" onClick={handleFlip} title="+ Info"></i>
+              {isFavorite ? (
+                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} title="Remove Favorite"></i>
+              ) : (
+                <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} title="Add Favorite"></i>
+              )}
+            </div>
           </div>
         </Card.Body>
       </Card>
