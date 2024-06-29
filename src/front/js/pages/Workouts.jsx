@@ -19,6 +19,7 @@ export const Workouts = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
+    const [workouts, setWorkouts] = useState([]);
     const exercisesPerPage = 5;
 
     const url = 'https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0';
@@ -43,9 +44,9 @@ export const Workouts = () => {
                 // Filtrar ejercicios con id <= 1324 y que tienen las propiedades necesarias
                 const validExercises = data.filter(exercise =>
                     exercise.id <= 1324 && // Filtro por ID
-                    exercise.name && 
-                    exercise.bodyPart && 
-                    exercise.equipment && 
+                    exercise.name &&
+                    exercise.bodyPart &&
+                    exercise.equipment &&
                     exercise.gifUrl
                 );
 
@@ -56,7 +57,53 @@ export const Workouts = () => {
         };
 
         fetchExercises();
+
+        const getWorkouts = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Token not found in localStorage.');
+                }
+
+                const url = `${process.env.BACKEND_URL}/api/workouts`;
+                const options = {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                };
+
+                const response = await fetch(url, options);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                setWorkouts(data.results);
+                console.log('Workouts data:', data); // Loguea los datos después de asegurarte de que response.json() ha completado correctamente
+            } catch (error) {
+                console.error('Error fetching workouts:', error.message);
+            }
+        };
+
+        getWorkouts();
     }, []);
+
+
+    const resetForm = () => {
+        setSelectedBodyPart("");
+        setSelectedEquipment("");
+        setSelectedReps("");
+        setSelectedSets("");
+        setSelectedRest("");
+        setRoutineName("Workout Name");
+        setIsEditingName(false);
+        setRoutineExercises([]);
+        setCurrentPage(1);
+        setShowExercises(false);
+        setShowRoutineExercises(false);
+    };
 
     const saveRoutineToDatabase = async () => {
         try {
@@ -86,6 +133,9 @@ export const Workouts = () => {
 
             if (response.ok) {
                 alert('Rutina guardada exitosamente en la base de datos');
+                resetForm(); // Resetear todos los estados después de guardar la rutina
+                 
+                
             } else {
                 const errorData = await response.json();
                 throw new Error(`Error al guardar la rutina en la base de datos: ${errorData.message}`);
@@ -96,16 +146,11 @@ export const Workouts = () => {
         }
     };
 
-
     useEffect(() => {
         if (!store.isLogin) {
             navigate('/');
         }
     }, [store.isLogin, navigate]);
-
-    const handleAddExerciseClick = () => {
-        setShowDropdown(!showDropdown);
-    };
 
     const handleBodyPartChange = (event) => {
         setSelectedBodyPart(event.target.value);
@@ -175,6 +220,13 @@ export const Workouts = () => {
 
     const toggleEditName = () => {
         setIsEditingName(!isEditingName);
+    };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); // Evita que se envíe el formulario si está dentro de uno
+            toggleEditName(); // Finaliza la edición al presionar "Enter"
+        }
     };
 
     const toggleShowExercises = () => {
@@ -257,170 +309,192 @@ export const Workouts = () => {
 
     return (
         <div className="container">
-                <div className="container">
-                    <h1 className="text-white text-start mt-2">My workouts!</h1>
-                    <div className="card text-center text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                        <div className="card-header justify-content-around d-flex align-items-center">
-                            {isEditingName ? (
+            <div className="container">
+                <h1 className="text-white text-start mt-2">Add workout!</h1>
+                <div className="card text-center text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                    <div className="card-header justify-content-around d-flex align-items-center">
+                        {isEditingName ? (
+                            <div className="col-4">
                                 <input
                                     type="text"
                                     value={routineName}
                                     onChange={handleNameChange}
                                     onBlur={toggleEditName}
+                                    onKeyDown={handleKeyDown}
                                     className="form-control "
                                 />
-                            ) : (
-                                <>
-                                    <h3 className="d-inline">{routineName}</h3>
-                                    <i
-                                        className="fas fa-pencil-alt"
-                                        onClick={toggleEditName}
-                                        style={{ cursor: 'pointer' }}
-                                    />
-                                    <button className="btn btn-outline-light ml-3" onClick={toggleShowExercises}>
-                                        Search exercises
-                                    </button>
-                                    <button className="btn btn-outline-light ml-3" onClick={toggleShowRoutineExercises}>
-                                        See workout ({routineExercises.length})
-                                    </button>
-                                </>
-                            )}
-                            <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
-                            <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
-                            <button className="btn btn-outline-success ml-3" onClick={saveRoutineToDatabase}>
-                                Add workout
-                            </button>
-                        </div>
-                        <div className="card-body">
-                            {showRoutineExercises && (
-                                <div className="mb-4">
-                                    <h4 className="text-white">Workout exercises:</h4>
-                                    <ul className="list-group">
-                                        {routineExercises.map((exercise, index) => (
+                            </div>
+                        ) : (
+                            <>
+                                <h3 className="d-inline">{routineName}</h3>
+                                <i
+                                    className="fas fa-pencil-alt"
+                                    onClick={toggleEditName}
+                                    style={{ cursor: 'pointer' }}
+                                />
+                                <button className="btn btn-outline-light ml-3" onClick={toggleShowExercises}>
+                                    Search exercises
+                                </button>
+                                <button className="btn btn-outline-light ml-3" onClick={toggleShowRoutineExercises}>
+                                    See workout ({routineExercises.length})
+                                </button>
+                            </>
+                        )}
+                        <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
+                        <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
+                        <button className="btn btn-outline-success ml-3" onClick={saveRoutineToDatabase}>
+                            Add workout
+                        </button>
+                    </div>
+                    
+                    <div className="card-body">
+                        {showRoutineExercises && (
+                            <div className="mb-4">
+                                <h4 className="text-white">Workout exercises:</h4>
+                                <ul className="list-group">
+                                    {routineExercises.map((exercise, index) => (
+                                        <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                                            <img
+                                                src={exercise.gifUrl}
+                                                alt={exercise.name}
+                                                style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
+                                            />{exercise.name.toUpperCase(0)} - {exercise.reps} reps, {exercise.sets} sets
+                                            <i
+                                                className="fas fa-trash-alt ml-auto"
+                                                onClick={() => removeExerciseFromRoutine(index)}
+                                                style={{ cursor: 'pointer', fontSize: '1.2rem' }}
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        {showExercises && (
+                            <div className="d-flex mt-3">
+                                <div className="d-flex flex-column p-4 border" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="bodyPart" className="text-white">Target Body Part</label>
+                                        <select
+                                            id="bodyPart"
+                                            className="form-control"
+                                            value={selectedBodyPart}
+                                            onChange={handleBodyPartChange}
+                                        >
+                                            <option value="">Select body part</option>
+                                            {bodyPartOptions.map((bodyPart, index) => (
+                                                <option key={index} value={bodyPart}>{bodyPart}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="equipment" className="text-white">Equipment</label>
+                                        <select
+                                            id="equipment"
+                                            className="form-control"
+                                            value={selectedEquipment}
+                                            onChange={handleEquipmentChange}
+                                        >
+                                            <option value="">Select equipment</option>
+                                            {equipmentOptions.map((equipment, index) => (
+                                                <option key={index} value={equipment}>{equipment}</option>
+                                            ))}
+                                        </select>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="reps" className="text-white">Number of Reps</label>
+                                        <select
+                                            id="reps"
+                                            className="form-control"
+                                            value={selectedReps}
+                                            onChange={handleRepsChange}
+                                        >
+                                            <option value="">Select number of reps</option>
+                                            <option value="5">5</option>
+                                            <option value="10">10</option>
+                                            <option value="12">12</option>
+                                            <option value="15">15</option>
+                                            <option value="20">20</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="sets" className="text-white">Number of Sets</label>
+                                        <select
+                                            id="sets"
+                                            className="form-control"
+                                            value={selectedSets}
+                                            onChange={handleSetsChange}
+                                        >
+                                            <option value="">Select number of sets</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                    </div>
+                                    <div className="form-group mb-3">
+                                        <label htmlFor="rest" className="text-white">Rest seconds</label>
+                                        <input
+                                            type="number"
+                                            id="rest"
+                                            className="form-control"
+                                            value={selectedRest}
+                                            onChange={handleRestChange}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="ml-4" style={{ width: '50%' }}>
+                                    <h6 className="text-white mx-5">Available exercises:</h6>
+                                    <ul className="list-group mx-5">
+                                        {currentExercises.map((exercise, index) => (
                                             <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                                                <img
-                                                    src={exercise.gifUrl}
-                                                    alt={exercise.name}
-                                                    style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
-                                                />{exercise.name.toUpperCase(0)} - {exercise.reps} reps, {exercise.sets} sets
-                                                <i
-                                                    className="fas fa-trash-alt ml-auto"
-                                                    onClick={() => removeExerciseFromRoutine(index)}
-                                                    style={{ cursor: 'pointer', fontSize: '1.2rem' }}
-                                                />
+                                                <div>{exercise.name}</div>
+                                                <div className="d-flex align-items-center">
+                                                    <img
+                                                        src={exercise.gifUrl}
+                                                        alt={exercise.name}
+                                                        style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
+                                                    />
+                                                    <i
+                                                        className="fas fa-plus mx-2 add-icon"
+                                                        onClick={() => handleAddToRoutine(exercise)}
+                                                        style={{ cursor: 'pointer' }}
+                                                        title="Add Exercise"
+                                                    />
+                                                </div>
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
-                            )}
-                            {showExercises && (
-                                <div className="d-flex mt-3">
-                                    <div className="d-flex flex-column p-4 border" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="bodyPart" className="text-white">Target Body Part</label>
-                                            <select
-                                                id="bodyPart"
-                                                className="form-control"
-                                                value={selectedBodyPart}
-                                                onChange={handleBodyPartChange}
-                                            >
-                                                <option value="">Select body part</option>
-                                                {bodyPartOptions.map((bodyPart, index) => (
-                                                    <option key={index} value={bodyPart}>{bodyPart}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="equipment" className="text-white">Equipment</label>
-                                            <select
-                                                id="equipment"
-                                                className="form-control"
-                                                value={selectedEquipment}
-                                                onChange={handleEquipmentChange}
-                                            >
-                                                <option value="">Select equipment</option>
-                                                {equipmentOptions.map((equipment, index) => (
-                                                    <option key={index} value={equipment}>{equipment}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="reps" className="text-white">Number of Reps</label>
-                                            <select
-                                                id="reps"
-                                                className="form-control"
-                                                value={selectedReps}
-                                                onChange={handleRepsChange}
-                                            >
-                                                <option value="">Select number of reps</option>
-                                                <option value="5">5</option>
-                                                <option value="10">10</option>
-                                                <option value="12">12</option>
-                                                <option value="15">15</option>
-                                                <option value="20">20</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="sets" className="text-white">Number of Sets</label>
-                                            <select
-                                                id="sets"
-                                                className="form-control"
-                                                value={selectedSets}
-                                                onChange={handleSetsChange}
-                                            >
-                                                <option value="">Select number of sets</option>
-                                                <option value="1">1</option>
-                                                <option value="2">2</option>
-                                                <option value="3">3</option>
-                                                <option value="4">4</option>
-                                                <option value="5">5</option>
-                                            </select>
-                                        </div>
-                                        <div className="form-group mb-3">
-                                            <label htmlFor="rest" className="text-white">Rest seconds</label>
-                                            <input
-                                                type="number"
-                                                id="rest"
-                                                className="form-control"
-                                                value={selectedRest}
-                                                onChange={handleRestChange}
-                                            />
-                                        </div>
-                                    </div>
-                                    <div className="ml-4" style={{ width: '50%' }}>
-                                        <h6 className="text-white mx-5">Available exercises:</h6>
-                                        <ul className="list-group mx-5">
-                                            {currentExercises.map((exercise, index) => (
-                                                <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                                                    <div>{exercise.name}</div>
-                                                    <div className="d-flex align-items-center">
-                                                        <img
-                                                            src={exercise.gifUrl}
-                                                            alt={exercise.name}
-                                                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
-                                                        />
-                                                        <i
-                                                            className="fas fa-plus mx-2 add-icon"
-                                                            onClick={() => handleAddToRoutine(exercise)}
-                                                            style={{ cursor: 'pointer' }}
-                                                            title="Add Exercise"
-                                                        />
-                                                    </div>
-                                                </li>
-                                            ))}
+                                    <nav className="mt-3">
+                                        <ul className="pagination justify-content-center">
+                                            {paginationItems()}
                                         </ul>
-                                        <nav className="mt-3">
-                                            <ul className="pagination justify-content-center">
-                                                {paginationItems()}
-                                            </ul>
-                                        </nav>
-                                    </div>
+                                    </nav>
                                 </div>
-                            )}
-                        </div>
+                            </div>
+                        )}
+                    </div>
+                    <div>
+                        <h2 className="mt-4">My Workouts</h2>
+                        {workouts.map(workout => (
+    <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
+        <div className="card-body">
+            <h5 className="card-title">{workout.name}</h5>
+            <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
+            <button className="btn btn-outline-light ml-3">Button Text</button>
+            {workout.exercises.map(exercise => (
+                <div key={exercise.id}>
+                    <p>Exercise ID: {exercise.name}</p>
+                    {/* Aquí puedes mostrar más detalles del ejercicio si es necesario */}
+                </div>
+            ))}
+        </div>
+    </div>
+))}
                     </div>
                 </div>
-            
+            </div>
+
         </div>
     );
 };
