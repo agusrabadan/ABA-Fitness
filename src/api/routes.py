@@ -361,6 +361,16 @@ def add_workout_detail():
 if __name__ == '__main__':
     app.run(debug=True)
 
+@api.route("/workoutdetails", methods=["GET"])
+def workoutdetails():
+    response_body = {}
+    if request.method == "GET":
+        workout_details = db.session.execute(db.select(WorkoutDetails)).scalars()
+        results = [row.serialize() for row in workout_details]
+        response_body["results"] = results
+        response_body["message"] = "Detalle de rutinas"
+        return response_body, 200
+
 @api.route("/workoutdetails/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workoutdetail(id):
     response_body = {}
