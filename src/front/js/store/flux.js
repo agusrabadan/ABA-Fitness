@@ -22,7 +22,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     const data = await response.json();
                     setStore({ exercises: data });
                 } catch (error) {
-                    console.error('Error fetching exercises:', error);
+                    console.error('Error fetching exercises:', error); 
                 }
             },
 
