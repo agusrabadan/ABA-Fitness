@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import "../../styles/workoutdetails.css";
 
 export const WorkoutDetails = () => {
-    const { id } = useParams(); // Obtener el id del parámetro de la URL
-    const [workout, setWorkout] = useState(null); // Inicializar como null para manejar la carga
+    const { id } = useParams();
+    const [workoutDetails, setWorkoutDetails] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -27,7 +29,8 @@ export const WorkoutDetails = () => {
                 }
 
                 const data = await response.json();
-                setWorkout(data.results); // Asignar directamente data.results según la estructura de la respuesta
+                console.log('Fetched data:', data);
+                setWorkoutDetails(data.results); 
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching workout details:', error.message);
@@ -36,37 +39,65 @@ export const WorkoutDetails = () => {
         };
 
         fetchWorkoutDetails();
-    }, [id]); // Dependencia id para que se actualice cuando cambia
+    }, [id]);
+
+    const handleEdit = (exerciseId) => {
+        // Manejar la edición del ejercicio
+        console.log(`Edit exercise with ID: ${exerciseId}`);
+    };
+
+    const handleDelete = async (exerciseId) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token not found in localStorage.');
+            }
+
+            const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${exerciseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Actualizar la lista de detalles del workout después de eliminar un ejercicio
+            setWorkoutDetails(workoutDetails.filter(exercise => exercise.id !== exerciseId));
+        } catch (error) {
+            console.error('Error deleting exercise:', error.message);
+        }
+    };
 
     if (loading) return <div>Loading...</div>;
 
-    // Verificar si workout es null antes de acceder a sus propiedades
-    if (!workout) {
-        return <div>No workout found.</div>;
+    if (workoutDetails.length === 0) {
+        return <div>No workout details found.</div>;
     }
 
     return (
         <div className="container">
-            <h1 className="text-white">{workout.name}</h1>
-            <p className="text-white">Duration: {formatDuration(workout.duration)}</p>
-            <h2 className="text-white">Exercises</h2>
+            <h1 className="text-white">Workout Details</h1>
             <ul>
-                {workout.exercises && workout.exercises.map(exercise => (
-                    <li key={exercise.id}>
-                        <h4 className="text-white">{exercise.name}</h4>
-                        <p className="text-white">Reps: {exercise.reps_num}</p>
-                        <p className="text-white">Sets: {exercise.series_num}</p>
-                        <p className="text-white">Rest: {exercise.rest_seconds} sec</p>
+                {workoutDetails.map((workout) => (
+                    <li key={workout.id} className="workout-detail-item">
+                        <div className="exercise-info">
+                            <h4 className="text-white">{workout.exercise_name}</h4>
+                            <img src={workout.exercise_gif} alt={workout.exercise_name} onError={(e) => {e.target.onerror = null; e.target.src="fallback-image-url"}} />
+                            <p className="text-white">Reps: {workout.reps_num}</p>
+                            <p className="text-white">Sets: {workout.series_num}</p>
+                            <p className="text-white">Rest: {workout.rest_seconds} sec</p>
+                        </div>
+                        <div className="exercise-actions">
+                            <FaEdit onClick={() => handleEdit(workout.id)} className="edit-icon" />
+                            <FaTrash onClick={() => handleDelete(workout.id)} className="delete-icon" />
+                        </div>
                     </li>
                 ))}
             </ul>
         </div>
     );
 };
-
-// Helper function to format the duration
-function formatDuration(totalSeconds) {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes} min ${seconds} sec`;
-}
