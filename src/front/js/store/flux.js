@@ -1,33 +1,75 @@
-const getState = ({getStore, getActions, setStore}) => {
+const getState = ({ getStore, getActions, setStore }) => {
 	return {
 		store: {
-			message: null,
-			demo: [{title: "FIRST", background: "white", initial: "white"}]
+			isLogin: false,
+			user: '',
+			exercises: [],
+			exercisesLoading: false,
+			favorites: [] // Añadido para almacenar los favoritos
 		},
 		actions: {
-			exampleFunction: () => {getActions().changeColor(0, "green");},  // Use getActions to call a function within a fuction
-			changeColor: (index, color) => {
-				const store = getStore();  // Get the store
-				// We have to loop the entire demo array to look for the respective index and change its color
-				const demo = store.demo.map((element, i) => {
-					if (i === index) element.background = color;
-					return element;
-				});
-				setStore({ demo: demo });  // Reset the global store
-			},
-			getMessage: async () => {
-					const response = await fetch(process.env.BACKEND_URL + "/api/hello")
-					if (!response.ok) {
-						console.log("Error loading message from backend", response.status, response.statusText)
-						return
+			fetchExercises: async () => {
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/exercises/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-rapidapi-key': 'f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5',
+							'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
+                        },
+                        body: JSON.stringify({ limit: 2000, offset: 0 })
+                    });
+                    const data = await response.json();
+                    setStore({ exercises: data });
+                } catch (error) {
+                    console.error('Error fetching exercises:', error); 
+                }
+            },
+
+			setIsLogin: (login) => { setStore({ isLogin: login }) },
+
+			setCurrentUser: (user) => { setStore({ user: user }) },
+
+			profile: async () => {
+				const token = localStorage.getItem('token');
+				const url = `${process.env.BACKEND_URL}/api/profile`;
+				const options = {
+					method: 'GET',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
 					}
-					const data = await response.json()
-					setStore({ message: data.message })
-					return data;  // Don't forget to return something, that is how the async resolves
-			}
+				}
+				const response = await fetch(url, options)
+				if (!response.ok) {
+					console.log('Error: ', response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				console.log(data);
+
+			},
+
+			addFavorite: (exercise) => {
+				const store = getStore();
+				const favorites = [...store.favorites, exercise];
+				setStore({ favorites }); // Añadido para agregar favoritos
+			},
+
+			removeFavorite: (id) => {
+				const store = getStore();
+				const favorites = store.favorites.filter(fav => fav.id !== id);
+				setStore({ favorites }); // Añadido para eliminar favoritos
+			},
+
+			setUser: (userData) => {
+				setStore({ user: userData });
+				// Si es necesario, también puedes actualizar el estado de `isLogin` aquí
+				// Por ejemplo, si el usuario se considera "loggeado" después de actualizar sus datos
+				setStore({ isLogin: true }); // Esto es opcional y depende de tu lógica
+			},
 		}
 	};
 };
-
 
 export default getState;

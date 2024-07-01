@@ -1,0 +1,25 @@
+/* Estilos para asegurar que el footer no esté fijo */
+.footer {
+    
+    color: #fff;            /* Texto blanco */
+    padding: 1rem;          /* Espaciado interno */
+    text-align: center;     /* Centrando el texto */
+    position: relative;     /* Posición relativa para comportamiento normal */
+    bottom: 0;              /* Asegura que se quede en la parte inferior del contenido */
+    width: 100%;            /* Ancho completo */
+}
+
+/* Estilos adicionales opcionales para la página */
+body, html {
+    margin: 0;              /* Elimina el margen por defecto */
+    padding: 0;             /* Elimina el padding por defecto */
+    min-height: 100vh;      /* Asegura que el contenido mínimo sea la altura de la ventana */
+    display: flex;          /* Usa flex para la distribución */
+    flex-direction: column; /* Direcciona el contenido en columna */
+}
+
+main {
+    flex: 1;                /* Asegura que el main ocupe el espacio disponible */
+    padding: 20px;          /* Espaciado interno para el contenido principal */
+}
+
