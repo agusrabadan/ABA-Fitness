@@ -35,6 +35,7 @@ export const Exercises = () => {
     fetchExercises();
   }, []);
 
+
   const filteredExercises = exercises.filter(exercise => {
     return exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       exercise.bodyPart.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -153,7 +154,8 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
             <div className="justify-content-around d-flex fixed-bottom mb-3">
               <i className="far fa-question-circle fs-2" onClick={handleFlip} title="+ Info" type="button"></i>
               {isFavorite ? (
-                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.removeFavorite(exercise.id)} title="Remove Favorite"></i>
+                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => {
+                  actions.removeFavorite(favorite.id)}} title="Remove Favorite"></i>
               ) : (
                 <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.addFavorite(exercise)} title="Add Favorite"></i>
               )}
