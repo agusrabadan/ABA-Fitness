@@ -9,30 +9,22 @@ const getState = ({ getStore, getActions, setStore }) => {
 		},
 		actions: {
 			fetchExercises: async () => {
-				try {
-					setStore({ exercisesLoading: true });
-
-					const response = await fetch('https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0', {
-						method: 'GET',
-						headers: {
-							'x-rapidapi-key': 'f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5',
+                try {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/exercises/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'x-rapidapi-key': 'f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5',
 							'x-rapidapi-host': 'exercisedb.p.rapidapi.com'
-						}
-					});
-
-					if (!response.ok) {
-						console.error('Error fetching exercises:', response.status, response.statusText);
-						setStore({ exercisesLoading: false });
-						return;
-					}
-
-					const data = await response.json();
-					setStore({ exercises: data, exercisesLoading: false });
-				} catch (error) {
-					console.error('Error fetching exercises:', error);
-					setStore({ exercisesLoading: false });
-				}
-			},
+                        },
+                        body: JSON.stringify({ limit: 2000, offset: 0 })
+                    });
+                    const data = await response.json();
+                    setStore({ exercises: data });
+                } catch (error) {
+                    console.error('Error fetching exercises:', error); 
+                }
+            },
 
 			setIsLogin: (login) => { setStore({ isLogin: login }) },
 
