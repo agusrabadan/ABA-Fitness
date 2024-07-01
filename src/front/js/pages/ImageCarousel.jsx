@@ -32,14 +32,19 @@ const ImageCarousel = () => {
 
   return (
     <div id="imageCarousel" className="carousel slide mb-2 mx-auto" data-bs-ride="carousel">
-      <div className="carousel-inner">
-        {images.map((image, index) => (
-          <div key={image.id} className={index === imageIndex ? "carousel-item active" : "carousel-item"}>
-            <img src={image.url} className="d-block mx-auto rounded" style={{ width: "600px", height: "400px" }} alt={`Image ${index}`} />
-          </div>
-        ))}
-      </div>
+    <div className="carousel-inner">
+      {images.map((image, index) => (
+        <div key={image.id} className={index === imageIndex ? "carousel-item active" : "carousel-item"}>
+          <img 
+            src={image.url} 
+            className="d-block mx-auto" 
+            style={{ width: "600px", height: "400px", borderRadius: "30px", border: "3px solid orange" }}
+            alt={`Image ${index}`} 
+          />
+        </div>
+      ))}
     </div>
+  </div>
   );
 };
 
