@@ -361,16 +361,6 @@ def add_workout_detail():
 if __name__ == '__main__':
     app.run(debug=True)
 
-@api.route("/workoutdetails", methods=["GET"])
-def workoutdetails():
-    response_body = {}
-    if request.method == "GET":
-        workout_details = db.session.execute(db.select(WorkoutDetails)).scalars()
-        results = [row.serialize() for row in workout_details]
-        response_body["results"] = results
-        response_body["message"] = "Detalle de rutinas"
-        return response_body, 200
-
 @api.route("/workoutdetails/<int:id>", methods=["GET", "PUT", "DELETE"])
 def workoutdetail(id):
     response_body = {}
@@ -379,13 +369,34 @@ def workoutdetail(id):
             db.select(WorkoutDetails).where(WorkoutDetails.id == id)
         ).scalar()
         if workoutdetail:
-            response_body["results"] = workoutdetail.serialize()
-            response_body["message"] = "Detalle de rutina encontrado"
-            return response_body, 200
+            exercise = db.session.execute(
+                db.select(Exercises).where(Exercises.id == workoutdetail.exercise_id)
+            ).scalar()
+
+            if exercise:
+                # Combina los detalles del workout con los detalles del ejercicio
+                workout_detail_with_exercise = {
+                    "id": workoutdetail.id,
+                    "workout_id": workoutdetail.workout_id,
+                    "exercise_id": workoutdetail.exercise_id,
+                    "reps_num": workoutdetail.reps_num,
+                    "rest_seconds": workoutdetail.rest_seconds,
+                    "series_num": workoutdetail.series_num,
+                    "exercise_name": exercise.name,
+                    "exercise_gif": exercise.gif_url
+                }
+                response_body["results"] = workout_detail_with_exercise
+                response_body["message"] = "Detalle de rutina encontrado"
+                return jsonify(response_body), 200
+
+            response_body["message"] = "Detalle de ejercicio no encontrado"
+            response_body["results"] = {}
+            return jsonify(response_body), 404
+        
         response_body["message"] = "Detalle de rutina no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return jsonify(response_body), 404
+
     if request.method == "PUT":
         data = request.json
         workoutdetail = db.session.execute(
@@ -398,19 +409,18 @@ def workoutdetail(id):
             workoutdetail.exercise_id = data.get(
                 "exercise_id", workoutdetail.exercise_id
             )
-            workoutdetail.repetitions = data.get(
-                "repetitions", workoutdetail.repetitions
+            workoutdetail.reps_num = data.get(
+                "reps_num", workoutdetail.reps_num
             )
-            workoutdetail.series = data.get("series", workoutdetail.series)
-            workoutdetail.duration = data.get("duration", workoutdetail.duration)
-            workoutdetail.status = data.get("status", workoutdetail.status)
+            workoutdetail.series_num = data.get("series_num", workoutdetail.series_num)
+            workoutdetail.rest_seconds = data.get("rest_seconds", workoutdetail.rest_seconds)
             db.session.commit()
             response_body["message"] = "Detalle de rutina actualizado"
             response_body["results"] = workoutdetail.serialize()
-            return response_body, 200
+            return jsonify(response_body), 200
         response_body["message"] = "Detalle de rutina no existe"
         response_body["results"] = {}
-        return response_body, 404
+        return jsonify(response_body), 404
     
     if request.method == "DELETE":
         workoutdetail = db.session.execute(
@@ -421,10 +431,10 @@ def workoutdetail(id):
             db.session.commit()
             response_body["message"] = "Detalle de rutina eliminado"
             response_body["results"] = {}
-            return response_body, 200
+            return jsonify(response_body), 200
         response_body["message"] = "Detalle de rutina no existe"
         response_body["results"] = {}
-        return response_body, 404
+        return jsonify(response_body), 404
 
 @api.route("/favorites", methods=["GET", "POST"])
 def favorites():

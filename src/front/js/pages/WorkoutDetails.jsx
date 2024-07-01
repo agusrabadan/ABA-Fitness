@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 export const WorkoutDetails = () => {
-    const { id } = useParams(); // Obtener el id del parámetro de la URL
-    const [workout, setWorkout] = useState(null); // Inicializar como null para manejar la carga
+    const { id } = useParams();
+    const [workout, setWorkout] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -14,7 +14,7 @@ export const WorkoutDetails = () => {
                     throw new Error('Token not found in localStorage.');
                 }
 
-                const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${id}`, {
+                const response = await fetch(`${process.env.BACKEND_URL}/api/workouts/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -27,7 +27,8 @@ export const WorkoutDetails = () => {
                 }
 
                 const data = await response.json();
-                setWorkout(data.results); // Asignar directamente data.results según la estructura de la respuesta
+                console.log('Fetched data:', data);
+                setWorkout(data.results);
                 setLoading(false);
             } catch (error) {
                 console.error('Error fetching workout details:', error.message);
@@ -36,22 +37,24 @@ export const WorkoutDetails = () => {
         };
 
         fetchWorkoutDetails();
-    }, [id]); // Dependencia id para que se actualice cuando cambia
+    }, [id]);
 
     if (loading) return <div>Loading...</div>;
 
-    // Verificar si workout es null antes de acceder a sus propiedades
     if (!workout) {
         return <div>No workout found.</div>;
     }
 
+    // Si workout tiene la propiedad exercises, úsala; de lo contrario, asume que workout es una lista de ejercicios
+    const exercises = workout.exercises ? workout.exercises : Array.isArray(workout) ? workout : [workout];
+
     return (
         <div className="container">
-            <h1 className="text-white">{workout.name}</h1>
-            <p className="text-white">Duration: {formatDuration(workout.duration)}</p>
+            <h1 className="text-white">{workout.name || 'Workout Details'}</h1>
+            <p className="text-white">Duration: {workout.duration ? formatDuration(workout.duration) : 'N/A'}</p>
             <h2 className="text-white">Exercises</h2>
             <ul>
-                {workout.exercises && workout.exercises.map(exercise => (
+                {exercises.map(exercise => (
                     <li key={exercise.id}>
                         <h4 className="text-white">{exercise.name}</h4>
                         <p className="text-white">Reps: {exercise.reps_num}</p>
@@ -64,7 +67,6 @@ export const WorkoutDetails = () => {
     );
 };
 
-// Helper function to format the duration
 function formatDuration(totalSeconds) {
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
