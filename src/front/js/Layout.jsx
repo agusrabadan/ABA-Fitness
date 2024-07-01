@@ -12,6 +12,7 @@ import { Login } from "./pages/Login.jsx";
 import { Signup } from "./pages/Signup.jsx";
 import { Profile } from "./pages/Profile.jsx";
 import { Workouts } from "./pages/Workouts.jsx";
+import { WorkoutDetails } from "./pages/WorkoutDetails.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
 import { Exercises } from "./pages/Exercises.jsx";
 import { Favorites } from "./pages/Favorites.jsx";
@@ -41,6 +42,7 @@ const Layout = () => {
                         <Route element={<Profile />} path="/profile" />
                         <Route element={<Exercises />} path="/exercises" />
                         <Route element={<Workouts />} path="/workouts" />
+                        <Route element={<WorkoutDetails />} path="/workout-details/:id" />
                         <Route element={<Favorites />} path="/favorites" />
                         <Route element={<ActivityLog />} path="/activity-log" />
                         <Route element={<PrivacyPolicy />} path="/privacy-policy" />
