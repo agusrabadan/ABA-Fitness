@@ -50,18 +50,77 @@ const getState = ({ getStore, getActions, setStore }) => {
 
 			},
 
-			addFavorite: (exercise) => {
+			addFavorite: async (exercise) => {
 				const store = getStore();
+				const userId = store.user.id; // Suponiendo que tienes el ID del usuario en el store
+			
 				const favorites = [...store.favorites, exercise];
-				setStore({ favorites }); // Añadido para agregar favoritos
+				setStore({ favorites });
+			
+				// Hacer el fetch para guardar en la base de datos
+				try {
+					const token = localStorage.getItem('token'); // Asumiendo que usas el token para autenticación
+			
+					const response = await fetch(`${process.env.BACKEND_URL}/api/favorites`, {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						},
+						body: JSON.stringify({
+							user_id: userId,
+							exercise_id: exercise.id
+						})
+					});
+			
+					if (!response.ok) {
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+			
+					const data = await response.json();
+					console.log('Favorite added:', data);
+				} catch (error) {
+					console.error('Error adding favorite:', error.message);
+				}
 			},
+			
 
-			removeFavorite: (id) => {
+			removeFavorite: async (favoriteId) => {
 				const store = getStore();
-				const favorites = store.favorites.filter(fav => fav.id !== id);
-				setStore({ favorites }); // Añadido para eliminar favoritos
+				console.log('ID to be removed (favorite):', favoriteId); // Verificar el ID del favorito
+			
+				try {
+					const token = localStorage.getItem('token');
+					if (!token) {
+						throw new Error('Token not found in localStorage.');
+					}
+			
+					const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${favoriteId}`, {
+						method: 'DELETE',
+						headers: {
+							'Content-Type': 'application/json',
+							'Authorization': `Bearer ${token}`
+						}
+					});
+			
+					if (response.ok) {
+						// Filtrar el favorito eliminado por el ID correcto
+						const updatedFavorites = store.favorites.filter(fav => fav.id !== favoriteId);
+						setStore({ favorites: updatedFavorites }); // Actualizar el store después de eliminar
+						console.log('Favorito eliminado:', favoriteId);
+					} else {
+						// Capturar el error de la respuesta y mostrar el mensaje
+						const errorResponse = await response.json();
+						console.error('Error removing favorite:', errorResponse.message);
+						throw new Error(`HTTP error! Status: ${response.status}`);
+					}
+				} catch (error) {
+					console.error('Error removing favorite:', error.message);
+				}
 			},
-
+			
+			
+			
 			setUser: (userData) => {
 				setStore({ user: userData });
 				// Si es necesario, también puedes actualizar el estado de `isLogin` aquí
