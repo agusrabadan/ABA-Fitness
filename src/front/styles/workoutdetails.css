@@ -1,0 +1,24 @@
+.workout-detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.exercise-info {
+    flex: 1;
+}
+
+.exercise-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    color: #fff;
+}
+
+.edit-icon:hover, .delete-icon:hover {
+    color: rgb(215, 120, 11);
+}

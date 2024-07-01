@@ -365,35 +365,35 @@ if __name__ == '__main__':
 def workoutdetail(id):
     response_body = {}
     if request.method == "GET":
-        workoutdetail = db.session.execute(
-            db.select(WorkoutDetails).where(WorkoutDetails.id == id)
-        ).scalar()
-        if workoutdetail:
-            exercise = db.session.execute(
-                db.select(Exercises).where(Exercises.id == workoutdetail.exercise_id)
-            ).scalar()
+        workoutdetails = db.session.execute(
+            db.select(WorkoutDetails).where(WorkoutDetails.workout_id == id)
+        ).scalars().all()
 
-            if exercise:
-                # Combina los detalles del workout con los detalles del ejercicio
-                workout_detail_with_exercise = {
-                    "id": workoutdetail.id,
-                    "workout_id": workoutdetail.workout_id,
-                    "exercise_id": workoutdetail.exercise_id,
-                    "reps_num": workoutdetail.reps_num,
-                    "rest_seconds": workoutdetail.rest_seconds,
-                    "series_num": workoutdetail.series_num,
-                    "exercise_name": exercise.name,
-                    "exercise_gif": exercise.gif_url
-                }
-                response_body["results"] = workout_detail_with_exercise
-                response_body["message"] = "Detalle de rutina encontrado"
-                return jsonify(response_body), 200
+        if workoutdetails:
+            results = []
+            for detail in workoutdetails:
+                exercise = db.session.execute(
+                    db.select(Exercises).where(Exercises.id == detail.exercise_id)
+                ).scalar()
+                
+                if exercise:
+                    workout_detail_with_exercise = {
+                        "id": detail.id,
+                        "workout_id": detail.workout_id,
+                        "exercise_id": detail.exercise_id,
+                        "reps_num": detail.reps_num,
+                        "rest_seconds": detail.rest_seconds,
+                        "series_num": detail.series_num,
+                        "exercise_name": exercise.name,
+                        "exercise_gif": exercise.gif_url
+                    }
+                    results.append(workout_detail_with_exercise)
+            
+            response_body["results"] = results
+            response_body["message"] = "Detalles del workout encontrados"
+            return jsonify(response_body), 200
 
-            response_body["message"] = "Detalle de ejercicio no encontrado"
-            response_body["results"] = {}
-            return jsonify(response_body), 404
-        
-        response_body["message"] = "Detalle de rutina no existe"
+        response_body["message"] = "Detalles del workout no existen"
         response_body["results"] = {}
         return jsonify(response_body), 404
 
