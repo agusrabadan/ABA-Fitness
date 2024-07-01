@@ -40,7 +40,7 @@ const MotivationCarousel = () => {
       <div className="carousel-inner">
         {motivations.map((motivation, index) => (
           <div key={index} className={index === motivationIndex ? "carousel-item active" : "carousel-item"}>
-            <h2 className="text-info text-center" style={{ fontFamily:"'Arial', sans-serif"}}>{motivation}</h2>
+            <h2 className="text-white text-center" style={{ fontFamily:"'Arial', sans-serif"}}>{motivation}</h2>
           </div>
         ))}
       </div>
