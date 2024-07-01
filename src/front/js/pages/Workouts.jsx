@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Context } from "../store/appContext.js";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 export const Workouts = () => {
     const { store } = useContext(Context);
@@ -8,6 +9,9 @@ export const Workouts = () => {
     const [showDropdown, setShowDropdown] = useState(false);
     const [showExercises, setShowExercises] = useState(false);
     const [showRoutineExercises, setShowRoutineExercises] = useState(false);
+    const [showWorkouts, setShowWorkouts] = useState(false);
+    const [workouts, setWorkouts] = useState([]);
+    const [showDetails, setShowDetails] = useState({});
     const [selectedBodyPart, setSelectedBodyPart] = useState("");
     const [selectedEquipment, setSelectedEquipment] = useState("");
     const [selectedReps, setSelectedReps] = useState("");
@@ -19,7 +23,6 @@ export const Workouts = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [workouts, setWorkouts] = useState([]);
     const exercisesPerPage = 5;
 
     const url = 'https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0';
@@ -58,37 +61,38 @@ export const Workouts = () => {
 
         fetchExercises();
 
-        const getWorkouts = async () => {
-            try {
-                const token = localStorage.getItem('token');
-                if (!token) {
-                    throw new Error('Token not found in localStorage.');
-                }
 
-                const url = `${process.env.BACKEND_URL}/api/workouts`;
-                const options = {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    }
-                };
-
-                const response = await fetch(url, options);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                const data = await response.json();
-                setWorkouts(data.results);
-                console.log('Workouts data:', data); // Loguea los datos después de asegurarte de que response.json() ha completado correctamente
-            } catch (error) {
-                console.error('Error fetching workouts:', error.message);
-            }
-        };
-
-        getWorkouts();
     }, []);
+
+    const getWorkouts = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token not found in localStorage.');
+            }
+
+            const url = `${process.env.BACKEND_URL}/api/workouts`;
+            const options = {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            };
+
+            const response = await fetch(url, options);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            setWorkouts(data.results);
+            
+        } catch (error) {
+            console.error('Error fetching workouts:', error.message);
+        }
+    };
+
 
 
     const resetForm = () => {
@@ -134,8 +138,8 @@ export const Workouts = () => {
             if (response.ok) {
                 alert('Rutina guardada exitosamente en la base de datos');
                 resetForm(); // Resetear todos los estados después de guardar la rutina
-                 
-                
+
+
             } else {
                 const errorData = await response.json();
                 throw new Error(`Error al guardar la rutina en la base de datos: ${errorData.message}`);
@@ -231,6 +235,17 @@ export const Workouts = () => {
 
     const toggleShowExercises = () => {
         setShowExercises(!showExercises);
+    };
+
+    const toggleShowWorkouts = () => {
+        setShowWorkouts(!showWorkouts);
+    };
+
+    const toggleShowDetails = (workoutId) => {
+        setShowDetails(prevState => ({
+            ...prevState,
+            [workoutId]: !prevState[workoutId]
+        }));
     };
 
     const toggleShowRoutineExercises = () => {
@@ -346,7 +361,7 @@ export const Workouts = () => {
                             Add workout
                         </button>
                     </div>
-                    
+
                     <div className="card-body">
                         {showRoutineExercises && (
                             <div className="mb-4">
@@ -475,22 +490,19 @@ export const Workouts = () => {
                         )}
                     </div>
                     <div>
-                        <h2 className="mt-4">My Workouts</h2>
+                        <button className="btn btn-outline-light ml-3" onClick={getWorkouts}><h3>See my Workouts</h3></button>
                         {workouts.map(workout => (
-    <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
-        <div className="card-body">
-            <h5 className="card-title">{workout.name}</h5>
-            <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
-            <button className="btn btn-outline-light ml-3">Button Text</button>
-            {workout.exercises.map(exercise => (
-                <div key={exercise.id}>
-                    <p>Exercise ID: {exercise.name}</p>
-                    {/* Aquí puedes mostrar más detalles del ejercicio si es necesario */}
-                </div>
-            ))}
-        </div>
-    </div>
-))}
+                            <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
+                                <div className="card-body">
+                                    <h5 className="card-title">{workout.name}</h5>
+                                    <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
+                                    <p className="card-text">Exercises: {workout.exercises.length}</p>
+                                    <Link to={`/workout-details/${workout.id}`} className="btn btn-outline-light rounded-pill text-orange border-orange">Details</Link>
+
+                                </div>
+
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

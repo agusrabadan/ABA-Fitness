@@ -151,11 +151,11 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
             <Card.Text><strong>Target:</strong> {exercise.target}</Card.Text>
             <Card.Text><strong>Equipment:</strong> {exercise.equipment}</Card.Text>
             <div className="justify-content-around d-flex fixed-bottom mb-3">
-              <i className="far fa-question-circle fs-2" onClick={handleFlip} title="+ Info"></i>
+              <i className="far fa-question-circle fs-2" onClick={handleFlip} title="+ Info" type="button"></i>
               {isFavorite ? (
-                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.removeFavorite(exercise.id)} title="Remove Favorite"></i>
+                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.removeFavorite(exercise.id)} title="Remove Favorite"></i>
               ) : (
-                <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" onClick={() => actions.addFavorite(exercise)} title="Add Favorite"></i>
+                <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.addFavorite(exercise)} title="Add Favorite"></i>
               )}
             </div>
           </div>
