@@ -33,12 +33,12 @@ export const Signup = () => {
         const dataToSend = {
             email,
             password,
-            first_name: firstName,
-            last_name: lastName,
-            weight: weight,
-            height: height,
-            gender: gender,
-            birth_date: birthDate
+            first_name: null,
+            last_name: null,
+            weight: null,
+            height: null,
+            gender: null,
+            birth_date: null
         };
         const url = `${process.env.BACKEND_URL}/api/signup`;
 
@@ -120,36 +120,36 @@ export const Signup = () => {
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="firstName" className="mb-1">Name:</label>
                                     <input type="text" className="form-control" id="firstName"
-                                        value={firstName} onChange={handleFirstNameChange} required />
+                                        value={firstName} onChange={handleFirstNameChange} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="lastName" className="mb-1">Last Name:</label>
                                     <input type="text" className="form-control" id="lastName"
-                                        value={lastName} onChange={handleLastNameChange} required />
+                                        value={lastName} onChange={handleLastNameChange} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="weight" className="mb-1">Weight(kg):</label>
                                     <input type="text" className="form-control" id="weight"
-                                        value={weight} onChange={handleWeight} required />
+                                        value={weight} onChange={handleWeight} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="height" className="mb-1">Height(cm):</label>
                                     <input type="text" className="form-control" id="height"
-                                        value={height} onChange={handleHeight} required />
+                                        value={height} onChange={handleHeight} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="gender" className="mb-1">Gender:</label>
                                     <select className="form-control" id="gender"
-                                        value={gender} onChange={handleGender} required>
-                                        <option value="Not defined">Not defined</option>
-                                        <option value="Male">Male</option>
+                                        value={gender} onChange={handleGender} >
                                         <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Not defined">Others</option>
                                     </select>
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="birthDate" className="mb-1">Birth Date:</label>
                                     <input type="date" className="form-control" id="birthDate"
-                                        value={birthDate} onChange={handleBirthDate} required />
+                                        value={birthDate} onChange={handleBirthDate} />
                                 </div>
                                 <div className="text-center">
                                     <button type="submit" className="btn btn-outline-light ms-2 mt-4">Create Account</button>

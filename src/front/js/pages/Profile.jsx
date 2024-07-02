@@ -87,113 +87,117 @@ export const Profile = () => {
             <h2 className="text-white">User Profile</h2>
             <i className="fas fa-edit fs-3 mx-5 mt-1" id="edit" onClick={handleEditClick} type="button" title="Edit Profile"></i>
           </div>
-          {isEditing ?  <div className="card bg-dark text-white col-6">
-              <div className="card-body">
-                <form onSubmit={handleFormSubmit}>
-                  <div className="mb-3">
-                    <label className="form-label">Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="first_name"
-                      value={formData.first_name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Last Name</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="last_name"
-                      value={formData.last_name}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Email</label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Gender</label>
-                    <select
-                      className="form-control"
-                      id="gender"
-                      name="gender" // Añadir el nombre para que coincida con formData
-                      value={formData.gender}
-                      onChange={handleInputChange}
-                    >
-                      <option value="Hombre">Male</option>
-                      <option value="Mujer">Female</option>
-                      <option value="Sin definir">Others</option>
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Weight (kg)</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      name="weight"
-                      value={formData.weight}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Height (cm)</label>
-                    <input
-                      type="number"
-                      className="form-control"
-                      name="height"
-                      value={formData.height}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  <div className="mb-3">
-                    <label className="form-label">Birth Date</label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      name="birth_date"
-                      value={formData.birth_date}
-                      onChange={handleInputChange}
-                    />
-                  </div>
-                  {/* is_active es parte del formulario pero no se muestra al usuario */}
-                  <button type="submit" className="btn btn-outline-light">
-                    Save changes
-                  </button>
-                </form>
-              </div>
+          {isEditing ? <div className="card bg-dark text-white col-6">
+            <div className="card-body">
+              <form onSubmit={handleFormSubmit}>
+                <div className="mb-3">
+                  <label className="form-label">Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="first_name"
+                    value={formData.first_name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Last Name</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    name="last_name"
+                    value={formData.last_name}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Email</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Gender</label>
+                  <select
+                    className="form-control"
+                    id="gender"
+                    name="gender" // Añadir el nombre para que coincida con formData
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                  >
+                    <option value="Hombre">Male</option>
+                    <option value="Mujer">Female</option>
+                    <option value="Sin definir">Others</option>
+                  </select>
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Weight (kg)</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Height (cm)</label>
+                  <input
+                    type="number"
+                    className="form-control"
+                    name="height"
+                    value={formData.height}
+                    onChange={handleInputChange}
+                  />
+                </div>
+                <div className="mb-3">
+                  <label className="form-label">Birth Date</label>
+                  <input
+                    type="date"
+                    className="form-control"
+                    name="birth_date"
+                    value={formData.birth_date}
+                    onChange={handleInputChange}
+                    lang="en-GB"
+                  />
+                </div>
+                {/* is_active es parte del formulario pero no se muestra al usuario */}
+                <button type="submit" className="btn btn-outline-light">
+                  Save changes
+                </button>
+              </form>
             </div>
-           : (
-            <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-              <div className="card-body">
-                <img src={store.user.profile_picture} alt="profile_pic" width="150" height="150" className="d-inline-block align-text-top rounded-circle mx-2 mb-5" />
-                <p><strong>Name:</strong> {store.user.first_name}</p>
-                <p><strong>Last Name:</strong> {store.user.last_name}</p>
-                <p><strong>Email:</strong> {store.user.email}</p>
-                <p><strong>Gender:</strong> {store.user.gender}</p>
-                <p><strong>Weight:</strong> {store.user.weight} kg</p>
-                <p><strong>Height:</strong> {store.user.height} cm</p>
-                <p><strong>Birth Date:</strong> {formatDate(store.user.birth_date)}</p>
-                <div>
-                  <strong>BMI:</strong>{" "}
-                  <span style={{ color: getBMIColor(calculateBMI(store.user.weight, store.user.height)), fontWeight: "bold" }}>
-                    {calculateBMI(store.user.weight, store.user.height)}
-                  </span>
+          </div>
+            : (
+              <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                <div className="card-body">
+                  <img src={store.user.profile_picture} alt="profile_pic" width="150" height="150" className="d-inline-block align-text-top rounded-circle mx-2 mb-5" />
+                  <p><strong>Name:</strong> {store.user.first_name}</p>
+                  <p><strong>Last Name:</strong> {store.user.last_name}</p>
+                  <p><strong>Email:</strong> {store.user.email}</p>
+                  <p><strong>Gender:</strong> {store.user.gender}</p>
+                  <p><strong>Weight:</strong> {store.user.weight} kg</p>
+                  <p><strong>Height:</strong> {store.user.height} cm</p>
+                  <p><strong>Birth Date:</strong> {formatDate(store.user.birth_date)}</p>
+                  <div>
+                    <strong>BMI:</strong>{" "}
+                    <span style={{ color: getBMIColor(calculateBMI(store.user.weight, store.user.height)), fontWeight: "bold" }}>
+                      {calculateBMI(store.user.weight, store.user.height)}
+                    </span>
+                    <p>Body Mass Index is a measure that uses a person's weight and height to estimate their body fat. It's 
+                      calculated by dividing the weight in kilograms by the height in meters squared. BMI categories include 
+                      underweight, normal weight, overweight, and obesity.</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       ) : (
         <div className="container text-center">
