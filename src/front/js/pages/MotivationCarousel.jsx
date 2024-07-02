@@ -36,11 +36,11 @@ const MotivationCarousel = () => {
   }, [motivations.length]);
 
   return (
-    <div id="motivationCarousel" className="carousel slide mb-2" data-bs-ride="carousel">
+    <div id="motivationCarousel" className="carousel slide mb-4" data-bs-ride="carousel">
       <div className="carousel-inner">
         {motivations.map((motivation, index) => (
           <div key={index} className={index === motivationIndex ? "carousel-item active" : "carousel-item"}>
-            <h2 className="text-white text-center" style={{ fontFamily:"'Arial', sans-serif"}}>{motivation}</h2>
+            <h3 className="text-white text-center" >{motivation}</h3>
           </div>
         ))}
       </div>

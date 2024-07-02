@@ -70,24 +70,27 @@ const Chrono = () => {
   };
 
   return (
-    <div className='text-white text-center'>
-<img src={chrono} alt="Chrono" width="60" height="60" style={{ borderRadius: "20px", paddingBottom: "5px" }} />
+    <div className='text-white text-center mt-5'>
+      <div className="d-flex justify-content-center mx-3 mt-4">
+        <i className="fas fa-stopwatch-20 fs-1 mb-2"></i>
+        <h4 className='mx-3'>Chrono</h4>
+      </div>
 
-<div className='d-flex justify-content-center align-items-center'>
+      <div className='d-flex justify-content-center align-items-center'>
         <p className='mb-0'>ACTIVE time:&nbsp; </p>
         <div className="roller-container mr-3 mb-0" style={{ width: '180px' }}>
           {formatTime(time)}
         </div>
         <div className="px-4">
-          <button 
-            onClick={handleStartStop} 
+          <button
+            onClick={handleStartStop}
             className="btn btn-outline-white rounded-pill text-orange border-orange mx-2">
-              {isRunning ? 'Stop' : 'Start'}
+            {isRunning ? 'Stop' : 'Start'}
           </button>
-          <button 
-            onClick={handleReset} 
+          <button
+            onClick={handleReset}
             className="btn btn-outline-white rounded-pill text-orange border-orange mx-2">
-              Reset
+            Reset
           </button>
         </div>
         <p className='mb-0'>REST time:&nbsp; </p>

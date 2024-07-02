@@ -5,7 +5,7 @@ import "../../styles/profile.css";
 
 export const Profile = () => {
   const { store, actions } = useContext(Context);
-  const navigate = useNavigate(); // Usar useNavigate para la redirección
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     first_name: store.user.first_name,
@@ -19,7 +19,7 @@ export const Profile = () => {
   });
 
   const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const options = { year: "numeric", month: "long", day: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
@@ -56,9 +56,9 @@ export const Profile = () => {
     e.preventDefault();
     try {
       const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${store.token}`,
         },
         body: JSON.stringify(formData),
@@ -78,36 +78,41 @@ export const Profile = () => {
   };
 
   const handleDeleteAccount = async () => {
-    try {
-      const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${store.token}`,
-        },
-        body: JSON.stringify({ ...formData, is_active: false }),
-      });
+    // Muestra la alerta de confirmación
+    const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
 
-      if (response.ok) {
-        const data = await response.json();
-        actions.setUser(data); // Actualizar el usuario
-        actions.setCurrentUser(data.results);
+    if (confirmDelete) {
+      try {
+        const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${store.token}`,
+          },
+          body: JSON.stringify({ ...formData, is_active: false }),
+        });
 
-        // Cambiar el estado de isLogin a false
-        actions.setIsLogin(false);
+        if (response.ok) {
+          const data = await response.json();
+          actions.setUser(data); // Actualizar el usuario
+          actions.setCurrentUser(data.results);
 
-        // Mostrar alerta y redirigir al usuario después de un pequeño retardo
-        alert("Your account has been deactivated.");
-        
-        // Redirigir después de un pequeño retardo para asegurar que las acciones anteriores se completen
-        setTimeout(() => {
-          navigate("/login");
-        }, 500);
-      } else {
-        console.error("Error deactivating account:", await response.json());
+          // Cambiar el estado de isLogin a false
+          actions.setIsLogin(false);
+
+          // Mostrar alerta y redirigir al usuario después de un pequeño retardo
+          alert("Your account has been deactivated.");
+          
+          // Redirigir después de un pequeño retardo para asegurar que las acciones anteriores se completen
+          setTimeout(() => {
+            navigate("/login");
+          }, 500);
+        } else {
+          console.error("Error deactivating account:", await response.json());
+        }
+      } catch (error) {
+        console.error("Error deactivating account:", error);
       }
-    } catch (error) {
-      console.error("Error deactivating account:", error);
     }
   };
 
@@ -119,7 +124,9 @@ export const Profile = () => {
             <h2 className="text-white">User Profile</h2>
             <i className="fas fa-edit fs-3 mx-5 mt-1" id="edit" onClick={handleEditClick} type="button" title="Edit Profile"></i>
           </div>
-          {isEditing ?  <div className="card bg-dark text-white col-6">
+
+          {isEditing ? (
+            <div className="card bg-dark text-white col-6">
               <div className="card-body">
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-3">
@@ -160,7 +167,7 @@ export const Profile = () => {
                     <select
                       className="form-control"
                       id="gender"
-                      name="gender" // Añadir el nombre para que coincida con formData
+                      name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
                     >
@@ -197,48 +204,71 @@ export const Profile = () => {
                       name="birth_date"
                       value={formData.birth_date}
                       onChange={handleInputChange}
+                      lang="en-GB"
                     />
                   </div>
-                  {/* is_active es parte del formulario pero no se muestra al usuario */}
                   <button type="submit" className="btn btn-outline-light">
                     Save changes
                   </button>
                 </form>
               </div>
             </div>
-           : (
+          ) : (
             <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
               <div className="card-body">
-                <img src={store.user.profile_picture} alt="profile_pic" width="150" height="150" className="d-inline-block align-text-top rounded-circle mx-2 mb-5" />
-                <p><strong>Name:</strong> {store.user.first_name}</p>
-                <p><strong>Last Name:</strong> {store.user.last_name}</p>
-                <p><strong>Email:</strong> {store.user.email}</p>
-                <p><strong>Gender:</strong> {store.user.gender}</p>
-                <p><strong>Weight:</strong> {store.user.weight} kg</p>
-                <p><strong>Height:</strong> {store.user.height} cm</p>
-                <p><strong>Birth Date:</strong> {formatDate(store.user.birth_date)}</p>
+                <img
+                  src={store.user.profile_picture}
+                  alt="profile_pic"
+                  width="150"
+                  height="150"
+                  className="d-inline-block align-text-top rounded-circle mx-2 mb-5"
+                />
+                <p>
+                  <strong>Name:</strong> {store.user.first_name}
+                </p>
+                <p>
+                  <strong>Last Name:</strong> {store.user.last_name}
+                </p>
+                <p>
+                  <strong>Email:</strong> {store.user.email}
+                </p>
+                <p>
+                  <strong>Gender:</strong> {store.user.gender}
+                </p>
+                <p>
+                  <strong>Weight:</strong> {store.user.weight} kg
+                </p>
+                <p>
+                  <strong>Height:</strong> {store.user.height} cm
+                </p>
+                <p>
+                  <strong>Birth Date:</strong> {formatDate(store.user.birth_date)}
+                </p>
                 <div>
                   <strong>BMI:</strong>{" "}
-                  <span style={{ color: getBMIColor(calculateBMI(store.user.weight, store.user.height)), fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: getBMIColor(calculateBMI(store.user.weight, store.user.height)),
+                      fontWeight: "bold",
+                    }}
+                  >
                     {calculateBMI(store.user.weight, store.user.height)}
                   </span>
+                  <p>
+                    Body Mass Index is a measure that uses a person's weight and height to estimate their body fat. It's
+                    calculated by dividing the weight in kilograms by the square of the height in meters.
+                  </p>
+                  <button className="btn btn-outline-danger mt-3" onClick={handleDeleteAccount}>
+            Delete Account
+          </button>
                 </div>
-                <p>
-                Body Mass Index is a measure that uses a person's weight and height to estimate their body fat. It's calculated by dividing the weight in kilograms by the height in meters squared. BMI categories include underweight, normal weight, overweight, and obesity.
-                </p>
               </div>
             </div>
           )}
+          
         </div>
       ) : (
-        <div className="container text-center">
-          <div className="alert alert-secondary col-6 d-flex justify-content-center mx-auto" role="alert">
-            Session has expired
-          </div>
-          <Link to="/login">
-            <button className="btn btn-outline-light">Login</button>
-          </Link>
-        </div>
+        navigate("/login")
       )}
     </div>
   );
