@@ -44,12 +44,16 @@ export const Navbar = () => {
                             </li>
                         </ul>
                     )}
-                    <ul className="navbar-nav ms-auto d-flex align-items-center">
+                    <ul className="navbar-nav ms-auto d-flex align-items-center"> 
                         {store.isLogin ? (
-                            <li className="nav-item">
-                                <button className="btn btn-outline-light rounded-pill text-info border-info font-weight-bold fs-5 dropdown-toggle mx-3" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    Welcome, {store.user.first_name}
-                                </button>
+                            <li className="nav-item"> 
+                                <button className="btn btn-outline-light rounded-pill text-info border-info font-weight-bold fs-5 dropdown-toggle mx-3" 
+                                type="button" 
+                                id="navbarDropdown" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false">
+                                    Welcome {store.user.first_name && ` ${store.user.first_name}`} 
+                                </button> 
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li><Link to="/profile" className="dropdown-item" onClick={profile}>Profile</Link></li>
                                     <li><hr className="dropdown-divider" /></li>
