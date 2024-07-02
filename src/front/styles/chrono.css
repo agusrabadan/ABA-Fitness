@@ -1,0 +1,17 @@
+.roller {
+    display: inline-block;
+    background-color: #17a2b8;
+    color: white;
+    font-size: 2rem;
+    width: 1.5em;
+    text-align: center;
+    margin: 0 0.1em;
+    border-radius: 0.2em;
+  }
+  
+  .roller-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  

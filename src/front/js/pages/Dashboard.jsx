@@ -6,7 +6,7 @@ import ChicaPesas from "../../img/ChicaPesas.webp";
 import MotivationCarousel from "./MotivationCarousel.jsx"; // Importa el componente MotivationCarousel
 import ImageCarousel from "./ImageCarousel.jsx"; // Importa el componente ImageCarousel
 import "../../styles/dashboard.css";
-import Chrono from "./Chrono.jsx"; 
+import Chrono from "./Chrono.jsx";
 
 export const Dashboard = () => {
   const { store } = useContext(Context);

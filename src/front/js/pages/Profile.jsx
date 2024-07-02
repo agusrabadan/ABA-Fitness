@@ -119,8 +119,7 @@ export const Profile = () => {
             <h2 className="text-white">User Profile</h2>
             <i className="fas fa-edit fs-3 mx-5 mt-1" id="edit" onClick={handleEditClick} type="button" title="Edit Profile"></i>
           </div>
-          {isEditing ? (
-            <div className="card bg-dark text-white col-6">
+          {isEditing ?  <div className="card bg-dark text-white col-6">
               <div className="card-body">
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-3">
@@ -161,7 +160,7 @@ export const Profile = () => {
                     <select
                       className="form-control"
                       id="gender"
-                      name="gender"
+                      name="gender" // Añadir el nombre para que coincida con formData
                       value={formData.gender}
                       onChange={handleInputChange}
                     >
@@ -200,19 +199,14 @@ export const Profile = () => {
                       onChange={handleInputChange}
                     />
                   </div>
+                  {/* is_active es parte del formulario pero no se muestra al usuario */}
                   <button type="submit" className="btn btn-outline-light">
                     Save changes
                   </button>
                 </form>
-                <button
-                  className="btn btn-outline-danger mt-3"
-                  onClick={handleDeleteAccount}
-                >
-                  Delete Account
-                </button>
               </div>
             </div>
-          ) : (
+           : (
             <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
               <div className="card-body">
                 <img src={store.user.profile_picture} alt="profile_pic" width="150" height="150" className="d-inline-block align-text-top rounded-circle mx-2 mb-5" />
@@ -229,12 +223,9 @@ export const Profile = () => {
                     {calculateBMI(store.user.weight, store.user.height)}
                   </span>
                 </div>
-                <button
-                  className="btn btn-outline-danger mt-3"
-                  onClick={handleDeleteAccount}
-                >
-                  Delete Account
-                </button>
+                <span>
+                  Body Mass Index is a measure that uses a person's weight and height to estimate their body fat. It's calculated by dividing the weight in kilograms by the height in meters squared. BMI categories include underweight, normal weight, overweight, and obesity.
+                  </span>
               </div>
             </div>
           )}
