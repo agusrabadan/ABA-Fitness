@@ -1,10 +1,11 @@
 import React, { useState, useContext } from "react";
 import { Context } from "../store/appContext.js";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../../styles/profile.css";
 
 export const Profile = () => {
   const { store, actions } = useContext(Context);
+  const navigate = useNavigate(); // Usar useNavigate para la redirección
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     first_name: store.user.first_name,
@@ -17,22 +18,19 @@ export const Profile = () => {
     is_active: store.user.is_active,
   });
 
-  // Formatear la fecha de nacimiento de ISO a un formato más legible
   const formatDate = (dateString) => {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Función para calcular el índice de masa corporal (BMI)
   const calculateBMI = (weight, height) => {
     if (weight <= 0 || height <= 0) return "N/A";
 
-    const heightInMeters = height / 100; // Convertir altura a metros
+    const heightInMeters = height / 100;
     const bmi = weight / (heightInMeters * heightInMeters);
-    return bmi.toFixed(1); // Redondear el BMI a un decimal
+    return bmi.toFixed(1);
   };
 
-  // Función para determinar el color del BMI según el rango
   const getBMIColor = (bmi) => {
     if (bmi <= 18.5) {
       return "#F7A926"; // Bajo peso
@@ -79,6 +77,40 @@ export const Profile = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    try {
+      const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${store.token}`,
+        },
+        body: JSON.stringify({ ...formData, is_active: false }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        actions.setUser(data); // Actualizar el usuario
+        actions.setCurrentUser(data.results);
+
+        // Cambiar el estado de isLogin a false
+        actions.setIsLogin(false);
+
+        // Mostrar alerta y redirigir al usuario después de un pequeño retardo
+        alert("Your account has been deactivated.");
+        
+        // Redirigir después de un pequeño retardo para asegurar que las acciones anteriores se completen
+        setTimeout(() => {
+          navigate("/login");
+        }, 500);
+      } else {
+        console.error("Error deactivating account:", await response.json());
+      }
+    } catch (error) {
+      console.error("Error deactivating account:", error);
+    }
+  };
+
   return (
     <div className="container mt-4">
       {store.isLogin ? (
@@ -87,7 +119,8 @@ export const Profile = () => {
             <h2 className="text-white">User Profile</h2>
             <i className="fas fa-edit fs-3 mx-5 mt-1" id="edit" onClick={handleEditClick} type="button" title="Edit Profile"></i>
           </div>
-          {isEditing ?  <div className="card bg-dark text-white col-6">
+          {isEditing ? (
+            <div className="card bg-dark text-white col-6">
               <div className="card-body">
                 <form onSubmit={handleFormSubmit}>
                   <div className="mb-3">
@@ -128,7 +161,7 @@ export const Profile = () => {
                     <select
                       className="form-control"
                       id="gender"
-                      name="gender" // Añadir el nombre para que coincida con formData
+                      name="gender"
                       value={formData.gender}
                       onChange={handleInputChange}
                     >
@@ -167,14 +200,19 @@ export const Profile = () => {
                       onChange={handleInputChange}
                     />
                   </div>
-                  {/* is_active es parte del formulario pero no se muestra al usuario */}
                   <button type="submit" className="btn btn-outline-light">
                     Save changes
                   </button>
                 </form>
+                <button
+                  className="btn btn-outline-danger mt-3"
+                  onClick={handleDeleteAccount}
+                >
+                  Delete Account
+                </button>
               </div>
             </div>
-           : (
+          ) : (
             <div className="card text-white" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
               <div className="card-body">
                 <img src={store.user.profile_picture} alt="profile_pic" width="150" height="150" className="d-inline-block align-text-top rounded-circle mx-2 mb-5" />
@@ -191,6 +229,12 @@ export const Profile = () => {
                     {calculateBMI(store.user.weight, store.user.height)}
                   </span>
                 </div>
+                <button
+                  className="btn btn-outline-danger mt-3"
+                  onClick={handleDeleteAccount}
+                >
+                  Delete Account
+                </button>
               </div>
             </div>
           )}

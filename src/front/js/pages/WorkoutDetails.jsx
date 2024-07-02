@@ -15,7 +15,6 @@ export const WorkoutDetails = () => {
                 if (!token) {
                     throw new Error('Token not found in localStorage.');
                 }
-
                 const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${id}`, {
                     method: 'GET',
                     headers: {
@@ -23,11 +22,9 @@ export const WorkoutDetails = () => {
                         'Authorization': `Bearer ${token}`
                     }
                 });
-
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('Fetched workout details:', data);
                 setWorkoutDetails(data.results);
@@ -44,7 +41,6 @@ export const WorkoutDetails = () => {
                 if (!token) {
                     throw new Error('Token not found in localStorage.');
                 }
-
                 const response = await fetch(`${process.env.BACKEND_URL}/api/workouts/${id}`, {
                     method: 'GET',
                     headers: {
@@ -56,7 +52,6 @@ export const WorkoutDetails = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
                 const data = await response.json();
                 console.log('Fetched workout:', data);
                 setWorkout(data.results); // Suponemos que aquí recibes el workout específico con el ID
@@ -66,9 +61,7 @@ export const WorkoutDetails = () => {
                 setLoading(false);
             }
         };
-
         fetchWorkoutDetails(), fetchWorkout();
-
     }, [id]);
 
     function formatDuration(totalSeconds) {
@@ -76,11 +69,6 @@ export const WorkoutDetails = () => {
         const seconds = totalSeconds % 60;
         return `${minutes} min ${seconds} seg`;
     }
-
-    const handleEdit = (exerciseId) => {
-        // Manejar la edición del ejercicio
-        console.log(`Edit exercise with ID: ${exerciseId}`);
-    };
 
     const handleDelete = async (exerciseId) => {
         try {
@@ -114,10 +102,13 @@ export const WorkoutDetails = () => {
         return <div>No workout details found.</div>;
     }
 
+    const capitalizeFirstLetter = (string) => { //funcion para poner la primera letra en mayusculas
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+
     return (
         <div className="container">
             <div className='justify-content-around d-flex mb-5 mt-5'>
-                <img src="https://v2.exercisedb.io/image/vcLH762WnXfDay"></img>
                 <h3 className="text-white">Workout name: {workout.name}</h3>
                 <h3 className="text-white">Workout duration: {formatDuration(workout.duration)}</h3>
             </div>
@@ -130,16 +121,14 @@ export const WorkoutDetails = () => {
                             style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
                         />
                         <span>
-                            {workout.exercise_name.toUpperCase()} - {workout.reps_num} reps, {workout.series_num} sets
+                            {capitalizeFirstLetter(workout.exercise_name)} - {workout.reps_num} reps, {workout.series_num} sets
                         </span>
                         <div>
                             <i className="fas fa-trash-alt text-white fs-4 mx-5" title="Remove exercise" type="button" onClick={() => handleDelete(workout.id)}></i>
-                            <i className="fas fa-edit text-white fs-4" title="Remove exercise" type="button" onClick={() => handleEdit(workout.id)}></i>
                         </div>
                     </li>
                 ))}
             </ul>
-            
             {/* Botón para volver a la lista de workouts */}
             <Link to="/workouts" className="btn btn-outline-light rounded-pill text-orange border-orange mt-3">Back to Workouts</Link>
         </div>
