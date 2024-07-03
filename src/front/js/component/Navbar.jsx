@@ -31,6 +31,9 @@ export const Navbar = () => {
                     {store.isLogin && (
                         <ul className="navbar-nav mx-auto d-flex justify-content-center align-items-center">
                             <li className="nav-item mx-3">
+                                <Link to="/dashboard" className="btn btn-outline-light rounded-pill text-orange border-orange">Dashboard</Link>
+                            </li>
+                            <li className="nav-item mx-3">
                                 <Link to="/exercises" className="btn btn-outline-light rounded-pill text-orange border-orange">Exercises</Link>
                             </li>
                             <li className="nav-item mx-3 text-white">
@@ -38,9 +41,6 @@ export const Navbar = () => {
                             </li>
                             <li className="nav-item mx-3">
                                 <Link to="/favorites" className="btn btn-outline-light rounded-pill text-orange border-orange">Favorites</Link>
-                            </li>
-                            <li className="nav-item mx-3">
-                                <Link to="/activity-log" className="btn btn-outline-light rounded-pill text-orange border-orange">Activity Log</Link>
                             </li>
                         </ul>
                     )}
