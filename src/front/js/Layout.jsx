@@ -14,7 +14,7 @@ import { Profile } from "./pages/Profile.jsx";
 import { Workouts } from "./pages/Workouts.jsx";
 import { WorkoutDetails } from "./pages/WorkoutDetails.jsx";
 import { Dashboard } from "./pages/Dashboard.jsx";
-import { Exercises } from "./pages/Exercises.jsx";
+import Exercises from './pages/Exercises.jsx';
 import { Favorites } from "./pages/Favorites.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 import { ConditionsTerms } from "./pages/ConditionsTerms.jsx";

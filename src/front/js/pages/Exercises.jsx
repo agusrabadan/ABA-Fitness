@@ -3,7 +3,7 @@ import { Container, Row, Col, Card, Button, Pagination, Spinner, Form, Alert } f
 import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
-export const Exercises = () => {
+const Exercises = () => {
   const { store, actions } = useContext(Context);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -176,3 +176,5 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
     </div>
   );
 };
+
+export default Exercises;

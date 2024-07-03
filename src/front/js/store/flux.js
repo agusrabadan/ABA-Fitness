@@ -98,9 +98,9 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            removeFavorite: async (favoriteId) => {
+            removeFavorite: async (exercise) => {
                 const store = getStore();
-                console.log('ID to be removed (favorite):', favoriteId);
+                console.log('ID to be removed (favorite):', exercise);
 
                 try {
                     const token = localStorage.getItem('token');
@@ -108,7 +108,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                         throw new Error('Token not found in localStorage.');
                     }
 
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${favoriteId}`, {
+                    const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${exercise}`, {
                         method: 'DELETE',
                         headers: {
                             'Content-Type': 'application/json',
@@ -117,7 +117,7 @@ const getState = ({ getStore, getActions, setStore }) => {
                     });
 
                     if (response.ok) {
-                        const updatedFavorites = store.favorites.filter(fav => fav.id !== favoriteId);
+                        const updatedFavorites = store.favorites.filter(fav => fav.id !== exercise);
                         setStore({ favorites: updatedFavorites });
                         console.log('Favorito eliminado:', favoriteId);
                     } else {

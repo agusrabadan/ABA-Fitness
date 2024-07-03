@@ -158,38 +158,44 @@ def exercises():
     response_body = {}
     if request.method == "GET":
         try:
-            exercises = db.session.execute(db.select(Exercises)).scalars()
+            exercises = db.session.execute(db.select(Exercises)).scalars().all()
             results = [row.serialize() for row in exercises]
             response_body["results"] = results
             response_body["message"] = "Listado de ejercicios"
             return jsonify(response_body), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+    
     if request.method == "POST":
         try:
-            headers = {
-                "X-RapidAPI-Key": RAPIDAPI_KEY,
-                "X-RapidAPI-Host": RAPIDAPI_HOST
-            }
-            api_url = "https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0"
-            external_response = requests.get(api_url, headers=headers)
-            if external_response.status_code != 200:
-                return jsonify({"error": "Error al obtener datos de la API externa"}), 500
-            external_data = external_response.json()
-            for data in external_data:
-                new_exercise = Exercises(
-                    name=data.get("name"),
-                    target=data.get("target"),
-                    body_part=data.get("bodyPart"),
-                    equipment=data.get("equipment"),
-                    secondary_muscles=data.get("secondaryMuscles", ""),
-                    instructions=data.get("instructions", ""),
-                    gif_url=data.get("gifUrl"),
-                )
-                db.session.add(new_exercise)
-            db.session.commit()
-            response_body["message"] = "Ejercicios creados"
-            return jsonify(response_body), 201
+            exercises_count = db.session.query(Exercises).count()
+            if exercises_count == 0:
+                headers = {
+                    "X-RapidAPI-Key": RAPIDAPI_KEY,
+                    "X-RapidAPI-Host": RAPIDAPI_HOST
+                }
+                api_url = "https://exercisedb.p.rapidapi.com/exercises?limit=2000&offset=0"
+                external_response = requests.get(api_url, headers=headers)
+                if external_response.status_code != 200:
+                    return jsonify({"error": "Error al obtener datos de la API externa"}), 500
+                external_data = external_response.json()
+                for data in external_data:
+                    new_exercise = Exercises(
+                        name=data.get("name"),
+                        target=data.get("target"),
+                        body_part=data.get("bodyPart"),
+                        equipment=data.get("equipment"),
+                        secondary_muscles=data.get("secondaryMuscles", ""),
+                        instructions=data.get("instructions", ""),
+                        gif_url=data.get("gifUrl"),
+                    )
+                    db.session.add(new_exercise)
+                db.session.commit()
+                response_body["message"] = "Ejercicios creados"
+                return jsonify(response_body), 201
+            else:
+                response_body["message"] = "La tabla de ejercicios ya contiene datos"
+                return jsonify(response_body), 200
         except Exception as e:
             db.session.rollback()
             return jsonify({"error": str(e)}), 400
