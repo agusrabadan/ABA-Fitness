@@ -6,14 +6,14 @@ export const Signup = () => {
     const { actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // Estado para controlar la visibilidad de la contraseña
+    const [showPassword, setShowPassword] = useState(false);  // Estado para controlar la visibilidad de la contraseña
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
-    const [gender, setGender] = useState(""); // Valor predeterminado
+    const [gender, setGender] = useState("");  // Valor predeterminado
     const [birthDate, setBirthDate] = useState("");
-    const [errorMessage, setErrorMessage] = useState(""); // Para almacenar el mensaje de error
+    const [errorMessage, setErrorMessage] = useState("");  // Para almacenar el mensaje de error
     const navigate = useNavigate();
 
     const handleEmailChange = (event) => setEmail(event.target.value);
@@ -33,12 +33,13 @@ export const Signup = () => {
         const dataToSend = {
             email,
             password,
-            first_name: null,
-            last_name: null,
-            weight: null,
-            height: null,
-            gender: null,
-            birth_date: null
+            // Solo incluir los valores adicionales si están presentes
+            first_name: firstName || undefined,
+            last_name: lastName || undefined,
+            weight: weight || undefined,
+            height: height || undefined,
+            gender: gender || undefined,
+            birth_date: birthDate || undefined
         };
         const url = `${process.env.BACKEND_URL}/api/signup`;
 
@@ -71,7 +72,6 @@ export const Signup = () => {
         }
     };
 
-
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -91,7 +91,7 @@ export const Signup = () => {
                                         Password:
                                     </label>
                                     <input
-                                        type={showPassword ? "text" : "password"} // Cambiar tipo basado en showPassword
+                                        type={showPassword ? "text" : "password"}  // Cambiar tipo basado en showPassword
                                         className="form-control"
                                         id="password"
                                         value={password}
@@ -107,7 +107,6 @@ export const Signup = () => {
                                             top: "50%",
                                             transform: "translateY(-50%)",
                                             cursor: "pointer",
-
                                         }}
                                     >
                                         {showPassword ? (
@@ -141,6 +140,7 @@ export const Signup = () => {
                                     <label htmlFor="gender" className="mb-1">Gender:</label>
                                     <select className="form-control" id="gender"
                                         value={gender} onChange={handleGender} >
+                                        <option value="">Select Gender</option> {/* Opción predeterminada vacía */}
                                         <option value="Female">Female</option>
                                         <option value="Male">Male</option>
                                         <option value="Not defined">Others</option>
