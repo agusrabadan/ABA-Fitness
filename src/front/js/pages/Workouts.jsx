@@ -161,17 +161,23 @@ export const Workouts = () => {
 
     const handleAddToRoutine = (exercise) => { //Obligatorio series y repeticiones
         if (!selectedReps || !selectedSets) {
-            alert("Especificar número de repeticiones y series.");
+            alert("Specify the number of reps and sets.");
+            return;
+        }
+        // Verificar si el ejercicio ya está en la rutina
+        const isAlreadyAdded = routineExercises.some(routineExercise => routineExercise.id === exercise.id);
+        if (isAlreadyAdded) {
+            alert("This exercise is already in the workout.");
             return;
         }
         setRoutineExercises([...routineExercises, { ...exercise, reps: selectedReps, sets: selectedSets, rest: selectedRest }]);
-        //Esto se queda comentado porque pensamos que es incomodo resetear toda la busqueda para añadir ejercicios uno a uno
-        /* setSelectedBodyPart("");
-        setSelectedEquipment("");
-        setSelectedReps("");
-        setSelectedSets("");
-        setSelectedRest(""); */
     };
+    //Esto se queda comentado porque pensamos que es incomodo resetear toda la busqueda para añadir ejercicios uno a uno
+    /* setSelectedBodyPart("");
+    setSelectedEquipment("");
+    setSelectedReps("");
+    setSelectedSets("");
+    setSelectedRest(""); */
 
     const capitalizeFirstLetter = (string) => { //funcion para poner la primera letra en mayusculas
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -426,11 +432,9 @@ export const Workouts = () => {
                                             onChange={handleRepsChange}
                                         >
                                             <option value="">Select number of reps</option>
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="12">12</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
+                                            {Array.from({ length: 20 }, (_, i) => i + 1).map(value => (
+                                                <option key={value} value={value}>{value}</option>
+                                            ))}
                                         </select>
                                     </div>
                                     <div className="form-group mb-3">
@@ -463,24 +467,27 @@ export const Workouts = () => {
                                 <div className="ml-4" style={{ width: '50%' }}>
                                     <h6 className="text-white mx-5">Available exercises:</h6>
                                     <ul className="list-group mx-5">
-                                        {currentExercises.map((exercise, index) => (
-                                            <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                                                <div>{capitalizeFirstLetter(exercise.name)}</div>
-                                                <div className="d-flex align-items-center">
-                                                    <img
-                                                        src={exercise.gifUrl}
-                                                        alt={exercise.name}
-                                                        style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
-                                                    />
-                                                    <i
-                                                        className="fas fa-plus mx-2 add-icon"
-                                                        onClick={() => handleAddToRoutine(exercise)}
-                                                        style={{ cursor: 'pointer' }} 
-                                                        title="Add Exercise"
-                                                    />
-                                                </div>
-                                            </li>
-                                        ))}
+                                        {currentExercises.map((exercise, index) => {
+                                            const isAdded = routineExercises.some(routineExercise => routineExercise.id === exercise.id);
+                                            return (
+                                                <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                                                    <div>{capitalizeFirstLetter(exercise.name)}</div>
+                                                    <div className="d-flex align-items-center">
+                                                        <img
+                                                            src={exercise.gifUrl}
+                                                            alt={exercise.name}
+                                                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
+                                                        />
+                                                        <i
+                                                            className={`fas ${isAdded ? 'fa-check' : 'fa-plus'} mx-2 add-icon`}
+                                                            onClick={() => handleAddToRoutine(exercise)}
+                                                            style={{ cursor: isAdded ? 'default' : 'pointer', color: isAdded ? 'green' : 'white' }}
+                                                            title={isAdded ? "Exercise added" : "Add Exercise"}
+                                                        />
+                                                    </div>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                     <nav className="mt-3">
                                         <ul className="pagination justify-content-center">
@@ -511,7 +518,6 @@ export const Workouts = () => {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };

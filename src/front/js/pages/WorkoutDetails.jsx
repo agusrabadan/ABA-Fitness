@@ -61,7 +61,8 @@ export const WorkoutDetails = () => {
                 setLoading(false);
             }
         };
-        fetchWorkoutDetails(), fetchWorkout();
+        fetchWorkoutDetails();
+         fetchWorkout();
     }, [id]);
 
     function formatDuration(totalSeconds) {
