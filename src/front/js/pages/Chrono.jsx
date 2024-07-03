@@ -71,11 +71,6 @@ const Chrono = () => {
 
   return (
     <div className='text-white text-center mt-5'>
-      <div className="d-flex justify-content-center mx-3 mt-4">
-        <i className="fas fa-stopwatch-20 fs-1 mb-2"></i>
-        <h4 className='mx-3'>Chrono</h4>
-      </div>
-
       <div className='d-flex justify-content-center align-items-center'>
         <p className='mb-0'>ACTIVE time:&nbsp; </p>
         <div className="roller-container mr-3 mb-0" style={{ width: '180px' }}>
