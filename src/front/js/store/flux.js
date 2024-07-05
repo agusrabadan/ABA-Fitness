@@ -65,75 +65,17 @@ const getState = ({ getStore, getActions, setStore }) => {
                 }
             },
 
-            addFavorite: async (exercise) => {
-                const store = getStore();
-                const userId = store.user.id;
+            addFavorite: (exercise) => {
+				const store = getStore();
+				const favorites = [...store.favorites, exercise];
+				setStore({ favorites }); // Añadido para agregar favoritos
+			},
 
-                const favorites = [...store.favorites, exercise];
-                setStore({ favorites });
-
-                try {
-                    const token = localStorage.getItem('token');
-
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/favorites`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        },
-                        body: JSON.stringify({
-                            user_id: userId,
-                            exercise_id: exercise.id
-                        })
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-
-                    const data = await response.json();
-                    console.log('Favorite added:', data);
-                } catch (error) {
-                    console.error('Error adding favorite:', error.message);
-                }
-            },
-
-            removeFavorite: async (exercise) => {
-                const store = getStore();
-                console.log('ID to be removed (favorite):', exercise);
-
-                try {
-                    const token = localStorage.getItem('token');
-                    if (!token) {
-                        throw new Error('Token not found in localStorage.');
-                    }
-
-                    const response = await fetch(`${process.env.BACKEND_URL}/api/favorites/${exercise}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`
-                        }
-                    });
-
-                    if (response.ok) {
-                        const updatedFavorites = store.favorites.filter(fav => fav.id !== exercise);
-                        setStore({ favorites: updatedFavorites });
-                        console.log('Favorito eliminado:', favoriteId);
-                    } else {
-                        const errorResponse = await response.json();
-                        console.error('Error removing favorite:', errorResponse.message);
-                        throw new Error(`HTTP error! Status: ${response.status}`);
-                    }
-                } catch (error) {
-                    console.error('Error removing favorite:', error.message);
-                }
-            },
-
-            setUser: (userData) => {
-                setStore({ user: userData });
-                setStore({ isLogin: true }); // Opcional: Marcar como logueado cuando se establece el usuario
-            },
+			removeFavorite: (id) => {
+				const store = getStore();
+				const favorites = store.favorites.filter(fav => fav.id !== id);
+				setStore({ favorites }); // Añadido para eliminar favoritos
+			},
         }
     };
 };

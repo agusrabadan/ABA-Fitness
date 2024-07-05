@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from 'react-router-dom'; // Importa Link desde react-router-dom
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import "../../styles/workoutdetails.css";
 
 export const WorkoutDetails = () => {
@@ -61,15 +61,32 @@ export const WorkoutDetails = () => {
                 setLoading(false);
             }
         };
+
         fetchWorkoutDetails();
-         fetchWorkout();
+        fetchWorkout();
     }, [id]);
 
     function formatDuration(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
-        return `${minutes} min ${seconds} seg`;
+        return `${minutes} min ${seconds} sec`;
     }
+
+    const calculateTotalRoutineDuration = () => {
+        let totalSeconds = 0;
+
+        workoutDetails.forEach(exercise => {
+            // Aquí asumimos que cada ejercicio tiene una duración base. Ajusta esto según tu lógica.
+            const exerciseDuration = exercise.duration || 60; // 60 segundos como valor por defecto si no hay duración.
+            totalSeconds += exerciseDuration;
+        });
+
+        // Si hay tiempos de descanso entre ejercicios, agrégalos aquí.
+        const restTime = 30; // Por ejemplo, 30 segundos de descanso entre ejercicios.
+        totalSeconds += (workoutDetails.length - 1) * restTime;
+
+        return totalSeconds;
+    };
 
     const handleDelete = async (exerciseId) => {
         try {
@@ -91,7 +108,16 @@ export const WorkoutDetails = () => {
             }
 
             // Actualizar la lista de detalles del workout después de eliminar un ejercicio
-            setWorkoutDetails(workoutDetails.filter(exercise => exercise.id !== exerciseId));
+            const updatedWorkoutDetails = workoutDetails.filter(exercise => exercise.id !== exerciseId);
+            setWorkoutDetails(updatedWorkoutDetails);
+
+
+            // Recalcular la duración de la rutina después de eliminar el ejercicio
+            const updatedDuration = calculateTotalRoutineDuration(updatedWorkoutDetails);
+            setWorkout(prevWorkout => ({
+                ...prevWorkout,
+                duration: updatedDuration
+            }));
         } catch (error) {
             console.error('Error deleting exercise:', error.message);
         }
@@ -100,10 +126,13 @@ export const WorkoutDetails = () => {
     if (loading) return <div>Loading...</div>;
 
     if (workoutDetails.length === 0) {
-        return <div>No workout details found.</div>;
+        return <div className=''>
+            <h2 className='text-white mt-3 text-center'>No exercises in workout!</h2>
+            <Link to="/workouts" className="btn btn-outline-light rounded-pill text-orange border-orange mt-3">Back to Workouts</Link>
+        </div>;
     }
 
-    const capitalizeFirstLetter = (string) => { //funcion para poner la primera letra en mayusculas
+    const capitalizeFirstLetter = (string) => {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
@@ -125,7 +154,7 @@ export const WorkoutDetails = () => {
                             {capitalizeFirstLetter(workout.exercise_name)} - {workout.reps_num} reps, {workout.series_num} sets
                         </span>
                         <div>
-                            <i className="fas fa-trash-alt text-white fs-4 mx-5" title="Remove exercise" type="button" onClick={() => handleDelete(workout.id)}></i>
+                            <i className="fas fa-trash-alt text-danger fs-4 mx-5" title="Remove exercise" type="button" onClick={() => handleDelete(workout.id)}></i>
                         </div>
                     </li>
                 ))}

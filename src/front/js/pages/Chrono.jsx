@@ -14,7 +14,7 @@ const Chrono = () => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
-      }, 10); // Actualiza cada 10 milisegundos
+      }, 10);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -26,7 +26,7 @@ const Chrono = () => {
     if (isBackgroundRunning) {
       backgroundIntervalRef.current = setInterval(() => {
         setBackgroundTime((prevTime) => prevTime + 1);
-      }, 10); // Actualiza cada 10 milisegundos en segundo plano
+      }, 10);
     } else {
       clearInterval(backgroundIntervalRef.current);
     }
@@ -41,7 +41,7 @@ const Chrono = () => {
     } else {
       setIsRunning(true);
       setIsBackgroundRunning(false);
-      setBackgroundTime(0); // Reinicia el tiempo en segundo plano
+      setBackgroundTime(0);
     }
   };
 
@@ -71,11 +71,6 @@ const Chrono = () => {
 
   return (
     <div className='text-white text-center mt-5'>
-      <div className="d-flex justify-content-center mx-3 mt-4">
-        <i className="fas fa-stopwatch-20 fs-1 mb-2"></i>
-        <h4 className='mx-3'>Chrono</h4>
-      </div>
-
       <div className='d-flex justify-content-center align-items-center'>
         <p className='mb-0'>ACTIVE time:&nbsp; </p>
         <div className="roller-container mr-3 mb-0" style={{ width: '180px' }}>

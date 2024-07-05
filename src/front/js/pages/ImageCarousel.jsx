@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Spinner } from "react-bootstrap"; // Asegúrate de tener react-bootstrap instalado o usa tu spinner preferido
+import { Spinner } from "react-bootstrap"; 
+import "../../styles/carousel.css";
 
 const ImageCarousel = () => {
   const [imageIndex, setImageIndex] = useState(0);
@@ -13,21 +14,23 @@ const ImageCarousel = () => {
 
     // Mapea las imágenes importadas a una estructura con URL y un ID único basado en el índice
     const mappedImages = imageFiles.map((image, index) => ({
-      id: `image_${index}`, // Genera un ID único para cada imagen
-      url: image.default, // URL de la imagen
+      id: `image_${index}`,
+      url: image.default,
     }));
 
-    setImages(mappedImages); // Establece las imágenes en el estado
-    setIsLoading(false); // Indica que la carga ha terminado
+    setTimeout(() => {
+      setImages(mappedImages);
+      setIsLoading(false); 
+    }, 2000); 
   }, []);
 
   useEffect(() => {
     if (images.length > 0) {
       const interval = setInterval(() => {
-        // Genera un índice aleatorio diferente al actual
+    
         const newIndex = Math.floor(Math.random() * images.length);
         setImageIndex(newIndex);
-      }, 7000); // Cambia cada 7 segundos (ajusta el intervalo según tus preferencias)
+      }, 7000); 
 
       return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
     }
@@ -37,7 +40,7 @@ const ImageCarousel = () => {
     <div>
       {isLoading ? (
         <div className="d-flex justify-content-center align-items-center" style={{ height: "400px" }}>
-          <Spinner animation="border" role="status" variant="info" style={{ width: "3rem", height: "3rem" }}>
+          <Spinner animation="border" role="status" variant="info" className="spinner-border">
             <span className="visually-hidden">Loading...</span>
           </Spinner>
         </div>
@@ -48,8 +51,7 @@ const ImageCarousel = () => {
               <div key={image.id} className={index === imageIndex ? "carousel-item active" : "carousel-item"}>
                 <img 
                   src={image.url} 
-                  className="d-block mx-auto" 
-                  style={{ width: "600px", height: "400px", borderRadius: "30px", border: "1px solid orange" }}
+                  className="d-block mx-auto"
                   alt={`Image ${index}`} 
                 />
               </div>

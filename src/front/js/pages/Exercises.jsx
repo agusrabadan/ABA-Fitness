@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Pagination, Spinner, Form, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Pagination, Spinner, Form } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
@@ -10,6 +11,7 @@ const Exercises = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const exercisesPerPage = 9;
+  const location = useLocation();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -35,6 +37,13 @@ const Exercises = () => {
     fetchExercises();
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const search = params.get("search");
+    if (search) {
+      setSearchTerm(search);
+    }
+  }, [location.search]);
 
   const filteredExercises = exercises.filter(exercise => {
     return exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -62,7 +71,7 @@ const Exercises = () => {
   return (
     <Container className="mt-4 container">
       <h1 className='text-white text-center'>Exercises</h1>
-      <Form className="mb-3 mt-3 col-4">
+      <Form className="mb-3 mt-3 col-12 col-md-6">
         <div className='d-flex justify-content-between'>
           <i className="fas fa-search text-white fs-3 mx-2 mt-1"></i>
           <Form.Control
@@ -83,43 +92,41 @@ const Exercises = () => {
         <>
           <Row className="d-flex">
             {currentExercises.map((exercise) => (
-              <Col key={exercise.id} xs={8} md={6} lg={4} className="mb-4 d-flex">
+              <Col key={exercise.id} xs={12} md={6} lg={4} className="mb-4 d-flex">
                 <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} />
               </Col>
             ))}
           </Row>
-          <div className="d-flex justify-content-center mt-4">
-            <div style={{ overflowX: 'auto' }}>
-              <Pagination>
-                {currentPage > 1 && (
-                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
-                )}
-                {startPage > 1 && (
-                  <>
-                    <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
-                    <Pagination.Ellipsis disabled />
-                  </>
-                )}
-                {displayedPageNumbers.map(number => (
-                  <Pagination.Item
-                    key={number}
-                    active={number === currentPage}
-                    onClick={() => handlePageChange(number)}
-                  >
-                    {number}
-                  </Pagination.Item>
-                ))}
-                {endPage < totalPages && (
-                  <>
-                    <Pagination.Ellipsis disabled />
-                    <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
-                  </>
-                )}
-                {currentPage < totalPages && (
-                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
-                )}
-              </Pagination>
-            </div>
+          <div className="d-flex justify-content-center mt-4 pagination-container">
+            <Pagination>
+              {currentPage > 1 && (
+                <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
+              )}
+              {startPage > 1 && (
+                <>
+                  <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
+                  <Pagination.Ellipsis disabled />
+                </>
+              )}
+              {displayedPageNumbers.map(number => (
+                <Pagination.Item
+                  key={number}
+                  active={number === currentPage}
+                  onClick={() => handlePageChange(number)}
+                >
+                  {number}
+                </Pagination.Item>
+              ))}
+              {endPage < totalPages && (
+                <>
+                  <Pagination.Ellipsis disabled />
+                  <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
+                </>
+              )}
+              {currentPage < totalPages && (
+                <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
+              )}
+            </Pagination>
           </div>
         </>
       )}
@@ -154,8 +161,7 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
             <div className="justify-content-around d-flex fixed-bottom mb-3">
               <i className="far fa-question-circle fs-2" onClick={handleFlip} title="+ Info" type="button"></i>
               {isFavorite ? (
-                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => {
-                  actions.removeFavorite(favorite.id)}} title="Remove Favorite"></i>
+                <i className="fas fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.removeFavorite(exercise.id)} title="Remove Favorite"></i>
               ) : (
                 <i className="far fa-heart float-end fa-lg pt-3 text-danger fs-2" type="button" onClick={() => actions.addFavorite(exercise)} title="Add Favorite"></i>
               )}

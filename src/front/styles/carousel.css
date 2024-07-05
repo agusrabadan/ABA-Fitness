@@ -1,0 +1,31 @@
+/* Estilos generales */
+.carousel-inner img {
+    width: 600px;
+    height: 400px;
+    border-radius: 30px;
+    border: 1px solid orange;
+  }
+  
+  /* Estilos específicos para pantallas pequeñas */
+  @media (max-width: 768px) {
+    .carousel-inner img {
+      width: 100%; /* Ajustar la imagen para que tome el 100% del ancho del contenedor */
+      height: auto; /* Ajustar la altura automáticamente */
+      border-radius: 15px; /* Reducir el radio del borde */
+    }
+  
+    .d-flex {
+      flex-direction: column; /* Asegurar que el contenido se organice en columna en pantallas pequeñas */
+      align-items: center; /* Centrar los elementos */
+    }
+  
+    .spinner-border {
+      width: 2rem; /* Ajustar el tamaño del spinner */
+      height: 2rem; /* Ajustar el tamaño del spinner */
+    }
+  
+    .carousel {
+      width: 90%; /* Ajustar el ancho del carrusel */
+      margin: auto; /* Centrar el carrusel horizontalmente */
+    }
+  }
