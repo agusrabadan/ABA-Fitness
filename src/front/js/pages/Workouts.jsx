@@ -53,6 +53,7 @@ export const Workouts = () => {
                 console.error("Error al obtener los ejercicios de la API:", error);
             }
         };
+
         fetchExercises();
     }, []);
 
@@ -75,12 +76,23 @@ export const Workouts = () => {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
+    
+            if (data.results.length === 0) {
+                // Mostrar alerta de que no hay rutinas creadas
+                alert('No hay rutinas creadas.');
+                // Puedes decidir qué hacer después de mostrar la alerta, por ejemplo:
+                // return; // Detiene la ejecución aquí si no quieres continuar con el código siguiente
+            }
+    
             setWorkouts(data.results);
             setShowWorkouts(!showWorkouts);
+    
         } catch (error) {
             console.error('Error fetching workouts:', error.message);
         }
     };
+    
+
 
     const resetForm = () => {
         setSelectedBodyPart("");
@@ -122,6 +134,8 @@ export const Workouts = () => {
             });
             if (response.ok) {
                 alert('Rutina guardada exitosamente en la base de datos');
+                getWorkouts();
+                setShowWorkouts(!showWorkouts)
                 resetForm(); // Resetear todos los estados después de guardar la rutina
             } else {
                 const errorData = await response.json();
@@ -132,6 +146,11 @@ export const Workouts = () => {
             alert(`Error al guardar la rutina. Por favor, intenta de nuevo más tarde. Detalle del error: ${error.message}`);
         }
     };
+
+    const seeWorkouts = () => {
+        getWorkouts();
+        setShowWorkouts(!showWorkouts);
+    }
 
     useEffect(() => {
         if (!store.isLogin) {
@@ -172,12 +191,6 @@ export const Workouts = () => {
         }
         setRoutineExercises([...routineExercises, { ...exercise, reps: selectedReps, sets: selectedSets, rest: selectedRest }]);
     };
-    //Esto se queda comentado porque pensamos que es incomodo resetear toda la busqueda para añadir ejercicios uno a uno
-    /* setSelectedBodyPart("");
-    setSelectedEquipment("");
-    setSelectedReps("");
-    setSelectedSets("");
-    setSelectedRest(""); */
 
     const capitalizeFirstLetter = (string) => { //funcion para poner la primera letra en mayusculas
         return string.charAt(0).toUpperCase() + string.slice(1);
@@ -499,17 +512,17 @@ export const Workouts = () => {
                         )}
                     </div>
                     <div>
-                        <button className="btn btn-outline-light ml-3" onClick={getWorkouts}><h3>See my Workouts</h3></button>
+                        <button className="btn btn-outline-light ml-3" onClick={seeWorkouts}><h3>See my Workouts</h3></button>
                         {showWorkouts && (
                             <div>
-                                {workouts.map((workout) => (
+                                {workouts.map((workout) => (                     
                                     <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
                                         <div className="card-body">
                                             <h5 className="card-title">{workout.name}</h5>
                                             <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
                                             <p className="card-text">Exercises: {workout.exercises.length}</p>
                                             <Link to={`/workout-details/${workout.id}`} className="btn btn-outline-light rounded-pill text-orange border-orange">Details</Link>
-                                            <i className="fas fa-trash-alt mx-2 fs-4 mt-3" type="button" title="Delete workout" onClick={() => handleDelete(workout.id)}></i>
+                                            <i className="fas fa-trash-alt mx-2 fs-4 mt-3 text-danger" type="button" title="Delete workout" onClick={() => handleDelete(workout.id)}></i>
                                         </div>
                                     </div>
                                 ))}
