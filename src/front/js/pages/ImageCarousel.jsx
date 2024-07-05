@@ -17,8 +17,10 @@ const ImageCarousel = () => {
       url: image.default, // URL de la imagen
     }));
 
-    setImages(mappedImages); // Establece las imágenes en el estado
-    setIsLoading(false); // Indica que la carga ha terminado
+    setTimeout(() => {
+      setImages(mappedImages); // Establece las imágenes en el estado
+      setIsLoading(false); // Indica que la carga ha terminado
+    }, 2000); // Simular una carga de 2 segundos (puedes eliminar esta línea en tu implementación real)
   }, []);
 
   useEffect(() => {
