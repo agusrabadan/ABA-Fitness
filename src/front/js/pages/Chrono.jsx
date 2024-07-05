@@ -14,7 +14,7 @@ const Chrono = () => {
     if (isRunning) {
       intervalRef.current = setInterval(() => {
         setTime((prevTime) => prevTime + 1);
-      }, 10); // Actualiza cada 10 milisegundos
+      }, 10);
     } else {
       clearInterval(intervalRef.current);
     }
@@ -26,7 +26,7 @@ const Chrono = () => {
     if (isBackgroundRunning) {
       backgroundIntervalRef.current = setInterval(() => {
         setBackgroundTime((prevTime) => prevTime + 1);
-      }, 10); // Actualiza cada 10 milisegundos en segundo plano
+      }, 10);
     } else {
       clearInterval(backgroundIntervalRef.current);
     }
@@ -41,7 +41,7 @@ const Chrono = () => {
     } else {
       setIsRunning(true);
       setIsBackgroundRunning(false);
-      setBackgroundTime(0); // Reinicia el tiempo en segundo plano
+      setBackgroundTime(0);
     }
   };
 

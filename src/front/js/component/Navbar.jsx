@@ -21,7 +21,7 @@ export const Navbar = () => {
         <nav className="navbar navbar-expand-lg text-white shadow-sm border-bottom custom-navbar">
             <div className="container-fluid">
                 <Link to="/" className="navbar-brand d-flex align-items-center">
-                    <img src={logo} alt="Logo" width="50" height="50" className="d-inline-block align-text-top rounded-circle mx-2" />
+                    <img src={logo} alt="Logo" width="75" height="75" className="d-inline-block align-text-top rounded-circle mx-2" />
                     <h1 className="h4 ms-2 text-info ml-2">ABA Fitness</h1>
                 </Link>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,14 +64,14 @@ export const Navbar = () => {
                             <div className="d-flex flex-column flex-sm-row align-items-center">
                                 <li className="nav-item mx-1">
                                     <Link to="/login" className="nav-link">
-                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold btn-sm">
+                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold">
                                             Login
                                         </button>
                                     </Link>
                                 </li>
                                 <li className="nav-item mx-1">
                                     <Link to="/signup" className="nav-link">
-                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold btn-sm">
+                                        <button className="btn btn-outline-light rounded-pill text-orange border-orange font-weight-bold">
                                             Register
                                         </button>
                                     </Link>
