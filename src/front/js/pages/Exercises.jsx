@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Container, Row, Col, Card, Button, Pagination, Spinner, Form, Alert } from 'react-bootstrap';
+import { Container, Row, Col, Card, Pagination, Spinner, Form } from 'react-bootstrap';
+import { useLocation } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
@@ -10,6 +11,7 @@ export const Exercises = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const exercisesPerPage = 9;
+  const location = useLocation();
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -34,6 +36,14 @@ export const Exercises = () => {
 
     fetchExercises();
   }, []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const search = params.get("search");
+    if (search) {
+      setSearchTerm(search);
+    }
+  }, [location.search]);
 
   const filteredExercises = exercises.filter(exercise => {
     return exercise.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

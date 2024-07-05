@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import "../../styles/workoutdetails.css";
 
 export const WorkoutDetails = () => {
-    const { id } = useParams(); // Obtener el id del parámetro de la URL
-    const [workout, setWorkout] = useState(null); // Inicializar como null para manejar la carga
+    const { id } = useParams();
+    const [workoutDetails, setWorkoutDetails] = useState([]);
+    const [workout, setWorkout] = useState({});
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -13,8 +15,33 @@ export const WorkoutDetails = () => {
                 if (!token) {
                     throw new Error('Token not found in localStorage.');
                 }
-
                 const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${id}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                console.log('Fetched workout details:', data);
+                setWorkoutDetails(data.results);
+                setLoading(false);
+            } catch (error) {
+                console.error('Error fetching workout details:', error.message);
+                setLoading(false);
+            }
+        };
+
+        const fetchWorkout = async () => {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('Token not found in localStorage.');
+                }
+                const response = await fetch(`${process.env.BACKEND_URL}/api/workouts/${id}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -25,48 +52,115 @@ export const WorkoutDetails = () => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-
                 const data = await response.json();
-                setWorkout(data.results); // Asignar directamente data.results según la estructura de la respuesta
+                console.log('Fetched workout:', data);
+                setWorkout(data.results); // Suponemos que aquí recibes el workout específico con el ID
                 setLoading(false);
             } catch (error) {
-                console.error('Error fetching workout details:', error.message);
+                console.error('Error fetching workout:', error.message);
                 setLoading(false);
             }
         };
 
         fetchWorkoutDetails();
-    }, [id]); // Dependencia id para que se actualice cuando cambia
+        fetchWorkout();
+    }, [id]);
+
+    function formatDuration(totalSeconds) {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${minutes} min ${seconds} sec`;
+    }
+
+    const calculateTotalRoutineDuration = () => {
+        let totalSeconds = 0;
+
+        workoutDetails.forEach(exercise => {
+            // Aquí asumimos que cada ejercicio tiene una duración base. Ajusta esto según tu lógica.
+            const exerciseDuration = exercise.duration || 60; // 60 segundos como valor por defecto si no hay duración.
+            totalSeconds += exerciseDuration;
+        });
+
+        // Si hay tiempos de descanso entre ejercicios, agrégalos aquí.
+        const restTime = 30; // Por ejemplo, 30 segundos de descanso entre ejercicios.
+        totalSeconds += (workoutDetails.length - 1) * restTime;
+
+        return totalSeconds;
+    };
+
+    const handleDelete = async (exerciseId) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token not found in localStorage.');
+            }
+
+            const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${exerciseId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Actualizar la lista de detalles del workout después de eliminar un ejercicio
+            const updatedWorkoutDetails = workoutDetails.filter(exercise => exercise.id !== exerciseId);
+            setWorkoutDetails(updatedWorkoutDetails);
+
+
+            // Recalcular la duración de la rutina después de eliminar el ejercicio
+            const updatedDuration = calculateTotalRoutineDuration(updatedWorkoutDetails);
+            setWorkout(prevWorkout => ({
+                ...prevWorkout,
+                duration: updatedDuration
+            }));
+        } catch (error) {
+            console.error('Error deleting exercise:', error.message);
+        }
+    };
 
     if (loading) return <div>Loading...</div>;
 
-    // Verificar si workout es null antes de acceder a sus propiedades
-    if (!workout) {
-        return <div>No workout found.</div>;
+    if (workoutDetails.length === 0) {
+        return <div className=''>
+            <h2 className='text-white mt-3 text-center'>No exercises in workout!</h2>
+            <Link to="/workouts" className="btn btn-outline-light rounded-pill text-orange border-orange mt-3">Back to Workouts</Link>
+        </div>;
+    }
+
+    const capitalizeFirstLetter = (string) => {
+        return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     return (
         <div className="container">
-            <h1 className="text-white">{workout.name}</h1>
-            <p className="text-white">Duration: {formatDuration(workout.duration)}</p>
-            <h2 className="text-white">Exercises</h2>
-            <ul>
-                {workout.exercises && workout.exercises.map(exercise => (
-                    <li key={exercise.id}>
-                        <h4 className="text-white">{exercise.name}</h4>
-                        <p className="text-white">Reps: {exercise.reps_num}</p>
-                        <p className="text-white">Sets: {exercise.series_num}</p>
-                        <p className="text-white">Rest: {exercise.rest_seconds} sec</p>
+            <div className='justify-content-around d-flex mb-5 mt-5'>
+                <h3 className="text-white">Workout name: {workout.name}</h3>
+                <h3 className="text-white">Workout duration: {formatDuration(workout.duration)}</h3>
+            </div>
+            <ul className="list-group">
+                {workoutDetails.map((workout) => (
+                    <li key={workout.id} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                        <img
+                            src={workout.exercise_gif}
+                            alt={workout.exercise_name}
+                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
+                        />
+                        <span>
+                            {capitalizeFirstLetter(workout.exercise_name)} - {workout.reps_num} reps, {workout.series_num} sets
+                        </span>
+                        <div>
+                            <i className="fas fa-trash-alt text-danger fs-4 mx-5" title="Remove exercise" type="button" onClick={() => handleDelete(workout.id)}></i>
+                        </div>
                     </li>
                 ))}
             </ul>
+            {/* Botón para volver a la lista de workouts */}
+            <Link to="/workouts" className="btn btn-outline-light rounded-pill text-orange border-orange mt-3">Back to Workouts</Link>
         </div>
     );
 };
-
-// Helper function to format the duration
-function formatDuration(totalSeconds) {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-    return `${minutes} min ${seconds} sec`;
-}

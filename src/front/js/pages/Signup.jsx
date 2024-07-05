@@ -6,14 +6,14 @@ export const Signup = () => {
     const { actions } = useContext(Context);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // Estado para controlar la visibilidad de la contraseña
+    const [showPassword, setShowPassword] = useState(false);  // Estado para controlar la visibilidad de la contraseña
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [weight, setWeight] = useState("");
     const [height, setHeight] = useState("");
-    const [gender, setGender] = useState(""); // Valor predeterminado
+    const [gender, setGender] = useState("");  // Valor predeterminado
     const [birthDate, setBirthDate] = useState("");
-    const [errorMessage, setErrorMessage] = useState(""); // Para almacenar el mensaje de error
+    const [errorMessage, setErrorMessage] = useState("");  // Para almacenar el mensaje de error
     const navigate = useNavigate();
 
     const handleEmailChange = (event) => setEmail(event.target.value);
@@ -33,12 +33,13 @@ export const Signup = () => {
         const dataToSend = {
             email,
             password,
-            first_name: firstName,
-            last_name: lastName,
-            weight: weight,
-            height: height,
-            gender: gender,
-            birth_date: birthDate
+            // Solo incluir los valores adicionales si están presentes
+            first_name: firstName || undefined,
+            last_name: lastName || undefined,
+            weight: weight || undefined,
+            height: height || undefined,
+            gender: gender || undefined,
+            birth_date: birthDate || undefined
         };
         const url = `${process.env.BACKEND_URL}/api/signup`;
 
@@ -71,7 +72,6 @@ export const Signup = () => {
         }
     };
 
-
     return (
         <div className="container">
             <div className="row justify-content-center">
@@ -91,7 +91,7 @@ export const Signup = () => {
                                         Password:
                                     </label>
                                     <input
-                                        type={showPassword ? "text" : "password"} // Cambiar tipo basado en showPassword
+                                        type={showPassword ? "text" : "password"}  // Cambiar tipo basado en showPassword
                                         className="form-control"
                                         id="password"
                                         value={password}
@@ -107,7 +107,6 @@ export const Signup = () => {
                                             top: "50%",
                                             transform: "translateY(-50%)",
                                             cursor: "pointer",
-
                                         }}
                                     >
                                         {showPassword ? (
@@ -120,36 +119,37 @@ export const Signup = () => {
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="firstName" className="mb-1">Name:</label>
                                     <input type="text" className="form-control" id="firstName"
-                                        value={firstName} onChange={handleFirstNameChange} required />
+                                        value={firstName} onChange={handleFirstNameChange} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="lastName" className="mb-1">Last Name:</label>
                                     <input type="text" className="form-control" id="lastName"
-                                        value={lastName} onChange={handleLastNameChange} required />
+                                        value={lastName} onChange={handleLastNameChange} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="weight" className="mb-1">Weight(kg):</label>
                                     <input type="text" className="form-control" id="weight"
-                                        value={weight} onChange={handleWeight} required />
+                                        value={weight} onChange={handleWeight} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="height" className="mb-1">Height(cm):</label>
                                     <input type="text" className="form-control" id="height"
-                                        value={height} onChange={handleHeight} required />
+                                        value={height} onChange={handleHeight} />
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="gender" className="mb-1">Gender:</label>
                                     <select className="form-control" id="gender"
-                                        value={gender} onChange={handleGender} required>
-                                        <option value="Not defined">Not defined</option>
-                                        <option value="Male">Male</option>
+                                        value={gender} onChange={handleGender} >
+                                        <option value="">Select Gender</option> {/* Opción predeterminada vacía */}
                                         <option value="Female">Female</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Not defined">Others</option>
                                     </select>
                                 </div>
                                 <div className="form-group mt-3 h6">
                                     <label htmlFor="birthDate" className="mb-1">Birth Date:</label>
                                     <input type="date" className="form-control" id="birthDate"
-                                        value={birthDate} onChange={handleBirthDate} required />
+                                        value={birthDate} onChange={handleBirthDate} />
                                 </div>
                                 <div className="text-center">
                                     <button type="submit" className="btn btn-outline-light ms-2 mt-4">Create Account</button>
@@ -162,4 +162,3 @@ export const Signup = () => {
         </div>
     );
 };
-

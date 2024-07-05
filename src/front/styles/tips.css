@@ -1,0 +1,20 @@
+.btn-group-vertical .btn {
+    width: 200px;
+    margin-bottom: 10px; /* Espacio entre los botones */
+}
+
+.tip-button-group {
+    position: relative;
+    display: flex; /* Añadido para alineación horizontal */
+    align-items: center; /* Añadido para centrar verticalmente */
+}
+
+.tip-text-horizontal {
+    margin-left: 15px; /* Espacio a la derecha del botón */
+    color: white;
+    background-color: rgba(0, 0, 0, 0.8); /* Fondo oscuro semitransparente */
+    padding: 10px;
+    border-radius: 5px;
+    white-space: normal; /* Permite que el texto se divida en líneas */
+    flex: 1; /* Permite que el texto ocupe el espacio restante */
+}

@@ -6,12 +6,10 @@ import { Link } from "react-router-dom";
 export const Workouts = () => {
     const { store } = useContext(Context);
     const navigate = useNavigate();
-    const [showDropdown, setShowDropdown] = useState(false);
     const [showExercises, setShowExercises] = useState(false);
     const [showRoutineExercises, setShowRoutineExercises] = useState(false);
     const [showWorkouts, setShowWorkouts] = useState(false);
     const [workouts, setWorkouts] = useState([]);
-    const [showDetails, setShowDetails] = useState({});
     const [selectedBodyPart, setSelectedBodyPart] = useState("");
     const [selectedEquipment, setSelectedEquipment] = useState("");
     const [selectedReps, setSelectedReps] = useState("");
@@ -23,8 +21,8 @@ export const Workouts = () => {
     const [isEditingName, setIsEditingName] = useState(false);
     const [routineExercises, setRoutineExercises] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const exercisesPerPage = 5;
 
+    const exercisesPerPage = 5;
     const url = 'https://exercisedb.p.rapidapi.com/exercises?limit=3000&offset=0';
     const options = {
         method: 'GET',
@@ -41,9 +39,7 @@ export const Workouts = () => {
                 if (!response.ok) {
                     throw new Error(`Error en la respuesta de la API: ${response.statusText}`);
                 }
-
                 const data = await response.json();
-
                 // Filtrar ejercicios con id <= 1324 y que tienen las propiedades necesarias
                 const validExercises = data.filter(exercise =>
                     exercise.id <= 1324 && // Filtro por ID
@@ -52,7 +48,6 @@ export const Workouts = () => {
                     exercise.equipment &&
                     exercise.gifUrl
                 );
-
                 setExercises(validExercises);
             } catch (error) {
                 console.error("Error al obtener los ejercicios de la API:", error);
@@ -60,8 +55,6 @@ export const Workouts = () => {
         };
 
         fetchExercises();
-
-
     }, []);
 
     const getWorkouts = async () => {
@@ -70,7 +63,6 @@ export const Workouts = () => {
             if (!token) {
                 throw new Error('Token not found in localStorage.');
             }
-
             const url = `${process.env.BACKEND_URL}/api/workouts`;
             const options = {
                 method: 'GET',
@@ -79,20 +71,27 @@ export const Workouts = () => {
                     'Authorization': `Bearer ${token}`
                 }
             };
-
             const response = await fetch(url, options);
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             const data = await response.json();
+    
+            if (data.results.length === 0) {
+                // Mostrar alerta de que no hay rutinas creadas
+                alert('No hay rutinas creadas.');
+                // Puedes decidir qué hacer después de mostrar la alerta, por ejemplo:
+                // return; // Detiene la ejecución aquí si no quieres continuar con el código siguiente
+            }
+    
             setWorkouts(data.results);
-            
+            setShowWorkouts(!showWorkouts);
+    
         } catch (error) {
             console.error('Error fetching workouts:', error.message);
         }
     };
-
+    
 
 
     const resetForm = () => {
@@ -116,7 +115,6 @@ export const Workouts = () => {
                 alert('No se puede guardar la rutina porque no has añadido ningún ejercicio.');
                 return;
             }
-
             const response = await fetch(`${process.env.BACKEND_URL}/api/workouts`, {
                 method: 'POST',
                 headers: {
@@ -134,12 +132,11 @@ export const Workouts = () => {
                     userId: store.user.id
                 }),
             });
-
             if (response.ok) {
                 alert('Rutina guardada exitosamente en la base de datos');
+                getWorkouts();
+                setShowWorkouts(!showWorkouts)
                 resetForm(); // Resetear todos los estados después de guardar la rutina
-
-
             } else {
                 const errorData = await response.json();
                 throw new Error(`Error al guardar la rutina en la base de datos: ${errorData.message}`);
@@ -149,6 +146,11 @@ export const Workouts = () => {
             alert(`Error al guardar la rutina. Por favor, intenta de nuevo más tarde. Detalle del error: ${error.message}`);
         }
     };
+
+    const seeWorkouts = () => {
+        getWorkouts();
+        setShowWorkouts(!showWorkouts);
+    }
 
     useEffect(() => {
         if (!store.isLogin) {
@@ -176,19 +178,23 @@ export const Workouts = () => {
         setSelectedRest(event.target.value);
     };
 
-    const handleAddToRoutine = (exercise) => {
+    const handleAddToRoutine = (exercise) => { //Obligatorio series y repeticiones
         if (!selectedReps || !selectedSets) {
-            alert("Especificar número de repeticiones y series.");
+            alert("Specify the number of reps and sets.");
             return;
         }
-
+        // Verificar si el ejercicio ya está en la rutina
+        const isAlreadyAdded = routineExercises.some(routineExercise => routineExercise.id === exercise.id);
+        if (isAlreadyAdded) {
+            alert("This exercise is already in the workout.");
+            return;
+        }
         setRoutineExercises([...routineExercises, { ...exercise, reps: selectedReps, sets: selectedSets, rest: selectedRest }]);
-        setSelectedBodyPart("");
-        setSelectedEquipment("");
-        setSelectedReps("");
-        setSelectedSets("");
-        setSelectedRest("");
     };
+
+    const capitalizeFirstLetter = (string) => { //funcion para poner la primera letra en mayusculas
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
     useEffect(() => {
         if (selectedBodyPart && selectedEquipment) {
@@ -201,28 +207,28 @@ export const Workouts = () => {
         }
     }, [selectedBodyPart, selectedEquipment, exercises]);
 
-    const bodyPartOptions = Array.from(new Set(exercises
+    const bodyPartOptions = Array.from(new Set(exercises //Partes del cuerpo disponibles
         .map(exercise => exercise.bodyPart.toLowerCase())
         .filter(bodyPart =>
-            ["back", "upper legs", "waist", "lower legs", "upper arms", "chest", "shoulders", "cardio"].includes(bodyPart)
+            ["back", "upper legs", "waist", "lower legs", "upper arms", "chest", "shoulders"].includes(bodyPart)
         )
     )).map(bodyPart => bodyPart.charAt(0).toUpperCase() + bodyPart.slice(1));
 
-    const unwantedEquipments = [
+    const unwantedEquipments = [ //Equipamiento descartado para una experiencia de usuario más sencilla
         "assisted", "medicine ball", "stability ball", "rope", "ez barbell", "sled machine", "upper body", "olimpic barbell", "weighted",
         "bosu ball", "resistance band", "roller", "skierg", "hammer", "wheel roller", "tire", "trap bar", "stepmill machine"
     ];
 
-    const equipmentOptions = Array.from(new Set(exercises
+    const equipmentOptions = Array.from(new Set(exercises //Filtra equipamientos y partes del cuerpo para solo tener las opciones más comunes
         .map(exercise => exercise.equipment.toLowerCase())
         .filter(equipment => !unwantedEquipments.includes(equipment))
     )).map(equipment => equipment.charAt(0).toUpperCase() + equipment.slice(1));
 
-    const handleNameChange = (event) => {
+    const handleNameChange = (event) => { //Función que cambia el nombre del workout
         setRoutineName(event.target.value);
     };
 
-    const toggleEditName = () => {
+    const toggleEditName = () => { //Función que maneja si estás editando o no el nombre del workout
         setIsEditingName(!isEditingName);
     };
 
@@ -233,19 +239,33 @@ export const Workouts = () => {
         }
     };
 
-    const toggleShowExercises = () => {
+    const toggleShowExercises = () => { //Función que muestra/oculta los ejercicios añadidos 
         setShowExercises(!showExercises);
     };
 
-    const toggleShowWorkouts = () => {
-        setShowWorkouts(!showWorkouts);
-    };
+    const handleDelete = async (workoutId) => { //Función para borrar workout
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Token not found in localStorage.');
+            }
+            const response = await fetch(`${process.env.BACKEND_URL}/api/workouts/${workoutId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            });
 
-    const toggleShowDetails = (workoutId) => {
-        setShowDetails(prevState => ({
-            ...prevState,
-            [workoutId]: !prevState[workoutId]
-        }));
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+
+            // Actualizar la lista de workouts después de eliminar uno
+            setWorkouts(workouts.filter(workout => workout.id !== workoutId));
+        } catch (error) {
+            console.error('Error deleting workout:', error.message);
+        }
     };
 
     const toggleShowRoutineExercises = () => {
@@ -276,7 +296,7 @@ export const Workouts = () => {
     function formatDuration(totalSeconds) {
         const minutes = Math.floor(totalSeconds / 60);
         const seconds = totalSeconds % 60;
-        return `${minutes} min ${seconds} seg`;
+        return `${minutes} min ${seconds} sec`;
     }
 
     function removeExerciseFromRoutine(index) {
@@ -355,6 +375,7 @@ export const Workouts = () => {
                                 </button>
                             </>
                         )}
+
                         <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
                         <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
                         <button className="btn btn-outline-success ml-3" onClick={saveRoutineToDatabase}>
@@ -424,11 +445,9 @@ export const Workouts = () => {
                                             onChange={handleRepsChange}
                                         >
                                             <option value="">Select number of reps</option>
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="12">12</option>
-                                            <option value="15">15</option>
-                                            <option value="20">20</option>
+                                            {Array.from({ length: 20 }, (_, i) => i + 1).map(value => (
+                                                <option key={value} value={value}>{value}</option>
+                                            ))}
                                         </select>
                                     </div>
                                     <div className="form-group mb-3">
@@ -461,24 +480,27 @@ export const Workouts = () => {
                                 <div className="ml-4" style={{ width: '50%' }}>
                                     <h6 className="text-white mx-5">Available exercises:</h6>
                                     <ul className="list-group mx-5">
-                                        {currentExercises.map((exercise, index) => (
-                                            <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
-                                                <div>{exercise.name}</div>
-                                                <div className="d-flex align-items-center">
-                                                    <img
-                                                        src={exercise.gifUrl}
-                                                        alt={exercise.name}
-                                                        style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
-                                                    />
-                                                    <i
-                                                        className="fas fa-plus mx-2 add-icon"
-                                                        onClick={() => handleAddToRoutine(exercise)}
-                                                        style={{ cursor: 'pointer' }}
-                                                        title="Add Exercise"
-                                                    />
-                                                </div>
-                                            </li>
-                                        ))}
+                                        {currentExercises.map((exercise, index) => {
+                                            const isAdded = routineExercises.some(routineExercise => routineExercise.id === exercise.id);
+                                            return (
+                                                <li key={index} className="list-group-item text-white d-flex justify-content-between align-items-center" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }}>
+                                                    <div>{capitalizeFirstLetter(exercise.name)}</div>
+                                                    <div className="d-flex align-items-center">
+                                                        <img
+                                                            src={exercise.gifUrl}
+                                                            alt={exercise.name}
+                                                            style={{ width: '100px', height: '100px', objectFit: 'cover', marginRight: '10px' }}
+                                                        />
+                                                        <i
+                                                            className={`fas ${isAdded ? 'fa-check' : 'fa-plus'} mx-2 add-icon`}
+                                                            onClick={() => handleAddToRoutine(exercise)}
+                                                            style={{ cursor: isAdded ? 'default' : 'pointer', color: isAdded ? 'green' : 'white' }}
+                                                            title={isAdded ? "Exercise added" : "Add Exercise"}
+                                                        />
+                                                    </div>
+                                                </li>
+                                            );
+                                        })}
                                     </ul>
                                     <nav className="mt-3">
                                         <ul className="pagination justify-content-center">
@@ -490,23 +512,25 @@ export const Workouts = () => {
                         )}
                     </div>
                     <div>
-                        <button className="btn btn-outline-light ml-3" onClick={getWorkouts}><h3>See my Workouts</h3></button>
-                        {workouts.map(workout => (
-                            <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
-                                <div className="card-body">
-                                    <h5 className="card-title">{workout.name}</h5>
-                                    <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
-                                    <p className="card-text">Exercises: {workout.exercises.length}</p>
-                                    <Link to={`/workout-details/${workout.id}`} className="btn btn-outline-light rounded-pill text-orange border-orange">Details</Link>
-
-                                </div>
-
+                        <button className="btn btn-outline-light ml-3" onClick={seeWorkouts}><h3>See my Workouts</h3></button>
+                        {showWorkouts && (
+                            <div>
+                                {workouts.map((workout) => (                     
+                                    <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
+                                        <div className="card-body">
+                                            <h5 className="card-title">{workout.name}</h5>
+                                            <p className="card-text">Duration: {formatDuration(workout.duration)}</p>
+                                            <p className="card-text">Exercises: {workout.exercises.length}</p>
+                                            <Link to={`/workout-details/${workout.id}`} className="btn btn-outline-light rounded-pill text-orange border-orange">Details</Link>
+                                            <i className="fas fa-trash-alt mx-2 fs-4 mt-3 text-danger" type="button" title="Delete workout" onClick={() => handleDelete(workout.id)}></i>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        )}
                     </div>
                 </div>
             </div>
-
         </div>
     );
 };

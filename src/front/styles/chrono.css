@@ -1,0 +1,16 @@
+.roller {
+  border: 1px solid rgb(0, 229, 255); /* Establece un borde blanco de 2px alrededor de cada número */
+  border-radius: 4px; /* Añade bordes redondeados para un estilo más suave */
+  padding: 3px; /* Añade espacio alrededor de cada número dentro del borde */
+  display: inline-block; /* Asegura que cada número se comporte como un bloque en línea para que el borde se aplique correctamente */
+  font-size: 24px; /* Ajusta el tamaño de la fuente según sea necesario */
+  margin: 0 2px; /* Espacio entre los números para evitar que los bordes se toquen */
+  width: 400px;
+}
+
+  
+  .roller-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
