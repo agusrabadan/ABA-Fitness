@@ -1,38 +1,40 @@
-/*
-    home.css: This website contains selectors only used in home.css
-
-    All pages share the styles on index.css but you should create 
-    one more css for each page that will contain the selected used 
-    on that page only (the ones not reused in other pages).
-*/
 .smaller-text {
-    font-size: 14px; /* Tamaño de fuente más pequeño */
-    max-width: 100%; /* Ancho máximo del contenedor */
+  font-size: 14px;
+  max-width: 100%;
 }
 
-.reduced-height {
-    max-height: 650px; /* Altura máxima deseada para la imagen */
-    object-fit: cover; /* Ajusta la imagen para que cubra el contenedor */
-    width: 100%; /* Asegura que la imagen ocupe el ancho completo del contenedor */
+.full-image {
+  max-height: 650px;
+  object-fit: cover;
+  width: 100%;
+  margin: 0 auto; /* Centra la imagen horizontalmente */
 }
 
 .hombre-pequeno-derecha {
-    max-width: 450px; /* Ajusta el tamaño máximo de la imagen */
-    height: auto; /* Mantiene la proporción de la imagen */
-    float: right; /* Flota la imagen a la derecha */
-    margin-left: 20px; /* Añade un margen a la izquierda para separar del texto */
+  max-width: 100%;
+  height: auto;
+  margin-left: 0;
 }
 
+.text-orange {
+  color: darkorange !important;
+}
 
-  
-  .text-orange {
-    color: darkorange !important; /* Color del texto naranja */
+.border-orange {
+  border-color: darkorange !important;
+}
+
+.text-bold {
+  font-weight: bold;
+}
+
+@media (min-width: 768px) {
+  .hombre-pequeno-derecha {
+      float: right;
+      margin-left: 20px;
   }
-  
-  .border-orange {
-    border-color: darkorange !important; /* Color del borde naranja */
+
+  .position-relative .d-none.d-md-block {
+      top: 40%;
   }
-  
-  .text-bold {
-    font-weight: bold; /* Hace que el texto sea más grueso, como negrita */
-  }
+}

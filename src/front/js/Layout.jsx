@@ -19,15 +19,14 @@ import { Favorites } from "./pages/Favorites.jsx";
 import { PrivacyPolicy } from "./pages/PrivacyPolicy.jsx";
 import { ConditionsTerms } from "./pages/ConditionsTerms.jsx";
 import Contact from "./pages/Contact.jsx";
-
-
+import ChatBot from "./component/Chatbot.jsx";
 
 // Create your first component
 const Layout = () => {
     // The basename is used when your project is published in a subdirectory and not in the root of the domain
     // you can set the basename on the .env file located at the root of this project, E.g: BASENAME=/react-hello-webapp/
     const basename = process.env.BASENAME || "";
-    if (!process.env.BACKEND_URL || process.env.BACKEND_URL == "") return <BackendURL/ >;
+    if (!process.env.BACKEND_URL || process.env.BACKEND_URL === "") return <BackendURL />;
 
     return (
         <div className="">
@@ -45,16 +44,16 @@ const Layout = () => {
                         <Route element={<Favorites />} path="/favorites" />
                         <Route element={<PrivacyPolicy />} path="/privacy-policy" />
                         <Route element={<ConditionsTerms />} path="/conditions-terms" />
-                        <Route element={<Contact/>} path="/contact" />
+                        <Route element={<Contact />} path="/contact" />
                         <Route element={<Dashboard />} path="/dashboard" />
-                        <Route element={<h1>Not found!</h1>} />
+                        <Route element={<h1>Not found!</h1>} path="*" />
                     </Routes>
+                    <ChatBot />
                     <Footer />
                 </ScrollToTop>
             </BrowserRouter>
         </div>
     );
 };
-
 
 export default injectContext(Layout);
