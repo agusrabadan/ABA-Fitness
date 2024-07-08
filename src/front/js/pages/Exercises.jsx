@@ -4,14 +4,16 @@ import { useLocation } from 'react-router-dom';
 import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
-export const Exercises = () => {
+const Exercises = () => {
+  
+  export const Exercises = () => {
 
   useEffect(() => {
     if (!store.isLogin) {
       navigate('/');
     }
   }, []);
-
+  
   const { store, actions } = useContext(Context);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -78,7 +80,7 @@ export const Exercises = () => {
   return (
     <Container className="mt-4 container">
       <h1 className='text-white text-center'>Exercises</h1>
-      <Form className="mb-3 mt-3 col-4">
+      <Form className="mb-3 mt-3 col-12 col-md-6">
         <div className='d-flex justify-content-between'>
           <i className="fas fa-search text-white fs-3 mx-2 mt-1"></i>
           <Form.Control
@@ -99,43 +101,41 @@ export const Exercises = () => {
         <>
           <Row className="d-flex">
             {currentExercises.map((exercise) => (
-              <Col key={exercise.id} xs={8} md={6} lg={4} className="mb-4 d-flex">
+              <Col key={exercise.id} xs={12} md={6} lg={4} className="mb-4 d-flex">
                 <ExerciseCard exercise={exercise} isFavorite={store.favorites.some(fav => fav.id === exercise.id)} actions={actions} />
               </Col>
             ))}
           </Row>
-          <div className="d-flex justify-content-center mt-4">
-            <div style={{ overflowX: 'auto' }}>
-              <Pagination>
-                {currentPage > 1 && (
-                  <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
-                )}
-                {startPage > 1 && (
-                  <>
-                    <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
-                    <Pagination.Ellipsis disabled />
-                  </>
-                )}
-                {displayedPageNumbers.map(number => (
-                  <Pagination.Item
-                    key={number}
-                    active={number === currentPage}
-                    onClick={() => handlePageChange(number)}
-                  >
-                    {number}
-                  </Pagination.Item>
-                ))}
-                {endPage < totalPages && (
-                  <>
-                    <Pagination.Ellipsis disabled />
-                    <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
-                  </>
-                )}
-                {currentPage < totalPages && (
-                  <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
-                )}
-              </Pagination>
-            </div>
+          <div className="d-flex justify-content-center mt-4 pagination-container">
+            <Pagination>
+              {currentPage > 1 && (
+                <Pagination.Prev onClick={() => handlePageChange(currentPage - 1)} />
+              )}
+              {startPage > 1 && (
+                <>
+                  <Pagination.Item onClick={() => handlePageChange(1)}>1</Pagination.Item>
+                  <Pagination.Ellipsis disabled />
+                </>
+              )}
+              {displayedPageNumbers.map(number => (
+                <Pagination.Item
+                  key={number}
+                  active={number === currentPage}
+                  onClick={() => handlePageChange(number)}
+                >
+                  {number}
+                </Pagination.Item>
+              ))}
+              {endPage < totalPages && (
+                <>
+                  <Pagination.Ellipsis disabled />
+                  <Pagination.Item onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
+                </>
+              )}
+              {currentPage < totalPages && (
+                <Pagination.Next onClick={() => handlePageChange(currentPage + 1)} />
+              )}
+            </Pagination>
           </div>
         </>
       )}
@@ -191,3 +191,5 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
     </div>
   );
 };
+
+export default Exercises;
