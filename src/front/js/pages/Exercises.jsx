@@ -5,6 +5,15 @@ import { Context } from "../store/appContext";
 import "../../styles/exercises.css";
 
 const Exercises = () => {
+  
+  export const Exercises = () => {
+
+  useEffect(() => {
+    if (!store.isLogin) {
+      navigate('/');
+    }
+  }, []);
+  
   const { store, actions } = useContext(Context);
   const [exercises, setExercises] = useState([]);
   const [loading, setLoading] = useState(true);

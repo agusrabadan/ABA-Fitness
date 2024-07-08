@@ -1,13 +1,19 @@
 import React from "react";
+import { useEffect } from "react";
 
 export const PrivacyPolicy = () => {
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className="container mt-5 text-white">
             <div className="row justify-content-center">
                 <div className="col-10">
                     <h2 className="mb-4 text-center">Privacy Policy</h2>
                     <p className="text-center">
-                        At <strong>[Company/Application/Website Name]</strong> ("we", "our", or "us"), we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and protect your information when you visit our website <a href="https://www.example.com">www.example.com</a> and/or use our services.
+                        At <strong>ABA Fitness </strong>, we value your privacy and are committed to protecting your personal data. This Privacy Policy explains how we collect, use, disclose, and protect your information when you visit our website <a href="https://www.example.com">www.ABAFitness.com</a> and/or use our services.
                     </p>
 
                     <h3 className="mt-4">1. Information We Collect</h3>
@@ -62,7 +68,7 @@ export const PrivacyPolicy = () => {
                         <li><strong>Deletion:</strong> You can request that we delete your personal information, subject to certain limitations.</li>
                         <li><strong>Opt-out:</strong> You can opt out of receiving promotional communications from us.</li>
                     </ul>
-                    <p>To exercise your rights, please contact us at <a href="mailto:contact@example.com">contact@example.com</a>.</p>
+                    <p>To exercise your rights, please contact us at <a href="mailto:contact@example.com">contact@abafitness.com</a>.</p>
 
                     <h3 className="mt-4">7. Cookies and Tracking Technologies</h3>
                     <p>We use cookies and similar technologies to enhance your experience on our website, analyze usage, and deliver personalized advertisements. You can manage your cookie preferences through your browser settings.</p>

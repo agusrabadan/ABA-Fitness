@@ -1,10 +1,17 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Context } from "../store/appContext.js";
 import { Link } from "react-router-dom";
 import { Pagination, Card } from "react-bootstrap"; // Añadido para paginación
 import "../../styles/favorites.css"
 
 export const Favorites = () => {
+
+    useEffect(() => {
+        if (!store.isLogin) {
+            navigate('/');
+        }
+    }, []);
+
     const { store, actions } = useContext(Context);
     const [currentPage, setCurrentPage] = useState(1); // Añadido estado para manejar la página actual
     const favoritesPerPage = 9; // 3 filas de 3
@@ -53,9 +60,9 @@ export const Favorites = () => {
                             <div key={index} className="col-md-4">
                                 <Card className="mb-4">
                                     <Card.Title className="text-center mx-3 mt-3 fw-bold">{capitalizeFirstLetter(fav.name)}</Card.Title> {/* Modificado para capitalizar la primera letra */}
-                                    <Card.Body className="d-flex flex-column"> 
+                                    <Card.Body className="d-flex flex-column">
                                         <Card.Img variant="top" src={fav.gifUrl} alt={fav.name} />
-                                        <div className="mt-auto mb-2"> 
+                                        <div className="mt-auto mb-2">
                                             <Card.Text><strong>Body part:</strong> {fav.bodyPart}</Card.Text>
                                             <Card.Text><strong>Objective:</strong> {fav.target}</Card.Text>
                                             <Card.Text><strong>Equipment:</strong> {fav.equipment}</Card.Text>

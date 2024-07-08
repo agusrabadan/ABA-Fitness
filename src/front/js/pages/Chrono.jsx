@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "../../styles/chrono.css";
-import chrono from "../../img/chrono.png";
 
 const Chrono = () => {
   const [time, setTime] = useState(0);
@@ -18,7 +17,6 @@ const Chrono = () => {
     } else {
       clearInterval(intervalRef.current);
     }
-
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 
@@ -30,7 +28,6 @@ const Chrono = () => {
     } else {
       clearInterval(backgroundIntervalRef.current);
     }
-
     return () => clearInterval(backgroundIntervalRef.current);
   }, [isBackgroundRunning]);
 

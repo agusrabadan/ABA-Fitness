@@ -32,7 +32,6 @@ export const Login = () => {
         'Content-Type': 'application/json'
       }
     };
-
     try {
       const response = await fetch(url, options);
       if (!response.ok) {

@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 export const Workouts = () => {
+
+    useEffect(() => {
+        if (!store.isLogin) {
+            navigate('/');
+        }
+    }, []);
+
     const { store } = useContext(Context);
     const navigate = useNavigate();
     const [showExercises, setShowExercises] = useState(false);
@@ -53,7 +60,6 @@ export const Workouts = () => {
                 console.error("Error al obtener los ejercicios de la API:", error);
             }
         };
-
         fetchExercises();
     }, []);
 
@@ -76,23 +82,16 @@ export const Workouts = () => {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
             const data = await response.json();
-    
+
             if (data.results.length === 0) {
-                // Mostrar alerta de que no hay rutinas creadas
                 alert('No hay rutinas creadas.');
-                // Puedes decidir qué hacer después de mostrar la alerta, por ejemplo:
-                // return; // Detiene la ejecución aquí si no quieres continuar con el código siguiente
             }
-    
             setWorkouts(data.results);
             setShowWorkouts(!showWorkouts);
-    
         } catch (error) {
             console.error('Error fetching workouts:', error.message);
         }
     };
-    
-
 
     const resetForm = () => {
         setSelectedBodyPart("");
@@ -151,12 +150,6 @@ export const Workouts = () => {
         getWorkouts();
         setShowWorkouts(!showWorkouts);
     }
-
-    useEffect(() => {
-        if (!store.isLogin) {
-            navigate('/');
-        }
-    }, [store.isLogin, navigate]);
 
     const handleBodyPartChange = (event) => {
         setSelectedBodyPart(event.target.value);
@@ -256,11 +249,9 @@ export const Workouts = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             // Actualizar la lista de workouts después de eliminar uno
             setWorkouts(workouts.filter(workout => workout.id !== workoutId));
         } catch (error) {
@@ -290,7 +281,7 @@ export const Workouts = () => {
     function calculateTotalDuration(exercise) {
         const totalSets = parseInt(exercise.sets, 10);
         const totalReps = parseInt(exercise.reps, 10);
-        return totalSets * totalReps * 2;
+        return totalSets * totalReps * 3;
     }
 
     function formatDuration(totalSeconds) {
@@ -375,14 +366,12 @@ export const Workouts = () => {
                                 </button>
                             </>
                         )}
-
                         <h6 className="mt-2">Exercises: {routineExercises.length}</h6>
                         <h6 className="mt-2">Duration: {formatDuration(calculateTotalRoutineDuration())}</h6>
                         <button className="btn btn-outline-success ml-3" onClick={saveRoutineToDatabase}>
                             Add workout
                         </button>
                     </div>
-
                     <div className="card-body">
                         {showRoutineExercises && (
                             <div className="mb-4">
@@ -515,7 +504,7 @@ export const Workouts = () => {
                         <button className="btn btn-outline-light ml-3" onClick={seeWorkouts}><h3>See my Workouts</h3></button>
                         {showWorkouts && (
                             <div>
-                                {workouts.map((workout) => (                     
+                                {workouts.map((workout) => (
                                     <div className="card" style={{ backgroundColor: "rgba(1, 6, 16, 0.000)" }} key={workout.id}>
                                         <div className="card-body">
                                             <h5 className="card-title">{workout.name}</h5>
