@@ -17,7 +17,7 @@ export const Home = () => {
     return (
         <div className="container-fluid">
             <div className="row justify-content-center position-relative">
-                <div className="col-12 col-md-10 position-relative">
+                <div className="col-12 col-md-12 position-relative">
                     <img src={rubiadef} alt="Descripción de la imagen" className="img-fluid full-image mx-auto d-block" />
                     <div style={textStyle} className="d-none d-md-block">
                         <h2 className="mt-3 text-orange">"Change your body, change your life" </h2>
@@ -98,7 +98,7 @@ export const Home = () => {
                         <div className="carousel-item active">
                             <h6 className="text-info text-center">"Since I started using ABA Fitness, my motivation has multiplied by 1000.<br />
                                 Going to the gym is no longer a sacrifice for me."</h6>
-                            <div className="d-flex justify-content-center">
+                            <div className="d-block stars-container">
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
@@ -109,7 +109,7 @@ export const Home = () => {
                         <div className="carousel-item">
                             <h6 className="text-info text-center">"I was tired of always doing the same exercises and not knowing how to perform them
                                 correctly.<br /> ABA Fitness solved both of these problems."</h6>
-                            <div className="d-flex justify-content-center">
+                            <div className="d-block stars-container">
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
@@ -120,10 +120,10 @@ export const Home = () => {
                         <div className="carousel-item">
                             <h6 className="text-info text-center">"Excellent app, highly recommended. It doesn't matter your level or age, <br />
                                 suitable for the whole family. They provide the tools, you set the pace."</h6>
-                            <div className="d-flex justify-content-center">
+                            <div className="d-block stars-container">
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
-                                <i class="fa fa-star text-center" style={{ color: 'orange' }}></i>
+                                <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                                 <i className="fa fa-star text-center" style={{ color: 'orange' }}></i>
                             </div>
