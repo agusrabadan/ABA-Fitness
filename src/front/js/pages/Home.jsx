@@ -1,6 +1,5 @@
 import React from "react";
 import "../../styles/home.css";
-import SubirImagen from "../component/SubirImagen.jsx";
 import rubiadef from "../../img/rubiadef.jpg";
 import hombre from "../../img/hombre-bn.webp";
 import { Link } from "react-router-dom";

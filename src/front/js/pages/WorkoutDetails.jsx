@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import "../../styles/workoutdetails.css";
 
 export const WorkoutDetails = () => {
+
     const { id } = useParams();
     const [workoutDetails, setWorkoutDetails] = useState([]);
     const [workout, setWorkout] = useState({});
@@ -71,10 +72,8 @@ export const WorkoutDetails = () => {
         const seconds = totalSeconds % 60;
         return `${minutes} min ${seconds} sec`;
     }
-
     const calculateTotalRoutineDuration = () => {
         let totalSeconds = 0;
-
         workoutDetails.forEach(exercise => {
             // Aquí asumimos que cada ejercicio tiene una duración base. Ajusta esto según tu lógica.
             const exerciseDuration = exercise.duration || 60; // 60 segundos como valor por defecto si no hay duración.
@@ -84,7 +83,6 @@ export const WorkoutDetails = () => {
         // Si hay tiempos de descanso entre ejercicios, agrégalos aquí.
         const restTime = 30; // Por ejemplo, 30 segundos de descanso entre ejercicios.
         totalSeconds += (workoutDetails.length - 1) * restTime;
-
         return totalSeconds;
     };
 
@@ -94,7 +92,6 @@ export const WorkoutDetails = () => {
             if (!token) {
                 throw new Error('Token not found in localStorage.');
             }
-
             const response = await fetch(`${process.env.BACKEND_URL}/api/workoutdetails/${exerciseId}`, {
                 method: 'DELETE',
                 headers: {
@@ -102,16 +99,12 @@ export const WorkoutDetails = () => {
                     'Authorization': `Bearer ${token}`
                 }
             });
-
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
-
             // Actualizar la lista de detalles del workout después de eliminar un ejercicio
             const updatedWorkoutDetails = workoutDetails.filter(exercise => exercise.id !== exerciseId);
             setWorkoutDetails(updatedWorkoutDetails);
-
-
             // Recalcular la duración de la rutina después de eliminar el ejercicio
             const updatedDuration = calculateTotalRoutineDuration(updatedWorkoutDetails);
             setWorkout(prevWorkout => ({
@@ -122,9 +115,7 @@ export const WorkoutDetails = () => {
             console.error('Error deleting exercise:', error.message);
         }
     };
-
     if (loading) return <div>Loading...</div>;
-
     if (workoutDetails.length === 0) {
         return <div className=''>
             <h2 className='text-white mt-3 text-center'>No exercises in workout!</h2>

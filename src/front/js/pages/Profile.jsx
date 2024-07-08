@@ -1,9 +1,16 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Context } from "../store/appContext.js";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../../styles/profile.css";
 
 export const Profile = () => {
+
+  useEffect(() => {
+    if (!store.isLogin) {
+      navigate('/');
+    }
+  }, []);
+
   const { store, actions } = useContext(Context);
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -79,7 +86,7 @@ export const Profile = () => {
   const handleDeleteAccount = async () => {
     // Muestra la alerta de confirmación
     const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
-  
+
     if (confirmDelete) {
       try {
         const response = await fetch(`${process.env.BACKEND_URL}/api/users/${store.user.id}`, {
@@ -90,17 +97,17 @@ export const Profile = () => {
           },
           body: JSON.stringify({ ...formData, is_active: false }),
         });
-  
+
         if (response.ok) {
           const data = await response.json();
           actions.setCurrentUser(data.results);
-  
+
           // Cambiar el estado de isLogin a false para cerrar sesión
           actions.setIsLogin(false);
-  
+
           // Mostrar alerta y redirigir al usuario después de un pequeño retardo
           alert("Your account has been deactivated.");
-  
+
           // Redirigir después de un pequeño retardo para asegurar que las acciones anteriores se completen
           setTimeout(() => {
             navigate("/login");
@@ -113,7 +120,7 @@ export const Profile = () => {
       }
     }
   };
-  
+
 
   return (
     <div className="container mt-4">
@@ -255,16 +262,16 @@ export const Profile = () => {
                   </span>
                   <p>
                     Body Mass Index is a measure that uses a person's weight and height to estimate their body fat. It's
-                    calculated by dividing the weight in kilograms by the square of the height in meters.
+                    calculated by dividing the weight in kilograms by the square of the height in meters. 
                   </p>
                   <button className="btn btn-outline-danger mt-3" onClick={handleDeleteAccount}>
-            Delete Account
-          </button>
+                    Delete Account
+                  </button>
                 </div>
               </div>
             </div>
           )}
-          
+
         </div>
       ) : (
         navigate("/login")

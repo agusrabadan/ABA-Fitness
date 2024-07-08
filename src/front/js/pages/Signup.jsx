@@ -15,7 +15,6 @@ export const Signup = () => {
     const [birthDate, setBirthDate] = useState("");
     const [errorMessage, setErrorMessage] = useState("");  // Para almacenar el mensaje de error
     const navigate = useNavigate();
-
     const handleEmailChange = (event) => setEmail(event.target.value);
     const handlePasswordChange = (event) => setPassword(event.target.value);
     const handleFirstNameChange = (event) => setFirstName(event.target.value);
@@ -42,7 +41,6 @@ export const Signup = () => {
             birth_date: birthDate || undefined
         };
         const url = `${process.env.BACKEND_URL}/api/signup`;
-
         const options = {
             method: 'POST',
             headers: {
@@ -50,7 +48,6 @@ export const Signup = () => {
             },
             body: JSON.stringify(dataToSend)
         };
-
         try {
             const response = await fetch(url, options);
             if (response.status === 409) {

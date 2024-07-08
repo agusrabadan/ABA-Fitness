@@ -25,9 +25,7 @@ def login():
     response_body = {}
     email = request.json.get("email", None)
     password = request.json.get("password", None)
-
-    # Lógica de validación de usuario y contraseña
-    user = db.session.execute(
+    user = db.session.execute( # Lógica de validación de usuario y contraseña
         db.select(Users).where(
             Users.email == email, Users.password == password, Users.is_active == True
         )
@@ -37,8 +35,7 @@ def login():
         response_body["message"] = "Usuario logueado"
         response_body["access_token"] = access_token
         response_body["results"] = user.serialize()
-        return response_body, 200
-    
+        return response_body, 200    
     response_body["message"] = "Usuario y/o contraseña incorrecta"
     return response_body, 401
 
@@ -67,10 +64,8 @@ def signup():
     existing_user = Users.query.filter_by(email=email).first()
     if existing_user:
         response_body["message"] = "El usuario ya existe"
-        return response_body, 409
-
-    # Lógica de verificación de email y password válidos
-    user = Users(
+        return response_body, 409  
+    user = Users(  # Lógica de verificación de email y password válidos
         email=email,
         password=password,
         is_active=True,
@@ -99,8 +94,7 @@ def users():
         results = [row.serialize() for row in users]
         response_body["results"] = results
         response_body["message"] = "Listado de usuarios"
-        return response_body, 200
-    
+        return response_body, 200    
     if request.method == "POST":
         response_body["message"] = "Este endpoint no es válido, primero haz un signup"
         return response_body, 200
@@ -116,8 +110,7 @@ def user(id):
             return response_body, 200
         response_body["message"] = "Usuario no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "PUT":
         data = request.json
         user = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
@@ -136,8 +129,7 @@ def user(id):
             return response_body, 200
         response_body["message"] = "Usuario no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404    
     if request.method == "DELETE":
         user = db.session.execute(db.select(Users).where(Users.id == id)).scalar()
         if user:
@@ -150,7 +142,6 @@ def user(id):
         response_body["results"] = {}
         return response_body, 404
     
-
 RAPIDAPI_KEY = "f335c9d4a1mshf5aa931e8c58f0ep101b9djsn062339dbf8b5"
 RAPIDAPI_HOST = "exercisedb.p.rapidapi.com"
 @api.route("/exercises", methods=["GET", "POST"])
@@ -194,7 +185,6 @@ def exercises():
             db.session.rollback()
             return jsonify({"error": str(e)}), 400
 
-
 @api.route("/exercises/<int:id>", methods=["GET", "PUT", "DELETE"])
 def exercise(id):
     response_body = {}
@@ -208,8 +198,7 @@ def exercise(id):
             return response_body, 200
         response_body["message"] = "Ejercicio no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "PUT":
         data = request.json
         exercise = db.session.execute(
@@ -229,8 +218,7 @@ def exercise(id):
             return response_body, 200
         response_body["message"] = "Ejercicio no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "DELETE":
         exercise = db.session.execute(
             db.select(Exercises).where(Exercises.id == id)
@@ -255,7 +243,6 @@ def workouts():
         response_body["message"] = "Listado de rutinas"
         return response_body, 200
 
-
 @api.route('/workouts', methods=['POST'])
 def add_workout():
     data = request.json
@@ -265,10 +252,8 @@ def add_workout():
         duration = data['totalDuration']
     )
     db.session.add(new_workout)
-    db.session.commit()
-    
-    # Añadir detalles del workout
-    exercises = data.get('exercises', [])
+    db.session.commit()       
+    exercises = data.get('exercises', []) # Añadir detalles del workout
     for exercise in exercises:
         workout_detail = WorkoutDetails(
             workout_id=new_workout.id,
@@ -277,8 +262,7 @@ def add_workout():
             series_num=exercise['series_num'],
             rest_seconds=exercise.get('rest_seconds', 0)
         )
-        db.session.add(workout_detail)
-    
+        db.session.add(workout_detail)    
     db.session.commit()
     response_body = {
         "results": new_workout.serialize(),
@@ -299,8 +283,7 @@ def workout(id):
             return response_body, 200
         response_body["message"] = "Rutina no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404    
     if request.method == "PUT":
         data = request.json
         workout = db.session.execute(
@@ -318,8 +301,7 @@ def workout(id):
             return response_body, 200
         response_body["message"] = "Rutina no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "DELETE":
         workout = db.session.execute(
             db.select(Workouts).where(Workouts.id == id)
@@ -333,18 +315,13 @@ def workout(id):
         response_body["message"] = "Rutina no existe"
         response_body["results"] = {}
         return response_body, 404
-
-
 app = Flask(__name__)
 CORS(app)
 
 @api.route("/workoutdetails", methods=["POST"])
 def add_workout_detail():
-    data = request.json
-    
-
-    # Agregar detalles de la rutina
-    workout_details = data['exercises']
+    data = request.json    
+    workout_details = data['exercises'] # Agregar detalles de la rutina
     for detail in workout_details:
         new_detail = WorkoutDetails(
             workout_id=workout_id,
@@ -355,9 +332,7 @@ def add_workout_detail():
         )
         db.session.add(new_detail)
     db.session.commit()
-
     return jsonify({"message": "Workout and details added successfully", "id": workout_id}), 201
-
 if __name__ == '__main__':
     app.run(debug=True)
 
@@ -368,14 +343,12 @@ def workoutdetail(id):
         workoutdetails = db.session.execute(
             db.select(WorkoutDetails).where(WorkoutDetails.workout_id == id)
         ).scalars().all()
-
         if workoutdetails:
             results = []
             for detail in workoutdetails:
                 exercise = db.session.execute(
                     db.select(Exercises).where(Exercises.id == detail.exercise_id)
-                ).scalar()
-                
+                ).scalar() 
                 if exercise:
                     workout_detail_with_exercise = {
                         "id": detail.id,
@@ -387,16 +360,13 @@ def workoutdetail(id):
                         "exercise_name": exercise.name,
                         "exercise_gif": exercise.gif_url
                     }
-                    results.append(workout_detail_with_exercise)
-            
+                    results.append(workout_detail_with_exercise)          
             response_body["results"] = results
             response_body["message"] = "Detalles del workout encontrados"
             return jsonify(response_body), 200
-
         response_body["message"] = "Detalles del workout no existen"
         response_body["results"] = {}
         return jsonify(response_body), 404
-
     if request.method == "PUT":
         data = request.json
         workoutdetail = db.session.execute(
@@ -421,7 +391,6 @@ def workoutdetail(id):
         response_body["message"] = "Detalle de rutina no existe"
         response_body["results"] = {}
         return jsonify(response_body), 404
-    
     if request.method == "DELETE":
         workoutdetail = db.session.execute(
             db.select(WorkoutDetails).where(WorkoutDetails.id == id)
@@ -444,8 +413,7 @@ def favorites():
         results = [row.serialize() for row in favorites]
         response_body["results"] = results
         response_body["message"] = "Listado de favoritos"
-        return response_body, 200
-    
+        return response_body, 200   
     if request.method == "POST":
         data = request.json
         new_favorite = Favorites(
@@ -457,7 +425,6 @@ def favorites():
         response_body["message"] = "Favorito creado"
         response_body["results"] = new_favorite.serialize()
         return response_body, 201
-
 @api.route("/favorites/<int:id>", methods=["GET", "DELETE"])
 def favorite(id):
     response_body = {}
@@ -471,8 +438,7 @@ def favorite(id):
             return response_body, 200
         response_body["message"] = "Favorito no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "DELETE":
         favorite = db.session.execute(
             db.select(Favorites).where(Favorites.id == id)
@@ -524,8 +490,7 @@ def activitylog(id):
             return response_body, 200
         response_body["message"] = "Log de actividad no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "PUT":
         data = request.json
         activitylog = db.session.execute(
@@ -542,8 +507,7 @@ def activitylog(id):
             return response_body, 200
         response_body["message"] = "Log de actividad no existe"
         response_body["results"] = {}
-        return response_body, 404
-    
+        return response_body, 404   
     if request.method == "DELETE":
         activitylog = db.session.execute(
             db.select(ActivityLogs).where(ActivityLogs.id == id)

@@ -30,7 +30,6 @@ const ImageCarousel = () => {
         const newIndex = Math.floor(Math.random() * images.length);
         setImageIndex(newIndex);
       }, 7000); // Cambia cada 7 segundos (ajusta el intervalo según tus preferencias)
-
       return () => clearInterval(interval); // Limpia el intervalo al desmontar el componente
     }
   }, [images]);

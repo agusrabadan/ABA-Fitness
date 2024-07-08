@@ -1,6 +1,12 @@
 import React from "react";
+import { useEffect } from "react";
 
 export const ConditionsTerms = () => {
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
+
     return (
         <div className="container mt-5 text-white">
             <div className="row justify-content-center">
