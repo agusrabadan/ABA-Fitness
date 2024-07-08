@@ -175,7 +175,7 @@ const ExerciseCard = ({ exercise, isFavorite, actions }) => {
           <ul>
             {exercise.instructions && exercise.instructions.map((instruction, index) => (
               <li key={index}>{instruction}</li>
-            ))}
+            ))} 
           </ul>
         </Card.Body>
       </Card>
