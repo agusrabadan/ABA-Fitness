@@ -12,6 +12,14 @@ Les presentamos nuestro proyecto dirigido a los amantes del fitness. Logueate y 
 + ### 📃 Disfruta con nuestro creador de rutinas, ponle un nombre, añade tantos ejercicios como gustes y guárdala en tu perfil!!!
 + ### 🤖 Nuestro chat-bot dirigido por INTELIGENCIA ARTIFICIAL te ayudará a resolver cualquier duda o problema que puedas tener.
 
+# Technologías:
+
+## Frontend
+React, Javascript, HTML, CSS, Bootstrap, Axios
+
+## Backend
+Python, Flask, Flask SQLAlchemy, JWT, PostgreSQL
+
 
 
 
